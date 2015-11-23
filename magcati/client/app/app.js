@@ -18,12 +18,12 @@ angular.module('myApp', [
 			url: '/signup/mentor',
 			templateUrl: 'app/auth/signup/mentorsignup.html'
 		})
-		.state('menteesignup', {
-			url: 'auth/signup/mentee',
+		.state('auth.menteesignup', {
+			url: '/signup/mentee',
 			templateUrl: 'app/auth/signup/menteesignup.html'
 		})
-		.state('login', {
-			url: '/login',
+		.state('auth.login', {
+			url: '/signup/login',
 			templateUrl: 'app/auth/login/login.html'
 		})
 		.state('home', {
