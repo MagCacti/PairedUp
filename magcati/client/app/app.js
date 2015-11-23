@@ -3,33 +3,38 @@ angular.module('myApp', [
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
-	$urlRouterProvider.otherwise('/signup');
+	$urlRouterProvider.otherwise('/auth');
 
 	$stateProvider
-		.state('auth', {
+		.state('auth', { //this is the nav bar and at the end is a view for everything else
 			url: '/auth',
-			templateUrl: 'app/auth/signin.html'
+			views: {
+				'': {templateUrl: 'app/auth/signin.html'},
+				'signUp@auth': {
+					templateUrl: 'app/auth/signup/signup.html'
+				}
+			}
 		})
-		.state('signup', {
-			url: '/signup',
-			templateUrl: 'app/auth/signup/signup.html'
-		})
-		.state('auth.mentorsignup', {
-			url: '/signup/mentor',
-			templateUrl: 'app/auth/signup/mentorsignup.html'
-		})
-		.state('auth.menteesignup', {
-			url: '/signup/mentee',
-			templateUrl: 'app/auth/signup/menteesignup.html'
-		})
+		// .state('auth.signup', {
+		// 	url: '/signup',
+		// 	templateUrl: 'app/auth/signup/signup.html'
+		// })
+		// .state('auth.mentorsignup', {
+		// 	url: '/mentor',
+		// 	templateUrl: 'app/auth/signup/mentorsignup.html'
+		// })
+		// .state('auth.menteesignup', {
+		// 	url: '/mentee',
+		// 	templateUrl: 'app/auth/signup/menteesignup.html'
+		// })
 		.state('auth.login', {
-			url: '/signup/login',
+			url: '/login',
 			templateUrl: 'app/auth/login/login.html'
 		})
-		.state('home', {
-			url: '/home',
-			templateUrl: 'app/home/home.html'
-		})
+		// .state('home', {
+		// 	url: '/home',
+		// 	templateUrl: 'app/home/home.html'
+		// })
 
 
 
