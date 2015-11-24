@@ -41,8 +41,10 @@
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li><a ui-sref="signup">Sign Up</a></li>
-          <li><a ui-sref="login">Login</a></li>
+          <li ng-hide="loggin()"><a ui-sref="signup">Sign Up</a></li>
+          <li ng-hide="loggin()"><a ui-sref="login">Login</a></li>
+          <li ng-show="loggin()"><a ui-sref="signup">Logout</a></li>
+          <li ng-hide="loggin()"><a ui-sref="codeshare">Codeshare</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
@@ -61,20 +63,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-ace/ui-ace.js"></script>
     <script src="app/app.js"></script>
   </body>
 </html>
 
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>
