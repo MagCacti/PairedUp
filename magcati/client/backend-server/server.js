@@ -17,7 +17,7 @@ A request handler is a function that will be executed every time the server rece
 
 var requestHandlerFunc = function (req, res) {
   res.end("Hello World");
-}
+};
 //Nice Template for a get request using express
 app.get('/', requestHandlerFunc);
 //function being called when there is a get request to the route above. 
