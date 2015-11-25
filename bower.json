@@ -1,0 +1,23 @@
+{
+  "name": "testapp",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "MagCacti"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/MagCacti/testapp",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ace-builds": "~1.2.2",
+    "angular": "~1.4.8",
+    "angular-ui-ace": "~0.2.3"
+  }
+}
