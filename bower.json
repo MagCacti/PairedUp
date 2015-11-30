@@ -19,5 +19,8 @@
     "ace-builds": "~1.2.2",
     "angular": "~1.4.8",
     "angular-ui-ace": "~0.2.3"
+  },
+  "resolutions": {
+    "angular-ui-ace": "~0.2.3"
   }
 }
