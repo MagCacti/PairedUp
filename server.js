@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 //should have access to user mongoose model with this
-var db = require('database');
+var db = require('./server/database/UserModel');
 
 //start express to app variable
 var app = express();
@@ -22,17 +22,6 @@ var requestHandlerFunc = function (req, res) {
 //Nice Template for a get request using express
 app.get('/', requestHandlerFunc);
 //function being called when there is a get request to the route above.
-
-var requestHandlerFuncForSignUp = function(req, res){
- //need to store info in relational database
- //use express-sessions to store in redis database whether a user is logged in or not
-
-};
-/*
-   Not necessary as mentor and mentee will be added to every skill as a question.
-app.post('/mentee', requestHandlerFuncForSignUp);
-
-app.post('/mentor', requestHandlerFuncForSignUp);*/
 
 var requestHandlerFuncForLogInOrSignUp = function(req, res, next){
  //query relational database to get the users information that will go on profile page
