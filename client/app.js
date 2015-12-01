@@ -26,9 +26,9 @@ angular.module('myApp', [
 			templateUrl: 'app/auth/login/login.html',
 			controller: 'LoggedIn'
 		})
-		.state('home', {
-			url: '/home',
-			templateUrl: 'app/home/home.html'
+		.state('map', {
+			url: '/map',
+			templateUrl: 'app/map/home.html'
 		})
 
 		// codeshare was added using the following: https://github.com/angular-ui/ui-ace
