@@ -1,6 +1,7 @@
 angular.module('myApp', [
 	'ui.router',
-	'ui.ace'
+	'ui.ace',
+	'ui.bootstrap'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
@@ -25,9 +26,9 @@ angular.module('myApp', [
 			templateUrl: 'app/auth/login/login.html',
 			controller: 'LoggedIn'
 		})
-		.state('home', {
-			url: '/home',
-			templateUrl: 'app/home/home.html'
+		.state('map', {
+			url: '/map',
+			templateUrl: 'app/map/map.html'
 		})
 
 		// codeshare was added using the following: https://github.com/angular-ui/ui-ace
