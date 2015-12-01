@@ -1,6 +1,7 @@
 angular.module('myApp', [
 	'ui.router',
-	'ui.ace'
+	'ui.ace',
+	'ui.bootstrap'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
