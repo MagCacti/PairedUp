@@ -28,7 +28,7 @@ angular.module('myApp', [
 		})
 		.state('map', {
 			url: '/map',
-			templateUrl: 'app/map/home.html'
+			templateUrl: 'app/map/map.html'
 		})
 
 		// codeshare was added using the following: https://github.com/angular-ui/ui-ace
