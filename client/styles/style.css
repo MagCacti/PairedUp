@@ -1,16 +1,18 @@
 body {
   padding-top: 50px;
 }
-.starter-template {
-  padding: 40px 15px;
-  text-align: center;
-}
 
+/* Styles for signin.html */
 .btn-default {
 	padding: 20px;
 	margin: 15px;
-	/*font-size: 14px;*/
-	
+	/*font-size: 14px;*/	
+}
+
+/* Styles for login.html */
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
 }
 
 /* Styles for codeshare.html */
