@@ -1,6 +1,7 @@
 angular.module('myApp', [
 	'ui.router',
-	'ui.ace'
+	'ui.ace',
+	'ui.bootstrap'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
@@ -9,25 +10,25 @@ angular.module('myApp', [
 	$stateProvider
 		.state('signup', {
 			url: '/signup',
-			templateUrl: 'app/auth/signup/signup.html'
+			templateUrl: 'auth/signup/signup.html'
 		})
 		.state('mentee', {
 			url: '/mentee',
-			templateUrl: 'app/auth/signup/menteesignup.html'
+			templateUrl: 'auth/signup/menteesignup.html'
 		})
 		.state('mentor', {
 			url: '/mentor',
-			templateUrl: 'app/auth/signup/mentorsignup.html'
+			templateUrl: 'auth/signup/mentorsignup.html'
 		})
 
 		.state('login', {
 			url: '/login',
-			templateUrl: 'app/auth/login/login.html',
+			templateUrl: 'auth/login/login.html',
 			controller: 'LoggedIn'
 		})
-		.state('home', {
-			url: '/home',
-			templateUrl: 'app/home/home.html'
+		.state('map', {
+			url: '/map',
+			templateUrl: 'map/map.html'
 		})
 
 		// codeshare was added using the following: https://github.com/angular-ui/ui-ace
@@ -44,7 +45,7 @@ angular.module('myApp', [
 		// 	whatever works for you
 		.state('codeshare', {
 			url: '/codeshare',
-			templateUrl: 'app/codeshare/codeshare.html'
+			templateUrl: 'codeshare/codeshare.html'
 		})
 
 })
