@@ -35,8 +35,8 @@
   theme:'chaos', // set color palette
   mode: 'javascript', // language, or xml, or json
   firstLineNumber: 1, // starting line number
-  onLoad: aceLoaded, // 
-  onChange: aceChanged
+  onLoad: aceLoaded, // we can cusomize this function
+  onChange: aceChanged // we can customize this 'listener'
 }" -->
 
 <i>Theme: chaos (nice, professional)</i>
@@ -89,6 +89,8 @@ var coolCollaboration = function (x, y) {
   onChange: aceChanged
 }"></div> -->
 
+<script type="text/javascript">var x = 'javascript'</script>
+
 <i>Theme: clouds_midnight (very clean and pleasant)</i>
 <div ui-ace="{
   useWrapMode : true,
@@ -98,7 +100,7 @@ var coolCollaboration = function (x, y) {
   firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
-}"></div>
+}"><html></html></div>
 
 <i>Theme: cobalt (looks kinda boss)</i>
 <div ui-ace="{
@@ -133,12 +135,12 @@ var coolCollaboration = function (x, y) {
   onChange: aceChanged
 }"></div> -->
 
-<i>Theme: dreamweaver - php</i>
+<i>Theme: dreamweaver - javascript</i>
 <div ui-ace="{
   useWrapMode : true,
   showGutter: false,
   theme:'dreamweaver',
-  mode: 'php',
+  mode:" +x+",
   firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
