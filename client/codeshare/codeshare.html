@@ -1,6 +1,20 @@
 <h1>The Codesharing experience will live here </h1>
+<div class="row">
+  <div class="col-md-2"> 
+    <button ng-click='add()'>Add</button>
+    <div ng-repeat=" file in filesList">{{ file.title }} 
+      <button ng-click='delete(file.id)'>Delete</button>
+      <button ng-click='edit(file.id)'>Edit</button>
+      <button ng-click='update()'>Update</button>
+    </div>
+  </div> 
+    <div class="col-md-8">
+    
+      <input ng-model="title">
 
-<div ui-ace class="ace_editor">we in here</div>
+      <div ui-ace class="ace_editor" ng-model="code">{{ code }}</div>
+    </div>
+</div>
 <!-- codeshare was added using the following: https://github.com/angular-ui/ui-ace
 	
 	you can also trying implementing the ace raw 

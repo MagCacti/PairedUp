@@ -1,7 +1,8 @@
 angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
-	'ui.bootstrap'
+	'ui.bootstrap',
+	'myApp.codeshare'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
@@ -45,7 +46,8 @@ angular.module('myApp', [
 		// 	whatever works for you
 		.state('codeshare', {
 			url: '/codeshare',
-			templateUrl: 'codeshare/codeshare.html'
+			templateUrl: 'codeshare/codeshare.html',
+			controller: 'CodeShareController'
 		})
 
 })
@@ -57,6 +59,25 @@ angular.module('myApp', [
  	
 })
 
-.controller('LoggedIn', function($scope, authToken) {
+.controller('LoggedIn', function($scope, $http, authToken) {
+	console.log('inside the LoggedIn controller');
+	//testing a get request to server.
+	$http.get('http://localhost:8000')
+	//Get request worked
+	.then(function(response){
+		console.log("response from server", response)
+	},//Get request did not work
+	function(error){
+			console.log("error message", error);
+	});
+//the second argument here is the data we send. It needs to be a object.
+	$http.post('http://localhost:8000/login', {name:'Kristina'})
+	//Get request worked
+	.then(function(response){
+		console.log("response from server for post", response)
+	},//Get request did not work
+	function(error){
+			console.log("error message", error);
+	});
 	$scope.loggin = authToken.login();
 })
