@@ -2,7 +2,17 @@
 
 
 
-<div ui-ace>we in here</div>
+<!-- <div class="ace_editor"ui-ace>we in here</div> -->
+
+<!-- 
+<section ng-controller="AceCtrl">
+
+  <div ui-ace="aceOption" ng-model="aceModel"></div>
+
+  <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+
+</section> -->
+
 <!-- codeshare was added using the following: https://github.com/angular-ui/ui-ace
 	
 	you can also trying implementing the ace raw 
@@ -17,13 +27,25 @@
 	whatever works for you
 -->
 
+<!-- Description of how the ui-ace object options works: -->
+
+<!-- <div ui-ace="{
+  useWrapMode : true, // wrap text
+  showGutter: true, // show or hide line numbers
+  theme:'chaos', // set color palette
+  mode: 'javascript', // language, or xml, or json
+  firstLineNumber: 1, // starting line number
+  onLoad: aceLoaded, // 
+  onChange: aceChanged
+}" -->
+
 <i>Theme: chaos (nice, professional)</i>
 <div ui-ace="{
   useWrapMode : true,
-  showGutter: false,
+  showGutter: true, 
   theme:'chaos',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'javascript',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }">var x = 'you';
@@ -35,15 +57,15 @@ var coolCollaboration = function (x, y) {
 <i>Theme: ambiance </i>
 <div ui-ace="{
   useWrapMode : false,
-  showGutter: false,
+  showGutter: true,
   theme:'ambiance',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'css',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
-}">var myEquation = function(e) {
-  if (e = mc^2) {return 'happyface'};
-};
+}">body {
+  padding-top: 50px;
+}
 </div>
 
 <!-- <div ui-ace="{
@@ -51,7 +73,7 @@ var coolCollaboration = function (x, y) {
   showGutter: false,
   theme:'chrome',
   mode: 'xml',
-  firstLineNumber: 5,
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div> -->
@@ -62,7 +84,7 @@ var coolCollaboration = function (x, y) {
   showGutter: false,
   theme:'clouds',
   mode: 'xml',
-  firstLineNumber: 5,
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div> -->
@@ -70,10 +92,10 @@ var coolCollaboration = function (x, y) {
 <i>Theme: clouds_midnight (very clean and pleasant)</i>
 <div ui-ace="{
   useWrapMode : true,
-  showGutter: false,
+  showGutter: true,
   theme:'clouds_midnight',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'html',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -83,8 +105,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'cobalt',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'ruby',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -95,7 +117,7 @@ var coolCollaboration = function (x, y) {
   showGutter: false,
   theme:'crimson_editor',
   mode: 'xml',
-  firstLineNumber: 5,
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -106,18 +128,18 @@ var coolCollaboration = function (x, y) {
   showGutter: false,
   theme:'dawn',
   mode: 'xml',
-  firstLineNumber: 5,
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div> -->
 
-<i>Theme: dreamweaver</i>
+<i>Theme: dreamweaver - php</i>
 <div ui-ace="{
   useWrapMode : true,
   showGutter: false,
   theme:'dreamweaver',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'php',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -127,8 +149,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'eclipse',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'json',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -137,8 +159,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'idle_fingers',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'json',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -149,8 +171,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'merbivore',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'json',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -160,8 +182,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'tomorrow_night_eighties',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'json',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
@@ -171,8 +193,8 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'twilight',
-  mode: 'xml',
-  firstLineNumber: 5,
+  mode: 'json',
+  firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
