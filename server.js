@@ -4,10 +4,10 @@ var favicon = require('express-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var passport = require('passport');
-var GitHubStrategy = require('passport-github').Strategy;
-var secret = require('githubsecret');
-var findOneOrCreate = require('mongoose-find-one-or-create');
+// var passport = require('passport');
+// var GitHubStrategy = require('passport-github').Strategy;
+// var secret = require('githubsecret');
+// var findOneOrCreate = require('mongoose-find-one-or-create');
 //should have access to user mongoose model with this
 var db = require('./server/database/UserModel');
 
@@ -66,19 +66,88 @@ var requestHandlerFuncForUpdatingInfo = function(req, res, next) {
 app.post("/updated",requestHandlerFuncForUpdatingInfo);
 
 //Start the express.js web server and output a user-friendly terminal message in a callback
-User.plugin(findOneOrCreate);
-passport.use(new GitHubStrategy({
-    clientID: secret.clientID,
-    clientSecret: secret.clientSecret,
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOneOrCreate({ githubId: profile.id}, function (err, user) {
-      return done(err, user);
-    });
-  }
-));
+// User.plugin(findOneOrCreate);
+// passport.use(new GitHubStrategy({
+//     clientID: secret.clientID,
+//     clientSecret: secret.clientSecret,
+//     callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     User.findOneOrCreate({ githubId: profile.id}, function (err, user) {
+//       return done(err, user);
+//     });
+//   }
+// ));
 
+
+
+
+/*Login Github Oauth Angular stuff too*/
+app.post('/auth/github', function(req, res) {
+  console.log("In the postAuth GIthub")
+  var accessTokenUrl = 'https://github.com/login/oauth/access_token';
+  var userApiUrl = 'https://api.github.com/user';
+  var params = {
+    code: req.body.code,
+    client_id: req.body.clientId,
+    client_secret: "its a secret",
+    redirect_uri: req.body.redirectUri
+  };
+
+  // Step 1. Exchange authorization code for access token.
+  request.get({ url: accessTokenUrl, qs: params }, function(err, response, accessToken) {
+    accessToken = qs.parse(accessToken);
+    var headers = { 'User-Agent': 'Satellizer' };
+
+    // Step 2. Retrieve profile information about the current user.
+    request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
+
+      // Step 3a. Link user accounts.
+      if (req.headers.authorization) {
+        User.findOne({ github: profile.id }, function(err, existingUser) {
+          if (existingUser) {
+            return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
+          }
+          var token = req.headers.authorization.split(' ')[1];
+          var payload = jwt.decode(token, config.TOKEN_SECRET);
+          User.findById(payload.sub, function(err, user) {
+            if (!user) {
+              return res.status(400).send({ message: 'User not found' });
+            }
+            user.github = profile.id;
+            user.picture = user.picture || profile.avatar_url;
+            user.displayName = user.displayName || profile.name;
+            user.save(function() {
+              var token = createJWT(user);
+              res.send({ token: token });
+            });
+          });
+        });
+      } else {
+        // Step 3b. Create a new user account or return an existing one.
+        User.findOne({ github: profile.id }, function(err, existingUser) {
+          if (existingUser) {
+            var token = createJWT(existingUser);
+            return res.send({ token: token });
+          }
+          var user = new User();
+          user.github = profile.id;
+          user.picture = profile.avatar_url;
+          user.displayName = profile.name;
+          user.save(function() {
+            var token = createJWT(user);
+            res.send({ token: token });
+          });
+        });
+      }
+    });
+  });
+});
+
+
+
+
+/*End Github Login*/
 app.listen(port, function(){
  console.log('The server is running, ' + ' please, open your browser at http://localhost:%s', port); 
 });
