@@ -52,7 +52,7 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-      	clientId: "6ffd349ee17a258a13ff"
+      	clientId: "secret"
     	});
 	console.log("window.location.origin", window.location.origin);
 	$authProvider.github({
