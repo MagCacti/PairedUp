@@ -2,7 +2,8 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
-	'myApp.codeshare'
+	'myApp.codeshare',
+	'Icecomm'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider){
 
