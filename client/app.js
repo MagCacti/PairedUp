@@ -2,11 +2,11 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
+	'myApp.codeshare',
             'btford.socket-io',
-	'satellizer',
-	'myApp.codeshare'
+            'satellizer'
 ])
-.config( function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
+.config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
 	$urlRouterProvider.otherwise('/signup');
 
@@ -57,11 +57,10 @@ angular.module('myApp', [
 	$authProvider.github({
       	clientId: "secret"
     	});
-	console.log("window.location.origin", window.location.origin);
 	$authProvider.github({
 	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-	  redirectUri: window.location.origin, //? window.location.origin +  '/auth/github/callback' : window.location.protocol + '//' + window.location.host + '/auth/github/callback',
+	  redirectUri: window.location.origin,  
 	  optionalUrlParams: ['scope'],
 	  scope: ['user:email'],
 	  scopeDelimiter: ' ',
@@ -147,10 +146,7 @@ angular.module('myApp', [
 
 .controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/) {
 
-	// $scope.authenticate = function(provider) {
-	//       console.log("provider", provider);
-	//       $auth.authenticate(provider);
-	//   };
+
    $scope.login = function() {
       $auth.login($scope.user)
         .then(function() {
@@ -179,35 +175,44 @@ angular.module('myApp', [
           }
         });
     };
-	// $scope.loggin = authToken.login();
-});
+})
 
-angular.module('myApp').
-factory('socket', ['$rootScope', function($rootScope) {
+/*angular.module('myApp')*/
+.factory('socket', ['$rootScope', function($rootScope) {
+    //A socket connection to our server.
   var socket = io.connect("http://localhost:8080");
 
   return {
+    //listen to events.
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
+    //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
       socket.emit(eventName, data);
     }
   };
-}]);
+}])
 
-angular.module('myApp').controller('IndexController', function($scope, socket) {
+/*angular.module('myApp')*/
+.controller('IndexController', function($scope, socket) {
+    //socket is the object returned from the factory named socket.
+
+    //The next two lines are just a part of the example. We will eventually erase them.
   $scope.newCustomers = [];
   $scope.currentCustomer = {};
 
+//An example function, we will eventually replace it.
   $scope.join = function() {
+    //send out a signal called add-customer.
     socket.emit('add-customer', $scope.currentCustomer);
   };
-
+//listen for a signal called notification
   socket.on('notification', function(data) {
     console.log("Just hear a notification from the server")
-
+    //I believe apply is important for this controller regardless of what we end up doing. I will research it more and update this comment about its ability.
     $scope.$apply(function () {
+        //Will eventually replace
       $scope.newCustomers.push(data.customer);
     });
   });
