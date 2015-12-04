@@ -52,7 +52,54 @@ angular.module('myApp', [
 
 })
 
-
+// .directive('iceComm', function($sce) {
+//   return {
+//     restrict: 'E',
+//     scope: {},
+//     templateUrl: "codeshare/codeshare.html",
+//     link: function($scope, ele, atts) {
+//       console.log("link");
+//       var comm = new Icecomm( atts.apikey );
+//       $scope.peers = [];
+//       comm.on("local",function(peer){
+//         $scope.$apply(function () {
+//           peer.stream = $sce.trustAsResourceUrl(peer.stream);
+//           $scope.local = peer;
+//         });
+//       });
+//       comm.on("connected", function(peer){
+//         $scope.$apply(function () {
+//           peer.stream = $sce.trustAsResourceUrl(peer.stream);
+//           $scope.peers.push(peer);
+//         });
+//       });
+      
+//       comm.on("disconnect", function(peer){
+//         $scope.$apply(function () {
+//           $scope.peers.splice($scope.peers.indexOf(peer),1);
+//         });
+//       });
+//       $scope.connect = function(room){
+//         if($scope.current_room) throw new Error("You already have a room");
+//         $scope.current_room = room;
+//         comm.connect(room, {audio: false});
+//       };
+//       $scope.close = function(){
+//         comm.leave();
+//       };
+//       $scope.roomEvent = function(e,value){
+//         if(e.which !== 13) return;
+//         $scope.connect(room.value);
+//         room.value = "";
+//       };
+//       ele.find("button.close").bind("click",$scope.close);
+//       ele.on('$destroy', $scope.close);
+//       if(atts.room){
+//         $scope.connect(atts.room);
+//       }
+//     }
+//   };
+// })
 .service('authToken', function() {
     this.name='carine'
     this.login = function(){console.log(this.name, "is logged in")}
