@@ -1,7 +1,41 @@
-<h2>Drag, drop, share your code here!</h2>
+
+<h1>The Codesharing experience will live here </h1>
+<div class="row">
+  <div class="col-md-2"> 
+    <button ng-click='add()'>Add</button>
+    <div ng-repeat=" file in filesList">{{ file.title }} 
+      <button ng-click='delete(file.id)'>Delete</button>
+      <button ng-click='edit(file.id)'>Edit</button>
+      <button ng-click='update(file.id)'>Update</button>
+    </div>
+  </div> 
+    <div class="col-md-8">
+    
+      <input ng-model="title">
+
+      <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
+      <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+    </div>
+    <div class="col-md-2">
+          <!-- <ice-comm
+            apikey="hKtqGYhzfZCoXXTn5X.XhbswJ7ECxIto51Q65AxOJBqeVP45ha"
+            room="custom room"></ice-comm>
+      <div>
+          <button ng-if="!!current_room" ng-click="close()">Close</button>
+          <input ng-if="!current_room" type="text" ng-keyup="roomEvent()" />
+          <div ng-if="!!local">
+            <video autoplay class="local" ng-src={{local.stream}}></video>
+          </div>
+          <ul><li ng-repeat="peer in peers">
+            <video autoplay ng-src="{{peer.stream}}" ></video>
+          </li></ul>
+      </div> -->
+
+    </div>
+</div>
 
 
-
+<!-- ui-ace="aceOption" ng-model="aceModel" -->
 <!-- <div class="ace_editor"ui-ace>we in here</div> -->
 
 <!-- 
@@ -12,6 +46,7 @@
   <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
 
 </section> -->
+
 
 <!-- codeshare was added using the following: https://github.com/angular-ui/ui-ace
 	
@@ -140,7 +175,7 @@ var coolCollaboration = function (x, y) {
   useWrapMode : true,
   showGutter: false,
   theme:'dreamweaver',
-  mode:" +x+",
+  mode: 'javascript',
   firstLineNumber: 1,
   onLoad: aceLoaded,
   onChange: aceChanged
