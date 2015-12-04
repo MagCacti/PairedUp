@@ -2,6 +2,7 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
+            'btford.socket-io',
 	'satellizer'
 ])
 .config( function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
@@ -130,4 +131,35 @@ angular.module('myApp', [
         });
     };
 	// $scope.loggin = authToken.login();
-})
+});
+
+angular.module('myApp').
+factory('socket', ['$rootScope', function($rootScope) {
+  var socket = io.connect("http://localhost:8080");
+
+  return {
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}]);
+
+angular.module('myApp').controller('IndexController', function($scope, socket) {
+  $scope.newCustomers = [];
+  $scope.currentCustomer = {};
+
+  $scope.join = function() {
+    socket.emit('add-customer', $scope.currentCustomer);
+  };
+
+  socket.on('notification', function(data) {
+    console.log("heho")
+
+    $scope.$apply(function () {
+      $scope.newCustomers.push(data.customer);
+    });
+  });
+});

@@ -14,7 +14,6 @@ var favicon = require('express-favicon');
     app.use(bodyParser.json());                                     // parse application/json
 
     // listen (start app with node server.js) ======================================
-    app.listen(8080);
     console.log("App listening on port 8080");
 
 
@@ -37,8 +36,11 @@ var db = require('./server/database/UserModel');
 // /*
 // */
 var http = require('http');
+var server = http.Server(app);
 var socketio = require('socket.io');
+var io = socketio(server);
 
+    server.listen(8080);
 // //use the http module of Node.js to create a server and wrap the Express application.
 
 // //server object is then passed to the Socket.io module and serves both the Express application and the Socket.io server.
@@ -194,10 +196,23 @@ app.post('/auth/github', function(req, res) {
   });
 });
 
-
+console.log("io", io);
 app.get('*', function(req, res) {
         res.sendFile(__dirname + '/client/index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
+console.log("Before io")
+io.on('connection', function(socket) {
+  console.log('new connection');
+
+  socket.on('add-customer', function(customer) {
+    console.log("Muha");
+    io.emit('notification', {
+      message: 'new customer',
+      customer: customer
+    });
+  });
+});
+io.listen//not sure if importnat
 
 // console.log("Listening on Port " + port)
 // // app.get('*', function (req, res) {
