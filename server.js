@@ -1,115 +1,84 @@
 //require express
 var express = require('express');
 //instantiate an express object
-var app = express();                               // create our app w/ express
-var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
+var app = express();                              
+var bodyParser = require('body-parser');   
 var favicon = require('express-favicon');
- var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 
 
     // configuration =================
 
+//serves up static files, otherwise we would not be able to load the index.html file
+app.use(express.static(__dirname + '/client'));                 
+//serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
-    app.use(express.static(__dirname + '/client'));                 // set the static files location /public/img will be /img for users
-    app.use('/bower_components', express.static(__dirname + '/bower_components'));
-    app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
-    app.use(bodyParser.json());                                     // parse application/json
+app.use(bodyParser.urlencoded({'extended':'true'}));            
 
-    // listen (start app with node server.js) ======================================
-    console.log("App listening on port 8080");
-
-
-
+//need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
+app.use(bodyParser.json());                                  
 
 
-
-// var express = require('express');
 var path = require('path');
-// var favicon = require('express-favicon');
-// var bodyParser = require('body-parser');
-// var cookieParser = require('cookie-parser');
-// var session = require('express-session');
 var passport = require('passport');
 var githubsecret = require('passport-github').Strategy;
 // var secret = require('githubsecret');
 // // var findOneOrCreate = require('mongoose-find-one-or-create');
 // //should have access to user mongoose model with this
+var mongoose = require('mongoose');
+
 var db = require('./server/database/UserModel');
-// /*
-// */
+
 //Necessary for sockets.
 var http = require('http');
+
 //I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
 //Necessary for making sockets.
 var server = http.Server(app);
-  //The docs are not clear on the next two lines.Both lines are necessary for sockets.
+
+//The docs are not clear on the next two lines.Both lines are necessary for sockets.
 var socketio = require('socket.io');
 var io = socketio(server);
+
 //listening to server
 server.listen(8080);
-// //use the http module of Node.js to create a server and wrap the Express application.
 
-// //server object is then passed to the Socket.io module and serves both the Express application and the Socket.io server.
-// //Used the http core module to create a server object that wraps your Express app object.  Returned the new server object instead of the Express application object.When the server starts, it will run your Socket.io server along with your Express application. 
-// var server = http.createServer(app);
-// var io = socketio.listen(server);
+// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
+console.log("App listening on port 8080");
 
-// // Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
+/*
+A request handler is a function that will be executed every time the server receives a particular request, usually defined by an HTTP method (e.g., GET) and the URL path (i.e., the URL without the protocol, host, and port). The Express.js request handler needs at least two parameters—request, or simply req, and response, or res.
+*/
 
-
-// // When a client wants to connect the Socket.io server, it will first send a handshake HTTP request. The server will then analyze the request to gather the necessary information for ongoing communication. It will then look for configuration middleware that is registered with the server and execute it before firing the connection event. When the client is successfully connected to the server, the connection event listener is executed, exposing a new socket instance. Once the handshaking process is over, the client is connected to the server and all communication with it is handled through the socket instance object. For example, handling a client's disconnection event will be as follows:
-// // io.on(' connection', function(socket){ 
-// //   // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
-
-// // /* ... */ console.log("Socket connection initiated.");
-// //   socket.on(' disconnect', function() { 
-// //     console.log(' user has disconnected');
-// //    });
-
-// // }); 
-// // server.listen(port);
-// //start express to app variable
-
-
-// /*
-// A request handler is a function that will be executed every time the server receives a particular request, usually defined by an HTTP method (e.g., GET) and the URL path (i.e., the URL without the protocol, host, and port). The Express.js request handler needs at least two parameters—request, or simply req, and response, or res.
-// */
-
-// var requestHandlerFunc = function (req, res, next) {
-//  res.end("Hello World");
-//  res.sendFile(__dirname + '/client/index.html');
-
-//  next();
-// };
-// // //Nice Template for a get request using express
-// // app.get('/', requestHandlerFunc);
-// //function being called when there is a get request to the route above.
+//to allow cross origin (need to add more to this comment.)
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+  next();
+});
 
 var requestHandlerFuncForLogInOrSignUp = function(req, res, next){
-//  //query relational database to get the users information that will go on profile page
-//  //if the user is not in database
-   
-//    //Using the new keyword, the create() method creates a new model instance, which is populated using the request body. Where new User is, we will have to place a require variable with a .user 
-   var user = new User(req.body);
-//    //Finally, you call the model instance's save() method that either saves the user and outputs the user object, or fail, passing the error to the next middleware.
-   user.save(function(err){ 
-//        //if error
-       if (err){
-//        //return the next function with the error as the argument
-        return next(err); 
-        }else{ 
-//            //Sends a JSON response. This method is identical to res.send() with an object or array as the parameter. However, you can use it to convert other values to JSON.
-           res.json(user);
-
-//            //res.send() : Sends the HTTP response.This method performs many useful tasks for simple non-streaming responses: For example, it automatically assigns the Content-Length HTTP response header field (unless previously defined) and provides automatic HEAD and HTTP cache freshness support.
-
-//            //log in and start a user session. 
-       } 
+ //query relational database to get the users information that will go on profile page
+   console.log("this is req.body", req.body.name);
+   //do not forget to stringify what you send back to the server.
+   var test = req.body;
+   //Using the new keyword, the create() method creates a new model instance, which is populated using the request body. Where new User is, we will have to place a require variable with a .user 
+   var testUser = new db({
+    username: test.name
    });
-// //else 
-//    //log in and start a user session.
-
-//  //use express-sessions to store in mongoose database whether a user is logged in or not
+   //Finally, you call the model instance's save() method that either saves the user and outputs the user object, or fail, passing the error to the next middleware.
+   //change this .save to .findOrCreate
+   testUser.save(function(err, testUser){
+      //if an error exists
+        if(err) {
+          //logs the error
+          console.log(err);
+        }else {
+          //res.send() : Sends the HTTP response.This method performs many useful tasks for simple non-streaming responses: For example, it automatically assigns the Content-Length HTTP response header field (unless previously defined) and provides automatic HEAD and HTTP cache freshness support.
+          res.send('Successfully inserted!!!');
+        }
+      });
 
 };
 
@@ -122,6 +91,8 @@ var requestHandlerFuncForUpdatingInfo = function(req, res, next) {
 //    //send the info back to frontEnd(?). 
 };
 app.post("/updated",requestHandlerFuncForUpdatingInfo);
+
+//Not sure if we still need the next 13 lines. 
 
 // //Start the express.js web server and output a user-friendly terminal message in a callback
 // // User.plugin(findOneOrCreate);
@@ -202,15 +173,23 @@ app.post('/auth/github', function(req, res) {
   });
 });
 
+//for every path request. 
 app.get('*', function(req, res) {
-        res.sendFile(__dirname + '/client/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+  // load the single view file (angular will handle the page changes on the front-end)
+        res.sendFile(__dirname + '/client/index.html'); 
     });
-console.log("Before io")
+
+// When a client wants to connect the Socket.io server, it will first send a handshake HTTP request. The server will then analyze the request to gather the necessary information for ongoing communication. It will then look for configuration middleware that is registered with the server and execute it before firing the connection event. When the client is successfully connected to the server, the connection event listener is executed, exposing a new socket instance. Once the handshaking process is over, the client is connected to the server and all communication with it is handled through the socket instance object. For example, handling a client's disconnection event will be as follows:
+
 io.on('connection', function(socket) {
   console.log('new connection');
 
+  // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
+  
+  //listen for a signal called add-customer
   socket.on('add-customer', function(customer) {
     console.log("Just heard a add-customer from frontEnd");
+    //send a signal to frontEnd called notification
     io.emit('notification', {
       message: 'new customer',
       customer: customer
@@ -218,8 +197,4 @@ io.on('connection', function(socket) {
   });
 });
 
-// console.log("Listening on Port " + port)
-// // app.get('*', function (req, res) {
-// // });
-// /*End Github Login*/
-// app.listen(port);
+

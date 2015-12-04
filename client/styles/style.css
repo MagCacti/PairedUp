@@ -1,16 +1,25 @@
 body {
   padding-top: 50px;
 }
+
+/* Styles for signin.html */
+.btn-default {
+	padding: 20px;
+	margin: 15px;
+	/*font-size: 14px;*/	
+}
+
+/* Styles for login.html */
 .starter-template {
   padding: 40px 15px;
   text-align: center;
 }
 
-.btn-default {
-	padding: 20px;
-	margin: 15px;
-	/*font-size: 14px;*/
-	
-}
+/* Styles for codeshare.html */
+.ace_editor { height: 200px; } 
 
-.ace_editor { height: 200px; }
+
+/*video {
+    height: 200px;
+    width: 200px;
+}*/
