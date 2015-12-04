@@ -8,3 +8,18 @@
 	</div>
 
 </div>
+<!-- Everything under this is an aspect of the example for sockets.  -->
+
+<div ng-controller="IndexController">
+    <label>Please enter your name: </label>
+    <input ng-model="currentCustomer.name"/>
+    <button ng-click="join()">Join</button>
+    <br/>
+
+    <h1>New Customers: </h1>
+    <ul>
+      <li ng-repeat="customer in newCustomers">{{customer.name}}</li>
+    </ul>
+
+    <!-- // <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script> -->
+  </div>

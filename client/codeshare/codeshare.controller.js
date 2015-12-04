@@ -75,7 +75,4 @@ angular.module('myApp.codeshare', [])
   };
 
 
-}])
-
-
-
+}]);

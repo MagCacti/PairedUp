@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" ng-app="myApp">
   <head>
@@ -53,8 +52,8 @@
     <!-- NG-VIEW BEGIN-->
     <div ui-view></div>
      <!--NG-VIEW END-->
-
-
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+   
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -65,9 +64,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../bower_components/angular-socket-io/socket.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
     <script type="text/javascript" src="../bower_components/ace-builds/src-min-noconflict/ace.js"></script>
     <script type="text/javascript" src="../bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="//cdn.jsdelivr.net/satellizer/0.13.1/satellizer.min.js"></script>
     <script src="app.js"></script>
 
     <!-- Google Maps JavaScript API v3 -->
@@ -76,10 +77,9 @@
     <!-- gmaps.js -->
     <script type="text/javascript" src="assets/lib/gmaps.js"></script>
 
-    <script src="/client/codeshare/codeshare.controller.js"></script>
+    <script src="./codeshare/codeshare.controller.js"></script>
     <script type="text/javascript" src="https://cdn.icecomm.io/icecomm.js"></script>
 
 
   </body>
 </html>
-
