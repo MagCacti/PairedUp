@@ -3,7 +3,9 @@ angular.module('myApp', [
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
+        //for client side sockets
             'btford.socket-io',
+            //for the authentication.
             'satellizer'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
