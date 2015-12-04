@@ -1,5 +1,7 @@
-var express  = require('express');
-var app      = express();                               // create our app w/ express
+//require express
+var express = require('express');
+//instantiate an express object
+var app = express();                               // create our app w/ express
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
 var favicon = require('express-favicon');
  var cookieParser = require('cookie-parser');
@@ -35,12 +37,16 @@ var githubsecret = require('passport-github').Strategy;
 var db = require('./server/database/UserModel');
 // /*
 // */
+//Necessary for sockets.
 var http = require('http');
+//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
+//Necessary for making sockets.
 var server = http.Server(app);
+  //The docs are not clear on the next two lines.Both lines are necessary for sockets.
 var socketio = require('socket.io');
 var io = socketio(server);
-
-    server.listen(8080);
+//listening to server
+server.listen(8080);
 // //use the http module of Node.js to create a server and wrap the Express application.
 
 // //server object is then passed to the Socket.io module and serves both the Express application and the Socket.io server.
@@ -196,7 +202,6 @@ app.post('/auth/github', function(req, res) {
   });
 });
 
-console.log("io", io);
 app.get('*', function(req, res) {
         res.sendFile(__dirname + '/client/index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
@@ -205,14 +210,13 @@ io.on('connection', function(socket) {
   console.log('new connection');
 
   socket.on('add-customer', function(customer) {
-    console.log("Muha");
+    console.log("Just heard a add-customer from frontEnd");
     io.emit('notification', {
       message: 'new customer',
       customer: customer
     });
   });
 });
-io.listen//not sure if importnat
 
 // console.log("Listening on Port " + port)
 // // app.get('*', function (req, res) {

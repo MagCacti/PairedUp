@@ -156,7 +156,7 @@ angular.module('myApp').controller('IndexController', function($scope, socket) {
   };
 
   socket.on('notification', function(data) {
-    console.log("heho")
+    console.log("Just hear a notification from the server")
 
     $scope.$apply(function () {
       $scope.newCustomers.push(data.customer);
