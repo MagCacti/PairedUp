@@ -1,7 +1,23 @@
-angular.module('myApp.codeshare', [])
+angular.module('myApp.codeshare', [ ])
 
-.controller('CodeShareController', ['$scope', function($scope){
+.factory('socket', ['$rootScope', function($rootScope) {
+    //A socket connection to our server.
+  var socket = io.connect("http://localhost:8080");
+  return {
+    //listen to events.
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    //give off signals to anyone who might be listening (such as the server).
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}])
+
+.controller('CodeShareController', ['$scope','socket', function($scope, socket){
   console.log('inside the codesharecontroller');
+  console.log("Socket", socket);
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
@@ -15,6 +31,13 @@ angular.module('myApp.codeshare', [])
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
       };
+    },
+    onChange: function(_ace) {
+      socket.emit('add-customer')
+      socket.on('notification', function(data) {
+        console.log("Just hear a notification from the server")
+        //I believe apply is important for this controller regardless of what we end up doing. I will research it more and update this comment about its ability.
+        });
     }
   };
 
@@ -31,6 +54,7 @@ angular.module('myApp.codeshare', [])
     $scope.id++
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
+    console.log("This is the text in the editor",$scope.filesList[0].code);
     $scope.title = '';
     $scope.aceModel = '';
 
@@ -76,3 +100,4 @@ angular.module('myApp.codeshare', [])
 
 
 }]);
+
