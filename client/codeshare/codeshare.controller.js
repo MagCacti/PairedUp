@@ -12,6 +12,9 @@ angular.module('myApp.codeshare', [ ])
     emit: function(eventName, data) {
       socket.emit(eventName, data);
     }
+    // broadcast: function(eventName, data){
+    //   socket.broadcast.emit(eventName,data);
+    // }
   };
 }])
 
@@ -23,7 +26,7 @@ angular.module('myApp.codeshare', [ ])
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[0];
-
+  $scope.textInEditor;
 
   $scope.aceOption = {
     mode: $scope.mode.toLowerCase(),
@@ -33,6 +36,11 @@ angular.module('myApp.codeshare', [ ])
       };
     },
     onChange: function(_ace) {
+      console.log('arguments',arguments);
+      console.log("_ace", _ace)
+      console.log("_ace get session", _ace[1].getSession().getDocument().getValue())
+      // _ace[1].getSession().getDocument().setValue("Setting the value");
+      $scope.textInEditor;
       socket.emit('add-customer')
       socket.on('notification', function(data) {
         console.log("Just hear a notification from the server")
