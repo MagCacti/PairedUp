@@ -183,17 +183,15 @@ app.get('*', function(req, res) {
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
-
+  console.log("socket.broadcast", socket.broadcast)
   // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
   
   //listen for a signal called add-customer
-  socket.on('add-customer', function(customer) {
-    console.log("Just heard a add-customer from frontEnd");
+  socket.on('add-customer', function(textFromEditor) {
+    console.log("Just heard a add-customer from Joseph");
     //send a signal to frontEnd called notification
-    io.emit('notification', {
-      message: 'new customer',
-      customer: customer
-    });
+    io.emit('notification', textFromEditor);
+
   });
 });
 
