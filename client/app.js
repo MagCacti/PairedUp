@@ -182,45 +182,5 @@ angular.module('myApp', [
           }
         });
     };
-})
-
-/*angular.module('myApp')*/
-.factory('socket', ['$rootScope', function($rootScope) {
-    //A socket connection to our server.
-  var socket = io.connect("http://localhost:8080");
-
-  return {
-    //listen to events.
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
-    },
-    //give off signals to anyone who might be listening (such as the server).
-    emit: function(eventName, data) {
-      socket.emit(eventName, data);
-    }
-  };
-}])
-
-/*angular.module('myApp')*/
-.controller('IndexController', function($scope, socket) {
-    //socket is the object returned from the factory named socket.
-
-    //The next two lines are just a part of the example. We will eventually erase them.
-  $scope.newCustomers = [];
-  $scope.currentCustomer = {};
-
-//An example function, we will eventually replace it.
-  $scope.join = function() {
-    //send out a signal called add-customer.
-    socket.emit('add-customer', $scope.currentCustomer);
-  };
-//listen for a signal called notification
-  socket.on('notification', function(data) {
-    console.log("Just hear a notification from the server")
-    //I believe apply is important for this controller regardless of what we end up doing. I will research it more and update this comment about its ability.
-    $scope.$apply(function () {
-        //Will eventually replace
-      $scope.newCustomers.push(data.customer);
-    });
-  });
 });
+
