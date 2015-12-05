@@ -8,10 +8,12 @@ angular.module('myApp.codeshare', [ ])
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
+    Realsocket: socket,
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
       socket.emit(eventName, data);
     }
+
     // broadcast: function(eventName, data){
     //   socket.broadcast.emit(eventName,data);
     // }
@@ -21,6 +23,7 @@ angular.module('myApp.codeshare', [ ])
 .controller('CodeShareController', ['$scope','socket', function($scope, socket){
   console.log('inside the codesharecontroller');
   console.log("Socket", socket);
+  console.log("RealSocket");
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
@@ -37,13 +40,27 @@ angular.module('myApp.codeshare', [ ])
     },
     onChange: function(_ace) {
       console.log('arguments',arguments);
-      console.log("_ace", _ace)
-      console.log("_ace get session", _ace[1].getSession().getDocument().getValue())
+      console.log("_ace", _ace);
+      var sessionDoc = _ace[1].getSession().getDocument();
       // _ace[1].getSession().getDocument().setValue("Setting the value");
-      $scope.textInEditor;
-      socket.emit('add-customer')
+      if ($scope.textInEditor !==sessionDoc.getValue() ){
+        $scope.textInEditor = sessionDoc.getValue();
+        sessionDoc.setValue($scope.textInEditor);
+        console.log("In the if and we are console logging sessiondoc.getvalue", sessionDoc.getValue());
+        socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
+      }
+
+      console.log("testInEditor", $scope.textInEditor);
+
       socket.on('notification', function(data) {
-        console.log("Just hear a notification from the server")
+        // _ace[1].getSession().getDocument().setValue($scope.textInEditor);
+        console.log("Just hear a notification from the server");
+        if ($scope.textInEditor !== data.textFromDoc){
+          $scope.textInEditor = data.textFromDoc;
+          sessionDoc.setValue($scope.textInEditor);
+          console.log("We are listening and in the if In the if and we are console logging sessiondoc.getvalue");
+        }
+
         //I believe apply is important for this controller regardless of what we end up doing. I will research it more and update this comment about its ability.
         });
     }
