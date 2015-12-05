@@ -31,9 +31,9 @@ var githubsecret = require('passport-github').Strategy;
 // var secret = require('githubsecret');
 // // var findOneOrCreate = require('mongoose-find-one-or-create');
 // //should have access to user mongoose model with this
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose');
 
-var db = require('./server/database/UserModel');
+// var db = require('./server/database/UserModel');
 
 //Necessary for sockets.
 var http = require('http');
