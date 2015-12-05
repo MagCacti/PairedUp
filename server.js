@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
 app.use(bodyParser.json());            
 
-// Add for deployment:                      
+// Added for deployment:                      
 var port = process.env.PORT || '3000';
 
 var path = require('path');
