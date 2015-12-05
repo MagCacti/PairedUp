@@ -57,15 +57,16 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-	$authProvider.github({
-      	clientId: "6ffd349ee17a258a13ff"
-    	});
+	// $authProvider.github({
+      	
+ //    	});
 	$authProvider.github({
 	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+    clientId: "6ffd349ee17a258a13ff",
 	  redirectUri: window.location.origin,  
 	  optionalUrlParams: ['scope'],
-	  scope: ['user:email'],
+	  scope: ['user'],
 	  scopeDelimiter: ' ',
 	  type: '2.0',
 	  popupOptions: { width: 1020, height: 618 }
@@ -150,19 +151,20 @@ angular.module('myApp', [
  	
 })
 
-.controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/) {
+.controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/, $http) {
 
 
-   $scope.login = function() {
-      $auth.login($scope.user)
-        .then(function() {
-          // toastr.success('You have successfully signed in!');
-          $location.path('/');
-        })
-        .catch(function(error) {
-          // toastr.error(error.data.message, error.status);
-        });
-    };
+   // $scope.login = function() {
+   //    $auth.login($scope.user)
+   //      .then(function() {
+   //    console.log($scope.user);
+   //        // toastr.success('You have successfully signed in!');
+   //        $location.path('/');
+   //      })
+   //      .catch(function(error) {
+   //        // toastr.error(error.data.message, error.status);
+   //      });
+   //  };
     $scope.authenticate = function() {
       $auth.authenticate('github')
         .then(function(response) {
