@@ -57,9 +57,6 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-	// $authProvider.github({
-      	
- //    	});
 	$authProvider.github({
 	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
@@ -145,6 +142,8 @@ angular.module('myApp', [
 //     }
 //   };
 // })
+
+
 .service('authToken', function() {
     this.name='carine'
     this.login = function(){console.log(this.name, "is logged in")}
@@ -168,7 +167,9 @@ angular.module('myApp', [
     $scope.authenticate = function() {
       $auth.authenticate('github')
         .then(function(response) {
-          console.log('this...', response);
+          var test = JSON.stringify(response.data.user);
+          console.log('this...', test);
+          $scope.username = test;
           // toastr.success('You have successfully signed in with ' + provider + '!');
           $location.path('/');
         })
@@ -184,5 +185,17 @@ angular.module('myApp', [
           }
         });
     };
-});
+})
+
+// .factory('getUsers', [function($http){
+//   return {
+//    getData: function(){
+//       return $http.get({
+//         method
+//       })
+//    },
+
+//   }
+// }])
+
 
