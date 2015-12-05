@@ -1,13 +1,13 @@
 
 {
-  "name": "testapp",
+  "name": "PairedUp",
   "description": "",
   "main": "app.js",
   "authors": [
     "MagCacti"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/MagCacti/testapp",
+  "homepage": "https://github.com/MagCacti/PairedUp",
   "moduleType": [],
   "ignore": [
     "**/.*",
