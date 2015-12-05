@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');å
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 //Line 5 or line 10. Not both. 
@@ -57,3 +57,4 @@ var User = mongoose.model("User", userSchema);
 
 */
 module.exports = User;
+
