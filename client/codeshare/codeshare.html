@@ -17,9 +17,15 @@
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
     </div>
     <div class="col-md-2">
-          <!-- <ice-comm
-            apikey="hKtqGYhzfZCoXXTn5X.XhbswJ7ECxIto51Q65AxOJBqeVP45ha"
-            room="custom room"></ice-comm>
+      <icecomm-connect room="custom room"></icecomm-connect>
+      <icecomm-local><video ng-if="local" autoplay class="icecomm-local"' +
+        'ng-src={{local.stream}}></video></icecomm-local>
+      <icecomm-peer></icecomm-peer>
+      <icecomm-leave></icecomm-leave>
+
+    <!-- <ice-comm
+            
+            room="custom room"></ice-comm> -->
       <div>
           <button ng-if="!!current_room" ng-click="close()">Close</button>
           <input ng-if="!current_room" type="text" ng-keyup="roomEvent()" />
@@ -29,7 +35,7 @@
           <ul><li ng-repeat="peer in peers">
             <video autoplay ng-src="{{peer.stream}}" ></video>
           </li></ul>
-      </div> -->
+      <!-- </div> -->
 
     </div>
 </div>
@@ -75,7 +81,7 @@
   onChange: aceChanged // we can customize this 'listener'
 }" -->
 
-<i>Theme: chaos (nice, professional)</i>
+<!-- <i>Theme: chaos (nice, professional)</i>
 <div ui-ace="{
   useWrapMode : true,
   showGutter: true, 
@@ -103,7 +109,7 @@ var coolCollaboration = function (x, y) {
   padding-top: 50px;
 }
 </div>
-
+ -->
 <!-- <div ui-ace="{
   useWrapMode : true,
   showGutter: false,
@@ -125,7 +131,7 @@ var coolCollaboration = function (x, y) {
   onChange: aceChanged
 }"></div> -->
 
-<script type="text/javascript">var x = 'javascript'</script>
+<!--<script type="text/javascript">var x = 'javascript'</script>
 
 <i>Theme: clouds_midnight (very clean and pleasant)</i>
 <div ui-ace="{
@@ -148,7 +154,7 @@ var coolCollaboration = function (x, y) {
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
-
+ -->
 <!-- <i>Themes: crimson and dawn (boring) -->
 <!-- <div ui-ace="{
   useWrapMode : true,
@@ -171,7 +177,7 @@ var coolCollaboration = function (x, y) {
   onChange: aceChanged
 }"></div> -->
 
-<i>Theme: dreamweaver - javascript</i>
+<<!-- i>Theme: dreamweaver - javascript</i>
 <div ui-ace="{
   useWrapMode : true,
   showGutter: false,
@@ -238,4 +244,8 @@ var coolCollaboration = function (x, y) {
 }"></div>
 
 
+ -->
 <!-- class="ace_editor" We would add this class to use the CSS height and width assignments.--> 
+
+
+

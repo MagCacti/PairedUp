@@ -1,12 +1,13 @@
 angular.module('myApp', [
 	'ui.router',
+  'ngRoute',
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
-        //for client side sockets
-            'btford.socket-io',
-            //for the authentication.
-            'satellizer'
+   //for client side sockets
+  'btford.socket-io',
+    //for the authentication.
+   'satellizer'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
@@ -56,15 +57,16 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-	$authProvider.github({
-      	clientId: "secret"
-    	});
+	// $authProvider.github({
+      	
+ //    	});
 	$authProvider.github({
 	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+    clientId: "6ffd349ee17a258a13ff",
 	  redirectUri: window.location.origin,  
 	  optionalUrlParams: ['scope'],
-	  scope: ['user:email'],
+	  scope: ['user'],
 	  scopeDelimiter: ' ',
 	  type: '2.0',
 	  popupOptions: { width: 1020, height: 618 }
@@ -84,6 +86,7 @@ angular.module('myApp', [
 	      var deferred = $q.defer();
 	      if ($auth.isAuthenticated()) {
 	        deferred.resolve();
+          console.log('hi, i am in');
 	      } else {
 	        $location.path('/login');
 	      }
@@ -91,6 +94,8 @@ angular.module('myApp', [
 	    }
 
 })
+
+
 
 // .directive('iceComm', function($sce) {
 //   return {
@@ -146,22 +151,24 @@ angular.module('myApp', [
  	
 })
 
-.controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/) {
+.controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/, $http) {
 
 
-   $scope.login = function() {
-      $auth.login($scope.user)
-        .then(function() {
-          // toastr.success('You have successfully signed in!');
-          $location.path('/');
-        })
-        .catch(function(error) {
-          // toastr.error(error.data.message, error.status);
-        });
-    };
-    $scope.authenticate = function(provider) {
-      $auth.authenticate(provider)
-        .then(function() {
+   // $scope.login = function() {
+   //    $auth.login($scope.user)
+   //      .then(function() {
+   //    console.log($scope.user);
+   //        // toastr.success('You have successfully signed in!');
+   //        $location.path('/');
+   //      })
+   //      .catch(function(error) {
+   //        // toastr.error(error.data.message, error.status);
+   //      });
+   //  };
+    $scope.authenticate = function() {
+      $auth.authenticate('github')
+        .then(function(response) {
+          console.log('this...', response);
           // toastr.success('You have successfully signed in with ' + provider + '!');
           $location.path('/');
         })
