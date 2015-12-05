@@ -10,8 +10,6 @@ var qs = require('querystring');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 
-
-
     // configuration =================
 
 //serves up static files, otherwise we would not be able to load the index.html file
@@ -22,8 +20,10 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use(bodyParser.urlencoded({'extended':'true'}));            
 
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
-app.use(bodyParser.json());                                  
+app.use(bodyParser.json());            
 
+// Add for deployment:                      
+var port = process.env.PORT || '3000';
 
 var path = require('path');
 var passport = require('passport');
@@ -47,7 +47,7 @@ var socketio = require('socket.io');
 var io = socketio(server);
 
 //listening to server
-server.listen(8080);
+server.listen(port);
 
 // Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
 console.log("App listening on port 8080");
