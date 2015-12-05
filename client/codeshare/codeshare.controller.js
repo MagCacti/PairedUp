@@ -1,13 +1,35 @@
-angular.module('myApp.codeshare', [])
+angular.module('myApp.codeshare', [ ])
 
-.controller('CodeShareController', ['$scope', function($scope){
+.factory('socket', ['$rootScope', function($rootScope) {
+    //A socket connection to our server.
+  var socket = io.connect("http://localhost:8080");
+  return {
+    //listen to events.
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    Realsocket: socket,
+    //give off signals to anyone who might be listening (such as the server).
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+
+    // broadcast: function(eventName, data){
+    //   socket.broadcast.emit(eventName,data);
+    // }
+  };
+}])
+
+.controller('CodeShareController', ['$scope','socket', function($scope, socket){
   console.log('inside the codesharecontroller');
+  console.log("Socket", socket);
+  console.log("RealSocket");
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[0];
-
+  $scope.textInEditor;
 
   $scope.aceOption = {
     mode: $scope.mode.toLowerCase(),
@@ -15,6 +37,32 @@ angular.module('myApp.codeshare', [])
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
       };
+    },
+    onChange: function(_ace) {
+      console.log('arguments',arguments);
+      console.log("_ace", _ace);
+      var sessionDoc = _ace[1].getSession().getDocument();
+      // _ace[1].getSession().getDocument().setValue("Setting the value");
+      if ($scope.textInEditor !==sessionDoc.getValue() ){
+        $scope.textInEditor = sessionDoc.getValue();
+        sessionDoc.setValue($scope.textInEditor);
+        console.log("In the if and we are console logging sessiondoc.getvalue", sessionDoc.getValue());
+        socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
+      }
+
+      console.log("testInEditor", $scope.textInEditor);
+
+      socket.on('notification', function(data) {
+        // _ace[1].getSession().getDocument().setValue($scope.textInEditor);
+        console.log("Just hear a notification from the server");
+        if ($scope.textInEditor !== data.textFromDoc){
+          $scope.textInEditor = data.textFromDoc;
+          sessionDoc.setValue($scope.textInEditor);
+          console.log("We are listening and in the if In the if and we are console logging sessiondoc.getvalue");
+        }
+
+        //I believe apply is important for this controller regardless of what we end up doing. I will research it more and update this comment about its ability.
+        });
     }
   };
 
@@ -31,6 +79,7 @@ angular.module('myApp.codeshare', [])
     $scope.id++
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
+    console.log("This is the text in the editor",$scope.filesList[0].code);
     $scope.title = '';
     $scope.aceModel = '';
 
@@ -76,3 +125,4 @@ angular.module('myApp.codeshare', [])
 
 
 }]);
+

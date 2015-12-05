@@ -179,21 +179,19 @@ app.get('*', function(req, res) {
         res.sendFile(__dirname + '/client/index.html'); 
     });
 
-// When a client wants to connect the Socket.io server, it will first send a handshake HTTP request. The server will then analyze the request to gather the necessary information for ongoing communication. It will then look for configuration middleware that is registered with the server and execute it before firing the connection event. When the client is successfully connected to the server, the connection event listener is executed, exposing a new socket instance. Once the handshaking process is over, the client is connected to the server and all communication with it is handled through the socket instance object. For example, handling a client's disconnection event will be as follows:
 
+//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
-
+  console.log("socket.broadcast", socket.broadcast)
   // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
   
   //listen for a signal called add-customer
-  socket.on('add-customer', function(customer) {
-    console.log("Just heard a add-customer from frontEnd");
+  socket.on('add-customer', function(textFromEditor) {
+    console.log("Just heard a add-customer from Joseph");
     //send a signal to frontEnd called notification
-    io.emit('notification', {
-      message: 'new customer',
-      customer: customer
-    });
+    io.emit('notification', textFromEditor);
+
   });
 });
 
