@@ -1,9 +1,9 @@
 angular.module('myApp', [
 	'ui.router',
+  'ngRoute',
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
-	'Icecomm',
    //for client side sockets
   'btford.socket-io',
     //for the authentication.
@@ -58,7 +58,7 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-      	clientId: "secret"
+      	clientId: "6ffd349ee17a258a13ff"
     	});
 	$authProvider.github({
 	  url: '/auth/github',
@@ -85,6 +85,7 @@ angular.module('myApp', [
 	      var deferred = $q.defer();
 	      if ($auth.isAuthenticated()) {
 	        deferred.resolve();
+          console.log('hi, i am in');
 	      } else {
 	        $location.path('/login');
 	      }
@@ -92,6 +93,8 @@ angular.module('myApp', [
 	    }
 
 })
+
+
 
 // .directive('iceComm', function($sce) {
 //   return {
@@ -160,9 +163,10 @@ angular.module('myApp', [
           // toastr.error(error.data.message, error.status);
         });
     };
-    $scope.authenticate = function(provider) {
-      $auth.authenticate(provider)
-        .then(function() {
+    $scope.authenticate = function() {
+      $auth.authenticate('github')
+        .then(function(response) {
+          console.log('this...', response);
           // toastr.success('You have successfully signed in with ' + provider + '!');
           $location.path('/');
         })
