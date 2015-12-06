@@ -202,20 +202,65 @@ app.get('*', function(req, res) {
   // load the single view file (angular will handle the page changes on the front-end)
         res.sendFile(__dirname + '/client/index.html'); 
     });
+var usersRoom;
+//Example of socket creation
+// app.post('/createSocket', function(req, res) {
+//   usersRoom = req.body.title;
+//   // var nsp = io.of('/my-namespace');
+//   // nsp.on('connection', function(socket){
+//   //   console.log('someone connected'):
+//   // });
+//   // nsp.emit('hi', 'everyone!');
+//   // io.on('connection', function(socket){
+//   // console.log('HELLO FRIEND');
+//   //   socket.join(usersRoom);
+//   globalSocket.join(usersRoom);
+//   console.log("usersRoom", usersRoom)
+//   io.emit(usersRoom);
+//   // io.to(usersRoom).emit(usersRoom);
 
-
+//   // });
+// });
+// var globalSocket;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
-  // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
-  
-  //listen for a signal called add-customer
-  socket.on('add-customer', function(textFromEditor) {
-    console.log("Just heard a add-customer from Joseph");
-    //send a signal to frontEnd called notification
-    io.emit('notification', textFromEditor);
 
-  });
+  //some room will be a variable. 
+  // io.to(usersRoom).emit(usersRoom);
+  //listen for a signal called add-customer. General code
+  // socket.on('add-customer', function(textFromEditor) {
+  //   console.log("Just heard a add-customer from Joseph");
+  //   //send a signal to frontEnd called notification
+  //   io.emit('notification', textFromEditor);
+
+  // });
+//general code
+  socket.on('/create', function(data) {
+    usersRoom = data.title
+    console.log("usersRoom", usersRoom)
+    socket.join(data.title);
+    //send a signal to frontEnd called notification
+    io.emit(usersRoom,data);
+    socket.on(data.title, function(data) {
+      console.log("Just heard a add-customer from Joseph");
+      //send a signal to frontEnd called notification
+      io.emit('notification', data);
+
+    });
+
+    });
+
+
+
+  // socket.on('addToRoom', function(roomName) {
+  //     socket.join(roomName);
+  // });
+   
+  // socket.on('removeFromRoom', function(roomName) {
+  //     socket.leave(roomName);
+  // });
+
 });
 
 

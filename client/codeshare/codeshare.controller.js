@@ -8,15 +8,19 @@ angular.module('myApp.codeshare', [ ])
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
+    join: function(room) {
+      socket.join(room);
+    } ,
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
+      console.log("socket", socket);
       socket.emit(eventName, data);
     }
   };
 }])
 
-.controller('CodeShareController', ['$scope','socket', function($scope, socket){
-  console.log('inside the codesharecontroller');
+.controller('CodeShareController', ['$scope','$http','socket', function($scope, $http, socket){
+  console.log('inside the codesharecontroller', 'and this is io', io);
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
@@ -42,26 +46,42 @@ angular.module('myApp.codeshare', [ ])
         $scope.textInEditor = sessionDoc.getValue();
 
         //send a signal with all the text from the document
-        socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
+        // socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
+        //line below is the general code that works
+         // socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
+         //attemptingto make it document specific
+         socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
         
       }
 
       console.log("testInEditor", $scope.textInEditor);
      
       //When a signal(called notification) is sent, then run the callback function.
+      //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put scope.title
       socket.on('notification', function(data) {
+      // socket.on($scope.title, function(data) {
         //data will be the information the server is sending.
 
         console.log("Just heard a notification from the server");
         //if the text in the document is not the same as the user's version of the text in the editor.
         if ($scope.textInEditor !== data.textFromDoc){
           //set the variable $scope.textInEditor to the text received from the server.
-          $scope.textInEditor = data.textFromDoc;
-          //change the user's document to reflect the other's typing. 
-          sessionDoc.setValue($scope.textInEditor);
-          console.log("We are listening and in the if In the if and we are console logging sessiondoc.getvalue");
+          if ($scope.title === data.title) {
+            $scope.textInEditor = data.textFromDoc;
+            //change the user's document to reflect the other's typing. 
+            sessionDoc.setValue($scope.textInEditor);
+            console.log("We are listening and in the if In the if and we are console logging sessiondoc.getvalue");
+            
+          }
           }
         });
+      // console.log("$scope.title", $scope.title)
+      socket.on($scope.title, function(data) {
+        console.log("Room worked")
+
+        // socket.to('some room').emit('Another event');
+      });
+
       }
   };
 
@@ -85,6 +105,8 @@ angular.module('myApp.codeshare', [ ])
   };
 
   $scope.update = function(id){
+    // var socket = io('/kristina');
+    // var socket = io('/' + $scope.title);
     var index = selectId(id);
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
@@ -100,6 +122,12 @@ angular.module('myApp.codeshare', [ ])
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
+    socket.on($scope.title, function(data) {
+      console.log("Room worked")
+
+      // socket.to('some room').emit('Another event');
+    });
+    socket.emit('/create', {title:$scope.title})
 
   };
 

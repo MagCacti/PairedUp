@@ -1,6 +1,6 @@
 angular.module('myApp', [
 	'ui.router',
-  'ngRoute',
+  // 'ngRoute',
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
