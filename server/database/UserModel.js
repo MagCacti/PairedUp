@@ -13,15 +13,16 @@ var db = require('mongoose').connect(uri);
 
 var userSchema = new Schema({
  username: String,
- firstname: String,
- lastname: String,
- password: String, 
- officeHours: String,
- angular: String, 
- node: String, 
- javascript: String, 
- skill: String,
- interest: String
+ name: String,
+ picture: String
+ // lastname: String,
+ // password: String, 
+ // officeHours: String,
+ // angular: String, 
+ // node: String, 
+ // javascript: String, 
+ // skill: String,
+ // interest: String
 });
 
 
