@@ -182,7 +182,7 @@ app.post('/auth/github', function(req, res) {
         db.findOne({ github: profile.login }, function(err, existingUser) {
           if (existingUser) {
             var token = createJWT(existingUser);
-            return res.send({ token: token });
+            return res.send({ token: token, user: existingUser });
           }
           var user = new db();
           user.username = profile.login;
