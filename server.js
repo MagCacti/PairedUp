@@ -9,7 +9,7 @@ var db = require('./server/database/UserModel');
 
 //start express to app variable
 var app = express();
-var port = 8000;
+var port = 8080;
 
 
 /*
