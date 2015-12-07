@@ -36,19 +36,6 @@ angular.module('myApp', [
 			url: '/map',
 			templateUrl: 'map/map.html'
 		})
-
-		// codeshare was added using the following: https://github.com/angular-ui/ui-ace
-			
-		// 	you can also trying implementing the ace raw 
-
-		// 	https://ace.c9.io/
-
-		// 	in order to view this page you must install bower like so 
-		// 	bower install angular-ui-ace#bower
-		// 	or 
-		// 	bower install -g --save angular-ui-ace#bower
-
-		// 	whatever works for you
 		.state('codeshare', {
 			url: '/codeshare',
 			templateUrl: 'codeshare/codeshare.html',
@@ -61,7 +48,7 @@ angular.module('myApp', [
       	
  //    	});
 	$authProvider.github({
-	  url: '/auth/github',
+	  url: 'https://paired-up.herokuapp.com/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     clientId: "6ffd349ee17a258a13ff",
 	  redirectUri: window.location.origin,  
