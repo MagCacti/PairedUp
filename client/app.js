@@ -48,7 +48,7 @@ angular.module('myApp', [
       	
  //    	});
 	$authProvider.github({
-	  url: 'https://paired-up.herokuapp.com/auth/github',
+	  url: 'https://paired-up.herokuapp.com', 
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     clientId: "6ffd349ee17a258a13ff",
 	  redirectUri: window.location.origin,  
