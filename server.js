@@ -13,6 +13,10 @@ var moment = require('moment');
     // configuration =================
 
 //serves up static files, otherwise we would not be able to load the index.html file
+
+//added for deployment:
+app.set('appPath', 'client');
+
 app.use(express.static(__dirname + '/client'));                 
 //serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
@@ -198,10 +202,19 @@ app.post('/auth/github', function(req, res) {
 });
 
 //for every path request. 
-app.get('*', function(req, res) {
-  // load the single view file (angular will handle the page changes on the front-end)
-        res.sendFile(__dirname + '/client/index.html'); 
-    });
+
+//added for deployment:
+app.route('/*')
+  .get(function(req, res) {
+    res.sendFile(app.get('appPath')+'/index.html');
+  });
+
+
+//commented out the below block of code for deployent:
+// app.get('*', function(req, res) {
+//   // load the single view file (angular will handle the page changes on the front-end)
+//         res.sendFile(__dirname + '/client/index.html'); 
+//     });
 
 
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
