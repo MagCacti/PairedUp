@@ -1,7 +1,6 @@
-
 {
   "name": "PairedUp",
-  "description": "",
+  "description": "Learn, Share, Code ...and give back.",
   "main": "app.js",
   "authors": [
     "MagCacti"
@@ -21,7 +20,6 @@
     "angular": "~1.4.8",
     "angular-ui-ace": "~0.2.3",
     "angular-socket-io": "~0.7.0"
-    
   },
   "resolutions": {
     "angular-ui-ace": "~0.2.3"
