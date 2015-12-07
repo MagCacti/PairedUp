@@ -1,7 +1,7 @@
 angular.module('myApp', [
 	'ui.router',
-  'ngRoute',
-	'angular-ui.ace',
+  // 'ngRoute',
+	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
    //for client side sockets
