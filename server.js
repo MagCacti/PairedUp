@@ -213,7 +213,7 @@ io.on('connection', function(socket) {
   socket.on('add-customer', function(textFromEditor) {
     console.log("Just heard a add-customer from Joseph");
     //send a signal to frontEnd called notification
-    io.broadcast.emit('notification', textFromEditor);
+    socket.broadcast.emit('notification', textFromEditor);
 
   });
 });
