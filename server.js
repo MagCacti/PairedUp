@@ -50,7 +50,7 @@ var io = socketio(server);
 server.listen(port);
 
 // Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
-console.log("App listening on port 8080");
+console.log("App listening.");
 
 
 function createJWT(user){
@@ -213,7 +213,7 @@ io.on('connection', function(socket) {
   socket.on('add-customer', function(textFromEditor) {
     console.log("Just heard a add-customer from Joseph");
     //send a signal to frontEnd called notification
-    io.emit('notification', textFromEditor);
+    io.broadcast.emit('notification', textFromEditor);
 
   });
 });
