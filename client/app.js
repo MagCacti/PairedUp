@@ -14,33 +14,37 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/signup');
 
 	$stateProvider
-		.state('signup', {
-			url: '/signup',
-			templateUrl: 'auth/signup/signup.html'
-		})
-		.state('mentee', {
-			url: '/mentee',
-			templateUrl: 'auth/signup/menteesignup.html'
-		})
-		.state('mentor', {
-			url: '/mentor',
-			templateUrl: 'auth/signup/mentorsignup.html'
-		})
-
-		.state('login', {
-			url: '/login',
-			templateUrl: 'auth/login/login.html',
-			controller: 'LoggedIn'
-		})
-		.state('map', {
-			url: '/map',
-			templateUrl: 'map/map.html'
-		})
+	
 		.state('codeshare', {
 			url: '/codeshare',
 			templateUrl: 'codeshare/codeshare.html',
 			controller: 'CodeShareController'
 		})
+    .state('login', {
+      url: '/login',
+      templateUrl: 'auth/login/login.html',
+      controller: 'LoggedIn'
+    })
+    .state('map', {
+      url: '/map',
+      templateUrl: 'map/map.html'
+    })
+    .state('mentee', {
+      url: '/mentee',
+      templateUrl: 'auth/signup/menteesignup.html'
+    })
+    .state('mentor', {
+      url: '/mentor',
+      templateUrl: 'auth/signup/mentorsignup.html'
+    })
+    .state('signup', {
+      url: '/signup',
+      templateUrl: 'auth/signup/signup.html'
+    })
+    .state('profile', {
+      url: '/profile',
+      templateUrl: 'user/profile.html'
+    })
 
 	$urlRouterProvider.otherwise('/');
 
