@@ -37,13 +37,13 @@ angular.module('myApp', [
       url: '/mentor',
       templateUrl: 'auth/signup/mentorsignup.html'
     })
-    .state('signup', {
-      url: '/signup',
-      templateUrl: 'auth/signup/signup.html'
-    })
     .state('profile', {
       url: '/profile',
       templateUrl: 'user/profile.html'
+    })
+    .state('signup', {
+      url: '/signup',
+      templateUrl: 'auth/signup/signup.html'
     })
 
 	$urlRouterProvider.otherwise('/');
