@@ -14,33 +14,37 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/signup');
 
 	$stateProvider
-		.state('signup', {
-			url: '/signup',
-			templateUrl: 'auth/signup/signup.html'
-		})
-		.state('mentee', {
-			url: '/mentee',
-			templateUrl: 'auth/signup/menteesignup.html'
-		})
-		.state('mentor', {
-			url: '/mentor',
-			templateUrl: 'auth/signup/mentorsignup.html'
-		})
-
-		.state('login', {
-			url: '/login',
-			templateUrl: 'auth/login/login.html',
-			controller: 'LoggedIn'
-		})
-		.state('map', {
-			url: '/map',
-			templateUrl: 'map/map.html'
-		})
+	
 		.state('codeshare', {
 			url: '/codeshare',
 			templateUrl: 'codeshare/codeshare.html',
 			controller: 'CodeShareController'
 		})
+    .state('login', {
+      url: '/login',
+      templateUrl: 'auth/login/login.html',
+      controller: 'LoggedIn'
+    })
+    .state('map', {
+      url: '/map',
+      templateUrl: 'map/map.html'
+    })
+    .state('mentee', {
+      url: '/mentee',
+      templateUrl: 'auth/signup/menteesignup.html'
+    })
+    .state('mentor', {
+      url: '/mentor',
+      templateUrl: 'auth/signup/mentorsignup.html'
+    })
+    .state('profile', {
+      url: '/profile',
+      templateUrl: 'user/profile.html'
+    })
+    .state('signup', {
+      url: '/signup',
+      templateUrl: 'auth/signup/signup.html'
+    })
 
 	$urlRouterProvider.otherwise('/');
 
@@ -48,7 +52,7 @@ angular.module('myApp', [
       	
  //    	});
 	$authProvider.github({
-	  url: 'https://paired-up.herokuapp.com', 
+	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     clientId: "6ffd349ee17a258a13ff",
 	  redirectUri: window.location.origin,  
