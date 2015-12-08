@@ -12,7 +12,7 @@ var moment = require('moment');
 
 
 
-    // configuration =================
+    // configuration 
 
 //serves up static files, otherwise we would not be able to load the index.html file
 app.use(express.static(__dirname + '/client'));                 
