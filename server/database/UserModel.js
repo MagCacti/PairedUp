@@ -12,9 +12,10 @@ var uri = 'mongodb://username:password@ds061954.mongolab.com:61954/heroku_z1qhwk
 var db = require('mongoose').connect(uri);
 
 var userSchema = new Schema({
- username: String,
+ displayName: String,
  name: String,
- picture: String
+ picture: String,
+ github: String
  // lastname: String,
  // password: String, 
  // officeHours: String,
