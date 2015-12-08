@@ -10,7 +10,7 @@ var qs = require('querystring');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 
-
+var hardcodedUsers = [{name: "Kristina"}, {name: "Joseph"}]
 
     // configuration =================
 
@@ -245,11 +245,17 @@ io.on('connection', function(socket) {
     socket.on(data.title, function(data) {
       console.log("Just heard a add-customer from Joseph");
       //send a signal to frontEnd called notification
-      io.emit('notification', data);
-
+      socket.broadcast.emit('notification', data);
+      });
     });
-
-    });
+  //working on chat feature with sockets
+    socket.on('new message', function(message) {
+      //store message in database. 
+      console.log("Going through new message socket.")
+      //sending stuff back to fronEnd for example. 
+      console.log("message", message)
+      io.emit('publish message', message);
+      });
 
 
 

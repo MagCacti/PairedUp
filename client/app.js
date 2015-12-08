@@ -184,5 +184,50 @@ angular.module('myApp', [
           }
         });
     };
-});
+})//;
 
+.factory('socket', ['$rootScope', function($rootScope) {
+    //A socket connection to our server.
+  var socket = io.connect("http://localhost:8080");
+  return {
+    //listen to events.
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    join: function(room) {
+      socket.join(room);
+    } ,
+    //give off signals to anyone who might be listening (such as the server).
+    emit: function(eventName, data) {
+      console.log("socket", socket);
+      socket.emit(eventName, data);
+    }
+  };
+}])
+//example chat for front end. 
+.controller('ExampleController', ['$scope','$http','socket', function($scope, $http, socket){
+      $scope.list = [];
+      $scope.text = 'hello';
+      socket.on("publish message", function(data) {
+        //will display this data on the front end.
+        console.log("going through socket.on");
+        console.log("Data.text", data.text);
+        $scope.text = data.text;
+        // $scope.render(data.text);
+        // $scope.list.push(data.text); 
+      });
+
+      $scope.render = function(text){
+        $scope.list.push(text);
+      }
+      $scope.submit = function() {
+        if ($scope.text) {
+         console.log("Going through if statement")
+         //emit a new message with the text data. Will store this in the database. 
+          socket.emit('new message', {text: $scope.text});
+          //listening to the signal the server will put up.
+          $scope.list.push($scope.text);
+          $scope.text = '';
+        }
+      };
+    }]);
