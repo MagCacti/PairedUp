@@ -6,7 +6,8 @@ angular.module('myApp', [
    //for client side sockets
   'btford.socket-io',
     //for the authentication.
-   'satellizer'
+   'satellizer',
+   'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
@@ -56,9 +57,6 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-	// $authProvider.github({
-      	
- //    	});
 	$authProvider.github({
 	  url: '/auth/github',
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
@@ -95,10 +93,6 @@ angular.module('myApp', [
 })
 
 
-
-
-      
-
 .service('authToken', function() {
     this.name='carine'
     this.login = function(){console.log(this.name, "is logged in")}
@@ -122,7 +116,9 @@ angular.module('myApp', [
     $scope.authenticate = function() {
       $auth.authenticate('github')
         .then(function(response) {
-          console.log('this...', response);
+          var test = JSON.stringify(response.data.user);
+          console.log('this...', test);
+          $scope.username = test;
           // toastr.success('You have successfully signed in with ' + provider + '!');
           $location.path('/');
         })
@@ -138,5 +134,28 @@ angular.module('myApp', [
           }
         });
     };
-});
+})
+
+// .factory('getUsers', [function($http){
+//   return {
+//    getData: function(){
+//       return $http.get({
+//         method
+//       })
+//    },
+
+//   }
+// }])
+
+.controller('LogOut', ['$scope', '$location', '$auth', function($scope, $location, $auth){
+    if(!$auth.isAuthenticated()){
+      return;
+    }
+    $auth.logout()
+      .then(function(){
+        console.log('Logged out yo!!!');
+        $state.go('signup');
+      });
+}]);
+
 
