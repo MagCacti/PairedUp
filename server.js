@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json());            
 
 // Added for deployment:                      
-var port = process.env.PORT || '3000';
+var port = process.env.PORT || '8080';
 
 var path = require('path');
 var passport = require('passport');
@@ -123,9 +123,6 @@ app.post("/updated",requestHandlerFuncForUpdatingInfo);
 // //   }
 // // ));
 
-
-
-
 // /*Login Github Oauth Angular stuff too*/
 app.post('/auth/github', function(req, res) {
   console.log('this.....', res);
@@ -202,7 +199,6 @@ app.get('*', function(req, res) {
   // load the single view file (angular will handle the page changes on the front-end)
         res.sendFile(__dirname + '/client/index.html'); 
     });
-
 
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
