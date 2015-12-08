@@ -198,4 +198,15 @@ angular.module('myApp', [
 //   }
 // }])
 
+.controller('LogOut', ['$scope', '$location', '$auth', function($scope, $location, $auth){
+    if(!$auth.isAuthenticated()){
+      return;
+    }
+    $auth.logout()
+      .then(function(){
+        console.log('Logged out yo!!!');
+        $state.go('signup');
+      });
+}]);
+
 
