@@ -1,13 +1,12 @@
 angular.module('myApp', [
 	'ui.router',
-  // 'ngRoute',
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
-   //for client side sockets
-  'btford.socket-io',
-    //for the authentication.
-   'satellizer'
+            //for client side sockets
+            'btford.socket-io',
+             //for the authentication.
+            'satellizer'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
@@ -194,65 +193,34 @@ angular.module('myApp', [
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
-    join: function(room) {
-      socket.join(room);
-    } ,
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
-      console.log("socket", socket);
       socket.emit(eventName, data);
     }
   };
 }])
 //example chat for front end. 
-.controller('ExampleController', ['$scope','$http',/*'$watch',*/'socket', function($scope, $http,/*watch*/ socket){
-      
-
-      //Testing get data from file upload
-      // $scope.getFileInfo = function() {
-      //   console.log('Going through get file info function');
-      //   $http.get('/testingGettingTextDocument').then(function(response) {
-      //       console.log("response from server to client", response);
-      //   })
-      // }
-
-      //end testing get data from file upload
-
-
-
-    //My implementation of watch to fix the problem is not working. 
-      $scope.list = [];
-      // $scope.text = 'hello';
-      socket.on("publish message", function(data) {
-        //will display this data on the front end.
-        console.log("Data.text", data.text);
+.controller('ExampleController', ['$scope', '$http', 'socket', function($scope, $http, socket){
+      //Where the text is held for the template chat. The template chat is not persisting data.
+    $scope.list = [];
+      //Listen when the server emits publish message and preform the a callback. This is to simulate going back to the server and have the info come back, as we will on the fully functional chat. 
+    socket.on("publish message", function(data) {
+        //set $scope.text to the text from the messages we received from the server (and database (?)).
         $scope.text = data.text;
-        // $scope.$watch('list', function() {
-        //     // if (data.text !== oldVal && $scope.text !== '') {
-        //     //     $scope.list.push($scope.text);
-        //     // }
-        //     alert("Hi there.")
-        // });
-      $scope.$apply(function(){
-        $scope.list.push(data.text); 
+        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
+        $scope.$apply(function(){
+            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
+            $scope.list.push(data.text); 
         
-      });
-            // $scope.render(data.text);
-        // console.log("going through socket.on", "This is list", $scope.list);
-      });
+        });
+    });
 
-      // $scope.render = function(text){
-      //   $scope.list.push(text);
-      // }
-      $scope.submit = function() {
+    //When someone clicks the submit button for the template chat.
+    $scope.submit = function() {
+        //if there is text in the box.
         if ($scope.text) {
-
-         console.log("Going through if statement")
-         //emit a new message with the text data. Will store this in the database. 
-          socket.emit('new message', {text: $scope.text});
-          //listening to the signal the server will put up.
-          // $scope.list.push($scope.text);
-          // $scope.text = '';
+            //emit a new message with the text data. Will store this in the database. 
+            socket.emit('new message', {text: $scope.text});
         }
-      };
-    }]);
+    };
+}]);
