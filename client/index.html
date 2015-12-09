@@ -48,12 +48,22 @@
       </div><!--/.nav-collapse -->
     </div>
   </nav>
+  <!-- Chat Template -->
    <form ng-submit="submit()" ng-controller="ExampleController">
      Enter text and hit enter:
      <input type="text" ng-model="text" name="text" />
      <input type="submit" id="submit" value="Submit" />
+
      <pre>list={{list}}</pre>
    </form>
+<!-- Ending Chat Template -->
+
+<!-- Form for uploading files -->
+   <form enctype="multipart/form-data" action="/fileUpload" method="post">
+       <input type= "file" input id="image-file" type="file" />
+       <button>Submit File</button>
+   </form>  
+<!-- Ending form for uploading files -->
     <!-- NG-VIEW BEGIN-->
     <div ui-view></div>
      <!--NG-VIEW END-->
