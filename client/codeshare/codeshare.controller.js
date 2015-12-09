@@ -115,7 +115,7 @@ angular.module('myApp.codeshare', [ ])
     $scope.aceModel = '';
 
   };
-
+//After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
     socket.on($scope.title, function(data) {
       console.log("Room worked")
