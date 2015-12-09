@@ -8,19 +8,14 @@ angular.module('myApp.codeshare', [ ])
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
-    join: function(room) {
-      socket.join(room);
-    } ,
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
-      console.log("socket", socket);
       socket.emit(eventName, data);
     }
   };
 }])
 
 .controller('CodeShareController', ['$scope','$http','socket', function($scope, $http, socket){
-  console.log('inside the codesharecontroller', 'and this is io', io);
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
@@ -36,69 +31,51 @@ angular.module('myApp.codeshare', [ ])
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
           
       };
-      var sessionDoc = _ace.getSession().getDocument()
-      $scope.doc = sessionDoc;
+      //store the document of the session to a variable. 
+      $scope.doc = _ace.getSession().getDocument();
      
     },
     //When someone changes the document (for example, typing in the document.)
     onChange: function(_ace) {
-      //The document the person is typing on.
-      console.log(_ace)
+      //store the document of the session to a variable. 
       var sessionDoc = _ace[1].getSession().getDocument();
       //Was erroring without this if statement. Not sure why. 
       if ($scope.textInEditor !== sessionDoc.getValue() ) {
         //setting $scope.textInEditor equal to the text in the document
         $scope.textInEditor = sessionDoc.getValue();
 
-        //send a signal with all the text from the document
-        // socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
-        //line below is the general code that works
-         // socket.emit('add-customer', {textFromDoc: $scope.textInEditor});
-         //attemptingto make it document specific
+         //send a signal with the title from the document and the text from the document. 
          socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
         
       }
-
-      // console.log("testInEditor", $scope.textInEditor);
      
       //When a signal(called notification) is sent, then run the callback function.
-      //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put scope.title
+      //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put notification
       socket.on('notification', function(data) {
-      // socket.on($scope.title, function(data) {
         //data will be the information the server is sending.
 
-        console.log("Just heard a notification from the server");
         //if the text in the document is not the same as the user's version of the text in the editor.
         if ($scope.textInEditor !== data.textFromDoc){
-          //set the variable $scope.textInEditor to the text received from the server.
+          //if the title of the user is the same as the title of the other user(s).
           if ($scope.title === data.title) {
+          //set the variable $scope.textInEditor to the text received from the server.
             $scope.textInEditor = data.textFromDoc;
             //change the user's document to reflect the other's typing. 
             sessionDoc.setValue($scope.textInEditor);
-            console.log("We are listening and in the if In the if and we are console logging sessiondoc.getvalue");
             
-          }
-          }
-        });
-      // console.log("$scope.title", $scope.title)
-      socket.on($scope.title, function(data) {
-        console.log("Room worked")
-
-        // socket.to('some room').emit('Another event');
+            }
+        }
       });
-
-      }
+    }
   };
+  //listening to when the server emits the file's data.
   socket.on("fileData", function( data) {
-    // console.log("This is ace in socket for front end upload file", _ace)
-    // var sessionDoc = _ace.getSession().getDocument()
-    console.log("Data from the client side socket listening to fileData")
+    //$scope.textInEditor will be set to the text (called data) from the file
    $scope.textInEditor = data;
-   // sessionDoc.setValue($scope.textInEditor);
-   console.log("$scope.doc", $scope.doc, "$scope.textInEditor", $scope.textInEditor)
+   //set the documents value to the text from the server.
    $scope.doc.setValue($scope.textInEditor);
-    console.log("this is data from the file by socket io", data);
-  })
+  });
+
   $scope.aceModel = ';; Scheme code in here.\n' +
     '(define (double x)\n\t(* x x))\n\n\n' +
     '<!-- XML code in here. -->\n' +
@@ -119,8 +96,6 @@ angular.module('myApp.codeshare', [ ])
   };
 
   $scope.update = function(id){
-    // var socket = io('/kristina');
-    // var socket = io('/' + $scope.title);
     var index = selectId(id);
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
@@ -131,27 +106,16 @@ angular.module('myApp.codeshare', [ ])
   };
 //After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
-    socket.on($scope.title, function(data) {
-      console.log("Room worked")
-
-      // socket.to('some room').emit('Another event');
-    });
+   //emiting a message to server called /create which will have the users join a room
     socket.emit('/create', {title:$scope.title})
+    }
 
-  }
   $scope.edit = function(id){
     var index = selectId(id);
     var item = $scope.filesList[index];
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
-    // socket.on($scope.title, function(data) {
-    //   console.log("Room worked")
-
-    //   // socket.to('some room').emit('Another event');
-    // });
-    // socket.emit('/create', {title:$scope.title})
-
   };
 
   $scope.delete = function(id){
