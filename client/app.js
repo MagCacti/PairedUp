@@ -207,6 +207,21 @@ angular.module('myApp', [
 //example chat for front end. 
 .controller('ExampleController', ['$scope','$http',/*'$watch',*/'socket', function($scope, $http,/*watch*/ socket){
       
+
+      //Testing get data from file upload
+      // $scope.getFileInfo = function() {
+      //   console.log('Going through get file info function');
+      //   $http.get('/testingGettingTextDocument').then(function(response) {
+      //       console.log("response from server to client", response);
+      //   })
+      // }
+
+      //end testing get data from file upload
+
+      socket.on("fileData", function( data) {
+        console.log("this is data from the file by socket io", data);
+      })
+
     //My implementation of watch to fix the problem is not working. 
       $scope.list = [];
       // $scope.text = 'hello';
