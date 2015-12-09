@@ -1,8 +1,9 @@
 //require express
 var express = require('express');
 //instantiate an express object
+var fs = require('fs');
+var multer  = require('multer')
 var app = express();                              
-var bodyParser = require('body-parser');   
 var favicon = require('express-favicon');
 var cookieParser = require('cookie-parser');
 var request = require('request');
@@ -11,13 +12,17 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 
 var hardcodedUsers = [{name: "Kristina"}, {name: "Joseph"}]
-
+//read contents of entire file.
+var readFile = require( 'utils-fs-read-file' );
     // configuration =================
 //for file uploading
-var multer  = require('multer');
+// var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var bodyParser = require('body-parser');   
+app.use(upload.single('string'));
 //the next two lines may be unusual. 
-var busboy = require("connect-busboy");
-app.use(busboy({ immediate: true }));
+// var busboy = require("connect-busboy");
+// app.use(busboy({ immediate: true }));
 //ending file uploading modules
 
 //serves up static files, otherwise we would not be able to load the index.html file
@@ -28,7 +33,8 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use(bodyParser.urlencoded({'extended':'true'}));            
 
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
-app.use(bodyParser.json());                                  
+app.use(bodyParser.json());   
+// app.use(bodyParser());                               
 
 
 var path = require('path');
@@ -292,11 +298,57 @@ io.on('connection', function(socket) {
 
 });
 
+app.get('/testingGettingTextDocument', function(req,res) {
+  console.log("Content on the server side before giving to the client.", content)
+  // return JSON.stringify(content);
+  res.json(content);
+})
+var content;
+var consoleLog = function(data) {
+ console.log("This is the data of the file in the other function",data);
+}
+    var onFile = function ( error, data ) {
+      if ( error ) {
+        console.error( error );
+      } else {
+        console.log( data );
+        content = data;
+      }
+     }
 //Checking the upload
-app.post('/fileUpload', multer({ dest: './uploads/'}).single('upl'),function(req, res, next) {
+app.post('/fileUpload', /*upload.single('string') ,*/function(req, res, next) {
   console.log("Successfully uploaded a file.");
+    console.log("req.body", req.body); //form fields
+    // console.log("req.file", req.file); //form fields
+    // console.log(req.headers['content-type'])
+    /* example output:
+    { title: 'abc' }
+     */
+     // console.log("This is the path ./" +req.file.path)
+     readFile(req.file.path, 'ascii', onFile );
+     console.log("This is console before emiting it by socket", content)
+      io.emit('fileData', content);
+     // fs.readFile(req.file.path, 'ascii',function (err, data) {
+     //   if (err) throw err;
+     //   content = data;
+     //   // console.log("data from fs readFile", data);
+     // });
+     // // console.log("this is content", content)
+     // consoleLog(content);
+    // console.log("req.file",req.file); //form files
+    /* example output:
+              { fieldname: 'upl',
+                originalname: 'grumpy.png',
+                encoding: '7bit',
+                mimetype: 'image/png',
+                destination: './uploads/',
+                filename: '436ec561793aa4dc475a88e84776b1b9',
+                path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
+                size: 277056 }
+     */
+    // res.status(204).end();
   // console.log("Req", req);
-  if(req.busboy) {
+  // if(req.busboy) {
       //   req.busboy.on("file", function(fieldName, fileStream, fileName, encoding, mimeType) {
       //       //Handle file stream here
       //   console.log("We went through the busBoy")
@@ -308,44 +360,44 @@ app.post('/fileUpload', multer({ dest: './uploads/'}).single('upl'),function(req
       //   req.busboy.on('field', function(fieldname, val) {
       //   console.log(fieldname, val);
       // });
-      req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        console.log("in the file busboy listner")
-          if (!filename) {
-            // If filename is not truthy it means there's no file
-            return;
-          }
-          // Create the initial array containing the stream's chunks
-          file.fileRead = [];
+      // req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+      //   console.log("in the file busboy listner")
+      //     if (!filename) {
+      //       // If filename is not truthy it means there's no file
+      //       return;
+      //     }
+      //     // Create the initial array containing the stream's chunks
+      //     file.fileRead = [];
 
-          file.on('data', function(chunk) {
-            // Push chunks into the fileRead array
-            this.fileRead.push(chunk);
-          });
+      //     file.on('data', function(chunk) {
+      //       // Push chunks into the fileRead array
+      //       this.fileRead.push(chunk);
+      //     });
 
-          file.on('error', function(err) {
-            console.log('Error while buffering the stream: ', err);
-          });
+      //     file.on('error', function(err) {
+      //       console.log('Error while buffering the stream: ', err);
+      //     });
 
-          file.on('end', function() {
-            // Concat the chunks into a Buffer
-            var finalBuffer = Buffer.concat(this.fileRead);
+      //     file.on('end', function() {
+      //       // Concat the chunks into a Buffer
+      //       var finalBuffer = Buffer.concat(this.fileRead);
 
-            req.files[fieldname] = {
-              buffer: finalBuffer,
-              size: finalBuffer.length,
-              filename: filename,
-              mimetype: mimetype
-            };
+      //       req.files[fieldname] = {
+      //         buffer: finalBuffer,
+      //         size: finalBuffer.length,
+      //         filename: filename,
+      //         mimetype: mimetype
+      //       };
 
-          });
-        });
-      console.log("req.body", req.body)
-      console.log("req.files", req.files)
-        var totalFile = req.pipe(req.busboy);
-        console.log(totalFile)
-        console.log("Req.body", req.body);
-        return req.pipe(req.busboy);
-    }
+      //     });
+      //   });
+      // console.log("req.body", req.body)
+      // console.log("req.files", req.files)
+      //   var totalFile = req.pipe(req.busboy);
+      //   console.log(totalFile)
+      //   console.log("Req.body", req.body);
+      //   return req.pipe(req.busboy);
+    // }
     //Something went wrong -- busboy was not loaded
 });
 
