@@ -205,29 +205,41 @@ angular.module('myApp', [
   };
 }])
 //example chat for front end. 
-.controller('ExampleController', ['$scope','$http','socket', function($scope, $http, socket){
+.controller('ExampleController', ['$scope','$http',/*'$watch',*/'socket', function($scope, $http,/*watch*/ socket){
+      
+    //My implementation of watch to fix the problem is not working. 
       $scope.list = [];
-      $scope.text = 'hello';
+      // $scope.text = 'hello';
       socket.on("publish message", function(data) {
         //will display this data on the front end.
-        console.log("going through socket.on");
         console.log("Data.text", data.text);
         $scope.text = data.text;
-        // $scope.render(data.text);
-        // $scope.list.push(data.text); 
+        // $scope.$watch('list', function() {
+        //     // if (data.text !== oldVal && $scope.text !== '') {
+        //     //     $scope.list.push($scope.text);
+        //     // }
+        //     alert("Hi there.")
+        // });
+      $scope.$apply(function(){
+        $scope.list.push(data.text); 
+        
+      });
+            // $scope.render(data.text);
+        // console.log("going through socket.on", "This is list", $scope.list);
       });
 
-      $scope.render = function(text){
-        $scope.list.push(text);
-      }
+      // $scope.render = function(text){
+      //   $scope.list.push(text);
+      // }
       $scope.submit = function() {
         if ($scope.text) {
+
          console.log("Going through if statement")
          //emit a new message with the text data. Will store this in the database. 
           socket.emit('new message', {text: $scope.text});
           //listening to the signal the server will put up.
-          $scope.list.push($scope.text);
-          $scope.text = '';
+          // $scope.list.push($scope.text);
+          // $scope.text = '';
         }
       };
     }]);
