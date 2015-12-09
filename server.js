@@ -250,6 +250,23 @@ io.on('connection', function(socket) {
     });
   //working on chat feature with sockets
     socket.on('new message', function(message) {
+      console.log('db', db);
+      // window.pairedUp = '123';
+      var JosephMessages = new db.messages({
+        nameOfChat: "Joseph", 
+        messageContent: "This is a message"
+      });
+      JosephMessages.save(function(err, results){
+        if (err) {
+          console.log("err", err);
+        }
+        else {
+          console.log("Saved into MONGODB Success")
+        }
+        db.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
+          console.log("ALL THE JOSEPH MESSAGES", results);
+        });
+      })
       //store message in database. 
       console.log("Going through new message socket.")
       //sending stuff back to fronEnd for example. 
