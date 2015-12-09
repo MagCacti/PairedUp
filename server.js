@@ -4,61 +4,65 @@ var favicon = require('serve-favicon');
 var app = express();                              
 app.use(favicon(__dirname + "/favicon.ico"));
 var fs = require('fs');
+//needed for uploading the file. might not be, I'll doublecheck
 var multer  = require('multer')
 var cookieParser = require('cookie-parser');
 var request = require('request');
+//JS:I don't know what qs is doing in this program. 
 var qs = require('querystring');
+//JS:I don't know what jwt is doing in this program. 
 var jwt = require('jwt-simple');
+//JS:I don't know what moment is doing in this program. 
 var moment = require('moment');
+//needed for uploading a file. might not be, I'll doublecheck
 var upload = multer({ dest: 'uploads/' });
 var bodyParser = require('body-parser');   
+//needed for uploading a file. might not be, I'll doublecheck
 app.use(upload.single('string'));
 //DELETE BusBoy in package.json
-//the next two lines may be unusual. 
-// var busboy = require("connect-busboy");
-// app.use(busboy({ immediate: true }));
-//ending file uploading modules
+
 
 //serves up static files, otherwise we would not be able to load the index.html file
 app.use(express.static(__dirname + '/client'));                 
 //serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
+//not sure what this does. Need to research. 
 app.use(bodyParser.urlencoded({'extended':'true'}));            
 
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
 app.use(bodyParser.json());   
-// app.use(bodyParser());                               
 
-
-var path = require('path');
-var passport = require('passport');
-var githubsecret = require('passport-github').Strategy;
-// var secret = require('githubsecret');
-// // var findOneOrCreate = require('mongoose-find-one-or-create');
-// //should have access to user mongoose model with this
-var mongoose = require('mongoose');
-
-var db = require('./server/database/UserModel');
-
-//Necessary for sockets.
 var http = require('http');
-
+var path = require('path');
+//should have access to user mongoose model with this
+var mongoose = require('mongoose');
+// //should have access to user mongoose model and message mongoose model with this.
+var db = require('./server/database/UserModel');
 //I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
 //Necessary for making sockets.
 var server = http.Server(app);
-
 //The docs are not clear on the next two lines.Both lines are necessary for sockets.
 var socketio = require('socket.io');
 var io = socketio(server);
-
 //listening to server
 server.listen(8080);
-
-// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
 console.log("App listening on port 8080");
 
+// var passport = require('passport');
+// var githubsecret = require('passport-github').Strategy;
+// var secret = require('githubsecret');
+// // var findOneOrCreate = require('mongoose-find-one-or-create');
 
+
+
+
+
+
+
+// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
+
+//JS: I do not know what this does
 function createJWT(user){
   var payload = {
     sub: user._id,
