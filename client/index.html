@@ -59,10 +59,10 @@
 <!-- Ending Chat Template -->
 
 <!-- Form for uploading files -->
-   <form enctype="multipart/form-data" action="/fileUpload" method="post">
-       <input type= "file" input id="image-file" type="file" />
-       <button>Submit File</button>
-   </form>  
+<form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+    <input type="file" name="string">
+    <input type="submit" value="Upload File">
+</form>
 <!-- Ending form for uploading files -->
     <!-- NG-VIEW BEGIN-->
     <div ui-view></div>
