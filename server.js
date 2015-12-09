@@ -48,6 +48,7 @@ var io = socketio(server);
 //listening to server
 server.listen(8080);
 console.log("App listening on port 8080");
+// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
 
 // var passport = require('passport');
 // var githubsecret = require('passport-github').Strategy;
@@ -60,7 +61,6 @@ console.log("App listening on port 8080");
 
 
 
-// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
 
 //JS: I do not know what this does
 function createJWT(user){
@@ -109,13 +109,7 @@ app.all('/*', function(req, res, next) {
 
 // app.post('/login', requestHandlerFuncForLogInOrSignUp);
 
-// //When the user updates their information. 
-var requestHandlerFuncForUpdatingInfo = function(req, res, next) {
-//    //find the user who we are updating
-//    //update them. 
-//    //send the info back to frontEnd(?). 
-};
-app.post("/updated",requestHandlerFuncForUpdatingInfo);
+
 
 //Not sure if we still need the next 13 lines. 
 
@@ -213,25 +207,7 @@ app.get('*', function(req, res) {
         res.sendFile(__dirname + '/client/index.html'); 
     });
 var usersRoom;
-//Example of socket creation
-// app.post('/createSocket', function(req, res) {
-//   usersRoom = req.body.title;
-//   // var nsp = io.of('/my-namespace');
-//   // nsp.on('connection', function(socket){
-//   //   console.log('someone connected'):
-//   // });
-//   // nsp.emit('hi', 'everyone!');
-//   // io.on('connection', function(socket){
-//   // console.log('HELLO FRIEND');
-//   //   socket.join(usersRoom);
-//   globalSocket.join(usersRoom);
-//   console.log("usersRoom", usersRoom)
-//   io.emit(usersRoom);
-//   // io.to(usersRoom).emit(usersRoom);
 
-//   // });
-// });
-// var globalSocket;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
