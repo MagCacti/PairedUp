@@ -1,26 +1,19 @@
-//require express
 var express = require('express');
-//instantiate an express object
 var favicon = require('serve-favicon');
+//instantiate an express object
 var app = express();                              
 app.use(favicon(__dirname + "/favicon.ico"));
 var fs = require('fs');
 var multer  = require('multer')
-// var favicon = require('express-favicon');
 var cookieParser = require('cookie-parser');
 var request = require('request');
 var qs = require('querystring');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-var hardcodedUsers = [{name: "Kristina"}, {name: "Joseph"}]
-//read contents of entire file.
-var readFile = require( 'utils-fs-read-file' );
-    // configuration =================
-//for file uploading
-// var multer  = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var bodyParser = require('body-parser');   
 app.use(upload.single('string'));
+//DELETE BusBoy in package.json
 //the next two lines may be unusual. 
 // var busboy = require("connect-busboy");
 // app.use(busboy({ immediate: true }));
@@ -307,28 +300,54 @@ app.get('/testingGettingTextDocument', function(req,res) {
 var content;
 var consoleLog = function(data) {
  console.log("This is the data of the file in the other function",data);
+ io.emit('fileData', content);
+
 }
     var onFile = function ( error, data ) {
       if ( error ) {
         console.error( error );
       } else {
-        console.log( data );
+        // console.log( data );
         content = data;
+        consoleLog(content)
+
       }
      }
 //Checking the upload
 app.post('/fileUpload', /*upload.single('string') ,*/function(req, res, next) {
   console.log("Successfully uploaded a file.");
     console.log("req.body", req.body); //form fields
-    // console.log("req.file", req.file); //form fields
+    console.log("req.file", req.file); //form fields
     // console.log(req.headers['content-type'])
     /* example output:
     { title: 'abc' }
      */
      // console.log("This is the path ./" +req.file.path)
-     readFile(req.file.path, 'ascii', onFile );
+     fs.readFile(req.file.path, 'ascii', onFile );
+     //delete readFile in package.json
+
+
+
+     // readFile(req.file.path, 'ascii', onFile );
+     // fs.stat( req.file.path, function( error, stats) { 
+     //  fs.open( req.file.path, "r", function( error, fd) { 
+     //    var buffer = new Buffer( stats.size); 
+     //    fs.read( fd, buffer, 0, buffer.length, null, function( error, bytesRead, buffer) { 
+     //      var data = buffer.toString("utf8");
+     //       console.log("This is data with the method from computer book",data); 
+     //       content = data;
+     //       consoleLog(content)
+     //     }); 
+     //  });
+     //  });
+
+
+// var f
      console.log("This is console before emiting it by socket", content)
-      io.emit('fileData', content);
+
+
+
+      // io.emit('fileData', content);
      // fs.readFile(req.file.path, 'ascii',function (err, data) {
      //   if (err) throw err;
      //   content = data;
@@ -400,5 +419,6 @@ app.post('/fileUpload', /*upload.single('string') ,*/function(req, res, next) {
       //   return req.pipe(req.busboy);
     // }
     //Something went wrong -- busboy was not loaded
+      // io.emit('fileData', content);
 });
 
