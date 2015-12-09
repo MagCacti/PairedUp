@@ -1,16 +1,17 @@
 //require express
 var express = require('express');
 //instantiate an express object
+var favicon = require('serve-favicon');
+var app = express();                              
+app.use(favicon(__dirname + "/favicon.ico"));
 var fs = require('fs');
 var multer  = require('multer')
-var app = express();                              
-var favicon = require('express-favicon');
+// var favicon = require('express-favicon');
 var cookieParser = require('cookie-parser');
 var request = require('request');
 var qs = require('querystring');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-
 var hardcodedUsers = [{name: "Kristina"}, {name: "Joseph"}]
 //read contents of entire file.
 var readFile = require( 'utils-fs-read-file' );
