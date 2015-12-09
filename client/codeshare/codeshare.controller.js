@@ -28,20 +28,17 @@ angular.module('myApp.codeshare', [ ])
   $scope.mode = $scope.modes[0];
   //Will use to hold all the text in editor
   $scope.textInEditor;
-
+  $scope.doc;
   $scope.aceOption = {
     mode: $scope.mode.toLowerCase(),
     onLoad: function (_ace) {
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
+          
       };
-      socket.on("fileData", function( data) {
-        console.log(_ace)
-        var sessionDoc = _ace.getSession().getDocument()
-       $scope.textInEditor = data;
-       sessionDoc.setValue($scope.textInEditor);
-        console.log("this is data from the file by socket io", data);
-      })
+      var sessionDoc = _ace.getSession().getDocument()
+      $scope.doc = sessionDoc;
+     
     },
     //When someone changes the document (for example, typing in the document.)
     onChange: function(_ace) {
@@ -62,7 +59,7 @@ angular.module('myApp.codeshare', [ ])
         
       }
 
-      console.log("testInEditor", $scope.textInEditor);
+      // console.log("testInEditor", $scope.textInEditor);
      
       //When a signal(called notification) is sent, then run the callback function.
       //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put scope.title
@@ -92,7 +89,16 @@ angular.module('myApp.codeshare', [ ])
 
       }
   };
-
+  socket.on("fileData", function( data) {
+    // console.log("This is ace in socket for front end upload file", _ace)
+    // var sessionDoc = _ace.getSession().getDocument()
+    console.log("Data from the client side socket listening to fileData")
+   $scope.textInEditor = data;
+   // sessionDoc.setValue($scope.textInEditor);
+   console.log("$scope.doc", $scope.doc, "$scope.textInEditor", $scope.textInEditor)
+   $scope.doc.setValue($scope.textInEditor);
+    console.log("this is data from the file by socket io", data);
+  })
   $scope.aceModel = ';; Scheme code in here.\n' +
     '(define (double x)\n\t(* x x))\n\n\n' +
     '<!-- XML code in here. -->\n' +
