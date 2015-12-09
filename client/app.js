@@ -218,9 +218,7 @@ angular.module('myApp', [
 
       //end testing get data from file upload
 
-      socket.on("fileData", function( data) {
-        console.log("this is data from the file by socket io", data);
-      })
+
 
     //My implementation of watch to fix the problem is not working. 
       $scope.list = [];

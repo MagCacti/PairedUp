@@ -35,10 +35,18 @@ angular.module('myApp.codeshare', [ ])
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
       };
+      socket.on("fileData", function( data) {
+        console.log(_ace)
+        var sessionDoc = _ace.getSession().getDocument()
+       $scope.textInEditor = data;
+       sessionDoc.setValue($scope.textInEditor);
+        console.log("this is data from the file by socket io", data);
+      })
     },
     //When someone changes the document (for example, typing in the document.)
     onChange: function(_ace) {
       //The document the person is typing on.
+      console.log(_ace)
       var sessionDoc = _ace[1].getSession().getDocument();
       //Was erroring without this if statement. Not sure why. 
       if ($scope.textInEditor !== sessionDoc.getValue() ) {
