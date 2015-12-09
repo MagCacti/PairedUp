@@ -12,9 +12,10 @@ var uri = 'mongodb://localhost/users';
 var db = require('mongoose').connect(uri);
 
 var userSchema = new Schema({
- username: String,
+ displayName: String,
  name: String,
- picture: String
+ picture: String,
+ github: String
  // lastname: String,
  // password: String, 
  // officeHours: String,
