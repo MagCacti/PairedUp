@@ -116,18 +116,27 @@ angular.module('myApp.codeshare', [ ])
 
   };
 
-  $scope.edit = function(id){
-    var index = selectId(id);
-    var item = $scope.filesList[index];
-    $scope.title = item.title;
-    $scope.aceModel = item.code;
-    $scope.mode = item.mode;
+  $scope.shareWith = function(username) {
     socket.on($scope.title, function(data) {
       console.log("Room worked")
 
       // socket.to('some room').emit('Another event');
     });
     socket.emit('/create', {title:$scope.title})
+
+  }
+  $scope.edit = function(id){
+    var index = selectId(id);
+    var item = $scope.filesList[index];
+    $scope.title = item.title;
+    $scope.aceModel = item.code;
+    $scope.mode = item.mode;
+    // socket.on($scope.title, function(data) {
+    //   console.log("Room worked")
+
+    //   // socket.to('some room').emit('Another event');
+    // });
+    // socket.emit('/create', {title:$scope.title})
 
   };
 
