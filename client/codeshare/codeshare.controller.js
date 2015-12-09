@@ -98,7 +98,7 @@ angular.module('myApp.codeshare', [ ])
     $scope.id++
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
-    console.log("This is the text in the editor",$scope.filesList[0].code);
+    console.log("This is from the add button signifying that this document is in the text in the editor",$scope.filesList[0].code);
     $scope.title = '';
     $scope.aceModel = '';
 
