@@ -7,7 +7,7 @@ angular.module('myApp', [
       'btford.socket-io',
       //for the authentication.
       'satellizer',
-      'Icecomm'
+      // 'Icecomm'
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
