@@ -10,7 +10,6 @@ angular.module('myApp', [
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
-	$urlRouterProvider.otherwise('/signup');
 
 	$stateProvider
 		.state('signup', {
