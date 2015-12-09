@@ -13,6 +13,12 @@ var moment = require('moment');
 var hardcodedUsers = [{name: "Kristina"}, {name: "Joseph"}]
 
     // configuration =================
+//for file uploading
+var multer  = require('multer');
+//the next two lines may be unusual. 
+var busboy = require("connect-busboy");
+app.use(busboy({ immediate: true }));
+//ending file uploading modules
 
 //serves up static files, otherwise we would not be able to load the index.html file
 app.use(express.static(__dirname + '/client'));                 
@@ -238,7 +244,7 @@ io.on('connection', function(socket) {
 //general code
   socket.on('/create', function(data) {
     usersRoom = data.title
-    console.log("usersRoom", usersRoom)
+    // console.log("usersRoom", usersRoom)
     socket.join(data.title);
     //send a signal to frontEnd called notification
     io.emit(usersRoom,data);
@@ -250,7 +256,7 @@ io.on('connection', function(socket) {
     });
   //working on chat feature with sockets
     socket.on('new message', function(message) {
-      console.log('db', db);
+      // console.log('db', db);
       // window.pairedUp = '123';
       var JosephMessages = new db.messages({
         nameOfChat: "Joseph", 
@@ -268,9 +274,9 @@ io.on('connection', function(socket) {
         });
       })
       //store message in database. 
-      console.log("Going through new message socket.")
+      // console.log("Going through new message socket.")
       //sending stuff back to fronEnd for example. 
-      console.log("message", message)
+      // console.log("message", message)
       io.emit('publish message', message);
       });
 
@@ -286,4 +292,60 @@ io.on('connection', function(socket) {
 
 });
 
+//Checking the upload
+app.post('/fileUpload', multer({ dest: './uploads/'}).single('upl'),function(req, res, next) {
+  console.log("Successfully uploaded a file.");
+  // console.log("Req", req);
+  if(req.busboy) {
+      //   req.busboy.on("file", function(fieldName, fileStream, fileName, encoding, mimeType) {
+      //       //Handle file stream here
+      //   console.log("We went through the busBoy")
+      //   console.log("FieldName", fieldName);
+      //   console.log("FileStream", fileStream);
+      //   console.log("FileName", fileName);
+      //   console.log("Encoding", encoding);
+      //   });
+      //   req.busboy.on('field', function(fieldname, val) {
+      //   console.log(fieldname, val);
+      // });
+      req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+        console.log("in the file busboy listner")
+          if (!filename) {
+            // If filename is not truthy it means there's no file
+            return;
+          }
+          // Create the initial array containing the stream's chunks
+          file.fileRead = [];
+
+          file.on('data', function(chunk) {
+            // Push chunks into the fileRead array
+            this.fileRead.push(chunk);
+          });
+
+          file.on('error', function(err) {
+            console.log('Error while buffering the stream: ', err);
+          });
+
+          file.on('end', function() {
+            // Concat the chunks into a Buffer
+            var finalBuffer = Buffer.concat(this.fileRead);
+
+            req.files[fieldname] = {
+              buffer: finalBuffer,
+              size: finalBuffer.length,
+              filename: filename,
+              mimetype: mimetype
+            };
+
+          });
+        });
+      console.log("req.body", req.body)
+      console.log("req.files", req.files)
+        var totalFile = req.pipe(req.busboy);
+        console.log(totalFile)
+        console.log("Req.body", req.body);
+        return req.pipe(req.busboy);
+    }
+    //Something went wrong -- busboy was not loaded
+});
 
