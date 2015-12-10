@@ -6,13 +6,13 @@ angular.module('myApp', [
 	'myApp.codeshare',
    //for client side sockets
   'btford.socket-io',
-    //for the authentication.
-   'satellizer',
-   'Icecomm'
+    //for the authentication
+   'satellizer'
+   // 'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
-	$urlRouterProvider.otherwise('/signup');
+	$urlRouterProvider.otherwise('/login');
 
 	$stateProvider
 	
@@ -38,6 +38,11 @@ angular.module('myApp', [
       url: '/mentor',
       templateUrl: 'auth/signup/mentorsignup.html'
     })
+    .state('messages', {
+      url: '/messages',
+      templateUrl: 'messages/messages.html',
+      controller: 'ExampleController'
+    })
     .state('profile', {
       url: '/profile',
       templateUrl: 'user/profile.html'
@@ -47,7 +52,7 @@ angular.module('myApp', [
       templateUrl: 'auth/signup/signup.html'
     })
 
-	$urlRouterProvider.otherwise('/');
+	// $urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
 	  url: '/auth/github',
@@ -142,7 +147,7 @@ angular.module('myApp', [
  	
 })
 
-.controller('LoggedIn', function($scope, $auth, $location, $auth, authToken/*toastr*/, $http) {
+.controller('LoggedIn', function($scope, $auth, $location, authToken/*toastr*/, $http) {
 
 
    // $scope.login = function() {
@@ -161,6 +166,7 @@ angular.module('myApp', [
         .then(function(response) {
           var test = JSON.stringify(response.data.user);
           console.log('this...', test);
+          console.log('this response is: ', response);
           $scope.username = test;
           // toastr.success('You have successfully signed in with ' + provider + '!');
           $location.path('/');
@@ -179,17 +185,6 @@ angular.module('myApp', [
     };
 })
 
-// .factory('getUsers', [function($http){
-//   return {
-//    getData: function(){
-//       return $http.get({
-//         method
-//       })
-//    },
-
-//   }
-// }])
-
 .controller('LogOut', ['$scope', '$location', '$auth', function($scope, $location, $auth){
     if(!$auth.isAuthenticated()){
       return;
@@ -197,8 +192,46 @@ angular.module('myApp', [
     $auth.logout()
       .then(function(){
         console.log('Logged out yo!!!');
-        $state.go('signup');
+        $state.go('login');
       });
+}])
+
+.factory('socket', ['$rootScope', function($rootScope) {
+    //A socket connection to our server.
+  var socket = io.connect("http://localhost:8080");
+  return {
+    //listen to events.
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    //give off signals to anyone who might be listening (such as the server).
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}])
+//example chat for front end. 
+.controller('ExampleController', ['$scope', '$http', 'socket', function($scope, $http, socket){
+      //Where the text is held for the template chat. The template chat is not persisting data.
+    $scope.list = [];
+      //Listen when the server emits publish message and preform the a callback. This is to simulate going back to the server and have the info come back, as we will on the fully functional chat. 
+    socket.on("publish message", function(data) {
+        //set $scope.text to the text from the messages we received from the server (and database (?)).
+        $scope.text = data.text;
+        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
+        $scope.$apply(function(){
+            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
+            $scope.list.push(data.text); 
+        
+        });
+    });
+
+    //When someone clicks the submit button for the template chat.
+    $scope.submit = function() {
+        //if there is text in the box.
+        if ($scope.text) {
+            //emit a new message with the text data. Will store this in the database. 
+            socket.emit('new message', {text: $scope.text});
+        }
+    };
 }]);
-
-
