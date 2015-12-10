@@ -1,8 +1,8 @@
 //require express
 var express = require('express');
 //instantiate an express object
-var app = express();                              
-var bodyParser = require('body-parser');   
+var app = express();  
+var bodyParser = require('body-parser');
 // var favicon = require('express-favicon');
 var cookieParser = require('cookie-parser');
 var request = require('request');
@@ -10,7 +10,7 @@ var qs = require('querystring');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 
-    // configuration =================
+// configuration =================
 
 //serves up static files, otherwise we would not be able to load the index.html file
 app.use(express.static(__dirname + '/client'));                 
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json());            
 
 // Added for deployment:                      
-var port = process.env.PORT || '8080';
+var port = process.env.PORT || '8080'; 
 
 var path = require('path');
 var passport = require('passport');
@@ -125,28 +125,27 @@ app.post("/updated",requestHandlerFuncForUpdatingInfo);
 
 // /*Login Github Oauth Angular stuff too*/
 app.post('/auth/github', function(req, res) {
-  // console.log('this.....', res);
-  console.log("In the postAuth GIthub")
+  console.log("Inside app.post function - the postAuth GitHub");
   var accessTokenUrl = 'https://github.com/login/oauth/access_token';
   var userApiUrl = 'https://api.github.com/user';
   var params = {
     code: req.body.code,
     client_id: req.body.clientId,
     client_secret: "ec5ccdd036aede19767499594e72fc90e7cf734e",
-    redirect_uri: req.body.redirectUri,
+    redirect_uri: req.body.redirectUri
     // grant_type: 'authorization_code'
   };
 
 //   // Step 1. Exchange authorization code for access token.
   request.get({ url: accessTokenUrl, qs: params}, function(err, response, accessToken) {
-    accessToken = qs.parse(accessToken);
-    // console.log('response-------', response);
+    //accessToken = qs.parse(accessToken); // this was commented out to merge with BKhurshids code.  In case of errors, come back here and add it back.
+    console.log('exchanging auth token for access token', response);
     // console.log('heyyyyyy-----', accessToken);
     var headers = { 'User-Agent': 'Satellizer' };
 
 //     // Step 2. Retrieve profile information about the current user.
     request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
-        // console.log('this is the profile------', profile);
+        console.log('this is the profile------', profile);
 //       // Step 3a. Link user accounts.
       if (req.headers.authorization) {
 
@@ -174,9 +173,8 @@ app.post('/auth/github', function(req, res) {
       //       });
       //     });
       //   });
-      //   //   console.log('auth head---------');
-      // }else{
-         // Step 3b. Create a new user account or return an existing one.
+
+        // Step 3b. Create a new user account or return an existing one.
           db.findOne({ github: profile.id }, function(err, existingUser) {
             console.log('existingUser------', existingUser);
             if (existingUser) {
@@ -200,23 +198,60 @@ app.post('/auth/github', function(req, res) {
 });
 
 //for every path request. 
-app.get('*', function(req, res) {
-  // load the single view file (angular will handle the page changes on the front-end)
-        res.sendFile(__dirname + '/client/index.html'); 
-    });
+// app.get('*', function (req, res) {
+//   // load the single view file (angular will handle the page changes on the front-end)
+//         res.sendFile(__dirname + '/client/index.html'); 
+//     });
 
+var usersRoom;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {æ
   console.log('new connection');
-  // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
+
+  //the socket.request property represents the handshake HTTP request
   
-  //listen for a signal called add-customer
-  socket.on('add-customer', function(textFromEditor) {
+  //listen for a signal 
+socket.on('/create', function(data) {
+  usersRoom = data.title
+  // console.log("usersRoom", usersRoom)
+  socket.join(data.title);
+  //send a signal to frontEnd called notification
+  io.emit(usersRoom,data);
+  socket.on(data.title, function(data) {
     console.log("Just heard a add-customer from Joseph");
     //send a signal to frontEnd called notification
-    socket.broadcast.emit('notification', textFromEditor);
-
+    socket.broadcast.emit('notification', data);
+    });
   });
-});
+// preliminary implementation of chat feature with sockets
+socket.on('new message', function(message) {
 
+  // generate new chat:
+  var JosephMessages = new db.messages({
+    nameOfChat: "Joseph", 
+    messageContent: "This is a message"
+  });
+  
+  // save message in database: 
+  JosephMessages.save(function(err, results){
+    if (err) {
+      console.log("err", err);
+    }
+    else {
+      console.log("Saved into MONGODB Success")
+    }
+
+    // locate message and pass it to console to confirm db operating.
+    db.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
+      console.log("ALL THE JOSEPH MESSAGES", results);
+    });
+  })
+
+  // console.log("Going through new message socket.")
+  // sending stuff back to fronEnd for example. 
+  // console.log("message", message)
+  io.emit('publish message', message);
+
+    });
+});
 
