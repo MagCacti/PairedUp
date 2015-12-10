@@ -9,7 +9,6 @@
     <div class="well" ng-repeat=" file in filesList">{{ file.title }} 
       <button ng-click='delete(file.id)'>Delete</button>
       <button ng-click='edit(file.id)'>Edit</button>
-      <button ng-click='update(file.id)'>Update</button>
     </div>
   </div> 
 
@@ -17,7 +16,10 @@
     <input ng-model="title">
 
     <!-- 'Add' Button: -->
-    <a href="#" class="btn btn-success" ng-click='add()'>Add</a>
+    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Add</a>
+
+    <!-- 'Update' Button -->
+    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update</a>
     
     <!-- Codeshare Editor -->
     <div class="ace_editor" 
