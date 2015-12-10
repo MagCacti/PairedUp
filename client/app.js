@@ -13,19 +13,7 @@ angular.module('myApp', [
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
 	$stateProvider
-		.state('signup', {
-			url: '/signup',
-			templateUrl: 'auth/signup/signup.html'
-		})
-		.state('mentee', {
-			url: '/mentee',
-			templateUrl: 'auth/signup/menteesignup.html'
-		})
-		.state('mentor', {
-			url: '/mentor',
-			templateUrl: 'auth/signup/mentorsignup.html'
-		})
-
+	
 		.state('login', {
 			url: '/login',
 			templateUrl: 'auth/login/login.html',
