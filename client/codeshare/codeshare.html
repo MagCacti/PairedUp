@@ -23,18 +23,18 @@
     <div class="ace_editor" 
     ng-model="aceModel"
     ui-ace="{
-    useWrapMode : true,
-    showGutter: true, 
-    theme:'chaos',
-    mode: 'javascript',
-    firstLineNumber: 1,
-    onLoad: aceLoaded,
-    onChange: aceChanged
-    }">var x = 'you';
-    var y = 'me';
-    var coolCollaboration = function (x, y) {
-    Type code here
-    }
+      useWrapMode : true,
+      showGutter: true, 
+      theme:'chaos',
+      mode: 'javascript',
+      firstLineNumber: 1,
+      onLoad: aceLoaded,
+      onChange: aceChanged
+      }">var x = 'you';
+      var y = 'me';
+      var coolCollaboration = function (x, y) {
+      Type code here
+      }
     </div>
 
     <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
