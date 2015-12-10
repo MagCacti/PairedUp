@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 
 // Since you're connecting to a local instance, you can skip the username and password and use the following URI:
 
-var uri = 'mongodb://localhost/users' || 'mongodb://username:password@ds061954.mongolab.com:61954/heroku_z1qhwknn';
+var uri = 'mongodb://username:password@ds061954.mongolab.com:61954/heroku_z1qhwknn'; //|| 'mongodb://localhost/users'
 var db = require('mongoose').connect(uri);
 
 var userSchema = new Schema({
