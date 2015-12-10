@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     },
     dist: {
         files: {
-          'dist/uglified.min.js': ['dist/shortyconcat.js']
+          'dist/uglified.min.js': ['dist/PairedUpConcat.js']
         }
       }
     },
