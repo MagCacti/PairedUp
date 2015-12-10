@@ -1,59 +1,50 @@
+<div class="well">
+  <h1 class="text-primary"> Pair | Share | Learn </h1>
+</div>
 
-<h1>The Codesharing experience will live here </h1>
+
 <div class="row">
+
   <div class="col-md-2"> 
-    <button ng-click='add()'>Add</button>
-    <div ng-repeat=" file in filesList">{{ file.title }} 
+    <div class="well" ng-repeat=" file in filesList">{{ file.title }} 
       <button ng-click='delete(file.id)'>Delete</button>
       <button ng-click='edit(file.id)'>Edit</button>
       <button ng-click='update(file.id)'>Update</button>
     </div>
   </div> 
-    <div class="col-md-8">
-      <input ng-model="title">
-      <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
-      <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+
+  <div class="col-md-8">
+    <input ng-model="title">
+
+    <!-- 'Add' Button: -->
+    <a href="#" class="btn btn-success" ng-click='add()'>Add</a>
+    
+    <!-- Codeshare Editor -->
+    <div class="ace_editor" 
+    ng-model="aceModel"
+    ui-ace="{
+    useWrapMode : true,
+    showGutter: true, 
+    theme:'chaos',
+    mode: 'javascript',
+    firstLineNumber: 1,
+    onLoad: aceLoaded,
+    onChange: aceChanged
+    }">var x = 'you';
+    var y = 'me';
+    var coolCollaboration = function (x, y) {
+    Type code here
+    }
     </div>
-    <div class="col-md-2">
 
-    <!-- <video id="localVideo" autoplay></video> -->
+    <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+  </div>
+  
+  <div class="col-md-2">
+<!--Icecomm Code (temp removal)--> 
+  </div>
 
-      <!-- <icecomm-connect room="custom room"></icecomm-connect>
-      <icecomm-local><video ng-if="local" autoplay class="icecomm-local"' +
-        'ng-src={{local.stream}}></video></icecomm-local>
-      <icecomm-peer></icecomm-peer>
-      <icecomm-leave></icecomm-leave>
-<<<<<<< HEAD
-
-    <!- <ice-comm
-            
-            room="custom room"></ice-comm> -->
-<!--       <div>
-=======
- -->
-    <!-- <ice-comm
-            
-            room="custom room"></ice-comm> -->
-      <!-- <div>
->>>>>>> 7c8bfaae760858c2487ac68d7b53f3871bb4c5c4
-          <button ng-if="!!current_room" ng-click="close()">Close</button>
-          <input ng-if="!current_room" type="text" ng-keyup="roomEvent()" />
-          <div ng-if="!!local">
-            <video autoplay class="local" ng-src={{local.stream}}></video>
-          </div>
-          <ul><li ng-repeat="peer in peers">
-            <video autoplay ng-src="{{peer.stream}}" ></video>
-<<<<<<< HEAD
-          </li></ul>
-      <!- </div> -->  
-
-    </div>
 </div>
-
-<!-- Commented lines 20-38 for deployment. -->
-
-<!-- ui-ace="aceOption" ng-model="aceModel" -->
-<!-- <div class="ace_editor"ui-ace>we in here</div> -->
 
 <!-- 
 <section ng-controller="AceCtrl">
@@ -66,23 +57,12 @@
 
 
 <!-- codeshare was added using the following: https://github.com/angular-ui/ui-ace
-	
-	you can also trying implementing the ace raw 
-
-	https://ace.c9.io/
-
-	in order to view this page you must install bower like so 
-	bower install angular-ui-ace#bower
-	or 
-<<<<<<< HEAD
-	bower install -g 'dash dash' save angular-ui-ace#bower
-=======
-	bower install -g -save angular-ui-ace#bower
->>>>>>> 7c8bfaae760858c2487ac68d7b53f3871bb4c5c4
-
-	whatever works for you
+  -The ui-ace dependency is in bower:
+  bower install angular-ui-ace#bower
+  or bower install -g 'dash dash' save angular-ui-ace#bower
+	-Considered: implementing the ace raw 
+    https://ace.c9.io/
 -->
-
 
 <!-- Description of how the ui-ace object options works: -->
 
@@ -98,20 +78,20 @@
 
 <!-- <i>Theme: chaos (nice, professional)</i>
 <div ui-ace="{
-  useWrapMode : true,
-  showGutter: true, 
-  theme:'chaos',
-  mode: 'javascript',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
+useWrapMode : true,
+showGutter: true, 
+theme:'chaos',
+mode: 'javascript',
+firstLineNumber: 1,
+onLoad: aceLoaded,
+onChange: aceChanged
 }">var x = 'you';
 var y = 'me';
 var coolCollaboration = function (x, y) {
-  Type code here
-}</div>
+Type code here
+}</div> -->
 
-<i>Theme: ambiance </i>
+<!-- <i>Theme: ambiance </i>
 <div ui-ace="{
   useWrapMode : false,
   showGutter: true,
@@ -123,8 +103,8 @@ var coolCollaboration = function (x, y) {
 }">body {
   padding-top: 50px;
 }
-</div>
- -->
+</div> -->
+
 <!-- <div ui-ace="{
   useWrapMode : true,
   showGutter: false,
@@ -169,7 +149,7 @@ var coolCollaboration = function (x, y) {
   onLoad: aceLoaded,
   onChange: aceChanged
 }"></div>
- -->
+-->
 <!-- <i>Themes: crimson and dawn (boring) -->
 <!-- <div ui-ace="{
   useWrapMode : true,
@@ -259,7 +239,7 @@ var coolCollaboration = function (x, y) {
 }"></div>
 
 
- -->
+-->
 <!-- class="ace_editor" We would add this class to use the CSS height and width assignments.--> 
 
 
