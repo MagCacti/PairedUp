@@ -21,7 +21,7 @@ angular.module('myApp.codeshare', [ ])
   $scope.id = 0;
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
-  $scope.mode = $scope.modes[0];
+  $scope.mode = $scope.modes[2];
 
   // var comm = new Icecomm('');
 
