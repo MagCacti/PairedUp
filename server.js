@@ -1,8 +1,11 @@
-//require express
 var express = require('express');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
 var favicon = require('express-favicon');
+var favicon = require('serve-favicon');
+var fs = require('fs');
+//Need if we want to check req.file; 
+var multer  = require('multer')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // var cors = require('cors');
@@ -12,14 +15,34 @@ var moment = require('moment');
 var path = require('path');
 var config = require('./config.js');
 var mongoose = require('mongoose');
+var app = express();
+
+//I believe we need if we want to check req.file
+var upload = multer({ dest: 'uploads/' });
+
+//I believe we need if we want to check req.file
+app.use(upload.single('string'));
+//DELETE BusBoy in package.json
+//for the image on the top left corner of the tab, on the web browser                             
+app.use(favicon(__dirname + "/favicon.ico"));
+
+var http = require('http');
+
+// //should have access to user mongoose model and message mongoose model with this.
+// var User = require('./database/UserModel');
+//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
+//Necessary for making sockets.
+var server = http.Server(app);
+//The docs are not clear on the next two lines.Both lines are necessary for sockets.
+var socketio = require('socket.io');
+var io = socketio(server);
+//listening to server
+server.listen(8080);
+console.log("App listening on port 8080");
 
 
-
-
-//serves up static files, otherwise we would not be able to load the index.html file
 var User = require('./database/UserModel');
 
-var app = express();
 
 app.set('port', process.env.PORT || 8080);
 // app.use(cors());
@@ -39,6 +62,7 @@ app.use(express.static(__dirname + '/client'));
 //serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
+
 //for every path request. 
 // app.get('*', function(req, res) {
 //   // load the single view file (angular will handle the page changes on the front-end)
@@ -50,6 +74,11 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
 // app.use(bodyParser.json());                                  
 
+            
+
+//need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
+
+// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
 
 /*
  |--------------------------------------------------------------------------
@@ -88,22 +117,12 @@ function ensureAuthenticated(req, res, next) {
  */
 
 
-//Necessary for sockets.
-var http = require('http');
 
-//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
-//Necessary for making sockets.
-var server = http.Server(app);
 
-//The docs are not clear on the next two lines.Both lines are necessary for sockets.
-var socketio = require('socket.io');
-var io = socketio(server);
 
-//listening to server
-server.listen(8080);
 
-// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
-console.log("App listening on port 8080");
+
+
 
 
 /*
@@ -111,6 +130,7 @@ console.log("App listening on port 8080");
  | Generate JSON Web Token
  |--------------------------------------------------------------------------
  */
+
 
 
 function createJWT(user){
@@ -136,16 +156,19 @@ app.all('/*', function(req, res, next) {
 });
 
 
+
 /*
  |--------------------------------------------------------------------------
  | GET /api/me
  |--------------------------------------------------------------------------
  */
 
-app.post('/api/me', function(req, res) {
-  console.log('req', req);
-  User.findById(req.user, function(err, user) {
+app.get('/api/me', function(req, res) {
+  var test = Object.keys(req);
+  console.log('req', req.params);
+  User.user.findById(req.user, function(err, user) {
     console.log('this is the user crap', user)
+    console.log('this, is the err', err);
     res.send(user);
   });
 });
@@ -157,7 +180,7 @@ app.post('/api/me', function(req, res) {
  */
 
 app.put('/api/me', function(req, res) {
-  User.findById(req.user, function(err, user) {
+  User.user.findById(req.user, function(err, user) {
     if (!user) {
       return res.status(400).send({ message: 'User not found' });
     }
@@ -174,6 +197,11 @@ app.put('/api/me', function(req, res) {
  | Login with GitHub
  |--------------------------------------------------------------------------
  */
+
+
+
+
+
 
 app.post('/auth/github', function(req, res) {
   console.log('heeyyy work it', res)
@@ -197,30 +225,31 @@ app.post('/auth/github', function(req, res) {
       // Step 3a. Link user accounts.
       if (req.headers.authorization) {
         console.log('inside authorization if statement ---------------');
-        User.findOne({ github: profile.id }, function(err, existingUser) {
-          console.log('this is the user in the database', existingUser);
-          if (existingUser) {
-            return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
-          }
-          var token = req.headers.authorization.split(' ')[1];
-          // console.log('this is the token', token)
-          var payload = jwt.decode(token, config.TOKEN_SECRET);
-          User.findById(payload.sub, function(err, user) {
-            if (!user) {
-              return res.status(400).send({ message: 'User not found' });
-            }
-            user.github = profile.id;
-            user.picture = user.picture || profile.avatar_url;
-            user.displayName = user.displayName || profile.name;
-            user.save(function() {
-              var token = createJWT(user);
-              res.send({ token: token });
-            });
-          });
-        });
-      } else {
+        // User.user.findOne({ github: profile.id }, function(err, existingUser) {
+        //   console.log('this is the user in the database', existingUser);
+        //   if (existingUser) {
+        //     return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
+        //   }
+        //   var token = req.headers.authorization.split(' ')[1];
+        //   // console.log('this is the token', token)
+        //   var payload = jwt.decode(token, config.TOKEN_SECRET);
+        //   User.user.findById(payload.sub, function(err, user) {
+        //     if (!user) {
+        //       return res.status(400).send({ message: 'User not found' });
+        //     }
+        //     user.github = profile.id;
+        //     user.picture = user.picture || profile.avatar_url;
+        //     user.displayName = user.displayName || profile.name;
+        //     user.save(function() {
+        //       var token = createJWT(user);
+        //       res.send({ token: token });
+        //     });
+        //   });
+        // });
+      }
+      // } else {
         // Step 3b. Create a new user account or return an existing one.
-        User.findOne({ github: profile.id }, function(err, existingUser) {
+        User.user.findOne({ github: profile.id }, function(err, existingUser) {
           if (existingUser) {
             console.log('i am the existing user', existingUser)
             var token = createJWT(existingUser);
@@ -235,7 +264,7 @@ app.post('/auth/github', function(req, res) {
             res.send({ token: token, user: user });
           });
         });
-      }
+      
     });
   });
 });
@@ -254,7 +283,7 @@ app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
     return res.status(400).send({ message: 'Unknown OAuth Provider' });
   }
 
-  User.findById(req.user, function(err, user) {
+  User.user.findById(req.user, function(err, user) {
     if (!user) {
       return res.status(400).send({ message: 'User Not Found' });
     }
@@ -270,18 +299,83 @@ app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
 
 
 
+var usersRoom;
+
+
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
-  // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
-  
-  //listen for a signal called add-customer
-  socket.on('add-customer', function(textFromEditor) {
-    console.log("Just heard a add-customer from Joseph");
-    //send a signal to frontEnd called notification
-    io.emit('notification', textFromEditor);
 
-  });
+  //some room will be a variable. 
+  // io.to(usersRoom).emit(usersRoom);
+  //listen for a signal called add-customer. General code
+  // socket.on('add-customer', function(textFromEditor) {
+  //   console.log("Just heard a add-customer from Joseph");
+  //   //send a signal to frontEnd called notification
+  //   io.emit('notification', textFromEditor);
+
+  // });
+//general code
+  socket.on('/create', function(data) {
+    usersRoom = data.title
+    //Have the socket join a rooom that is named after the title of their document
+    socket.join(data.title);
+    //Listen for a emit from client that's message is the title of the document
+    socket.on(data.title, function(data) {
+      //send a signal to frontEnd called notification
+      socket.broadcast.emit('notification', data);
+      });
+    });
+  //working on chat feature with sockets
+    socket.on('new message', function(message) {
+      //general algorithim for storing messages shall go here. 
+
+      //hard coded message document to test persisting chat data
+      var JosephMessages = new User.messages({
+        nameOfChat: "Joseph", 
+        messageContent: "This is a message"
+      });
+      //save josephMessages document into the database
+      JosephMessages.save(function(err, results){
+        if (err) {
+          console.log("err", err);
+        }
+        else {
+          console.log("Saved into MONGODB Success")
+        }
+        //search for messages that have Joseph as the name of their chat
+        User.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
+          console.log("ALL THE JOSEPH MESSAGES", results);
+        });
+      })
+
+      //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
+      io.emit('publish message', message);
+      });
 });
 
+//content will hold the data from the uploaded file
+var content;
+//Need to build this function to get around asynchronous behavior.
+var sendFileDataToClient = function(data) {
+  //send the data from the file to the client. 
+  io.emit('fileData', content);
+}
+
+//Initiating the file upload. Immediately happens after someone clickes the upload file button
+app.post('/fileUpload', function(req, res, next) {
+  //collect the data from the file in a human readable form. 
+     fs.readFile(req.file.path, 'ascii', function ( error, data ) {
+      if ( error ) {
+        console.error( error );
+      } else {
+        //content is being asynchronously set to the data in the file
+        content = data;
+        //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
+        sendFileDataToClient(content)
+
+      }
+  });
+     //DELETE readFile in package.json
+});
 
