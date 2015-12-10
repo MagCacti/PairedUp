@@ -26,14 +26,17 @@ var userSchema = new Schema({
  // interest: String
 });
 
-
+var messageSchema = new Schema({
+    nameOfChat: String, 
+    messageContent: String
+});
 // userSchema.methods.speak = function () {
 //  var greeting = this.username? "Meow name is " + this.username: "I don't have a name";
 //  console.log(greeting);
 // }
 
 
-
+var Message = mongoose.model('Messages', messageSchema);
 var User = mongoose.model("User", userSchema);
 
 // var Joseph = new User({
@@ -57,4 +60,7 @@ var User = mongoose.model("User", userSchema);
 /*Ultimate Product
 
 */
-module.exports = User;
+module.exports = {
+    user: User,
+    messages: Message
+};

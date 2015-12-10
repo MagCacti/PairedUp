@@ -1,58 +1,70 @@
-//require express
 var express = require('express');
+var favicon = require('serve-favicon');
 //instantiate an express object
-var app = express();                              
-var bodyParser = require('body-parser');   
-var favicon = require('express-favicon');
+var app = express(); 
+//for the image on the top left corner of the tab, on the web browser                             
+app.use(favicon(__dirname + "/favicon.ico"));
+var fs = require('fs');
+//Need if we want to check req.file; 
+var multer  = require('multer')
+
 var cookieParser = require('cookie-parser');
 var request = require('request');
+//JS:I don't know what qs is doing in this program. 
 var qs = require('querystring');
+//JS:I don't know what jwt is doing in this program. 
 var jwt = require('jwt-simple');
+//JS:I don't know what moment is doing in this program. 
 var moment = require('moment');
+//I believe we need if we want to check req.file
+var upload = multer({ dest: 'uploads/' });
+var bodyParser = require('body-parser');   
+//I believe we need if we want to check req.file
+app.use(upload.single('string'));
+//DELETE BusBoy in package.json
 
-
-
-    // configuration =================
+var http = require('http');
+var path = require('path');
+//should have access to user mongoose model with this
+var mongoose = require('mongoose');
+// //should have access to user mongoose model and message mongoose model with this.
+var db = require('./server/database/UserModel');
+//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
+//Necessary for making sockets.
+var server = http.Server(app);
+//The docs are not clear on the next two lines.Both lines are necessary for sockets.
+var socketio = require('socket.io');
+var io = socketio(server);
+//listening to server
+server.listen(8080);
+console.log("App listening on port 8080");
 
 //serves up static files, otherwise we would not be able to load the index.html file
 app.use(express.static(__dirname + '/client'));                 
 //serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
+//not sure what this does. Need to research. 
 app.use(bodyParser.urlencoded({'extended':'true'}));            
 
 //need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
-app.use(bodyParser.json());                                  
-
-
-var path = require('path');
-var passport = require('passport');
-var githubsecret = require('passport-github').Strategy;
-// var secret = require('githubsecret');
-// // var findOneOrCreate = require('mongoose-find-one-or-create');
-// //should have access to user mongoose model with this
-var mongoose = require('mongoose');
-
-var db = require('./server/database/UserModel');
-
-//Necessary for sockets.
-var http = require('http');
-
-//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
-//Necessary for making sockets.
-var server = http.Server(app);
-
-//The docs are not clear on the next two lines.Both lines are necessary for sockets.
-var socketio = require('socket.io');
-var io = socketio(server);
-
-//listening to server
-server.listen(8080);
+app.use(bodyParser.json());   
 
 // Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
-console.log("App listening on port 8080");
+
+// var passport = require('passport');
+// var githubsecret = require('passport-github').Strategy;
+// var secret = require('githubsecret');
+// // var findOneOrCreate = require('mongoose-find-one-or-create');
 
 
+
+
+
+
+
+
+//JS: I do not know what this does
 function createJWT(user){
   var payload = {
     sub: user._id,
@@ -73,55 +85,8 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-// var requestHandlerFuncForLogInOrSignUp = function(req, res, next){
-//  //query relational database to get the users information that will go on profile page
-//    console.log("this is req.body", req.body.name);
-//    //do not forget to stringify what you send back to the server.
-//    var test = req.body;
-//    //Using the new keyword, the create() method creates a new model instance, which is populated using the request body. Where new User is, we will have to place a require variable with a .user 
-//    var testUser = new db({
-//     username: test.name
-//    });
-//    //Finally, you call the model instance's save() method that either saves the user and outputs the user object, or fail, passing the error to the next middleware.
-//    //change this .save to .findOrCreate
-//    testUser.save(function(err, testUser){
-//       //if an error exists
-//         if(err) {
-//           //logs the error
-//           console.log(err);
-//         }else {
-//           //res.send() : Sends the HTTP response.This method performs many useful tasks for simple non-streaming responses: For example, it automatically assigns the Content-Length HTTP response header field (unless previously defined) and provides automatic HEAD and HTTP cache freshness support.
-//           res.send('Successfully inserted!!!');
-//         }
-//       });
 
-// };
 
-// app.post('/login', requestHandlerFuncForLogInOrSignUp);
-
-// //When the user updates their information. 
-var requestHandlerFuncForUpdatingInfo = function(req, res, next) {
-//    //find the user who we are updating
-//    //update them. 
-//    //send the info back to frontEnd(?). 
-};
-app.post("/updated",requestHandlerFuncForUpdatingInfo);
-
-//Not sure if we still need the next 13 lines. 
-
-// //Start the express.js web server and output a user-friendly terminal message in a callback
-// // User.plugin(findOneOrCreate);
-// // passport.use(new GitHubStrategy({
-// //     clientID: secret.clientID,
-// //     clientSecret: secret.clientSecret,
-// //     callbackURL: "http://127.0.0.1:3000/auth/github/callback"
-// //   },
-// //   function(accessToken, refreshToken, profile, done) {
-// //     User.findOneOrCreate({ githubId: profile.id}, function (err, user) {
-// //       return done(err, user);
-// //     });
-// //   }
-// // ));
 
 
 
@@ -207,20 +172,82 @@ app.get('*', function(req, res) {
   // load the single view file (angular will handle the page changes on the front-end)
         res.sendFile(__dirname + '/client/index.html'); 
     });
-
+var usersRoom;
 
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   console.log('new connection');
-  // The socket object is the same socket object that will be used for the connection and it holds some connection properties. One important property is the socket.request property, which represents the handshake HTTP request.
-  
-  //listen for a signal called add-customer
-  socket.on('add-customer', function(textFromEditor) {
-    console.log("Just heard a add-customer from Joseph");
-    //send a signal to frontEnd called notification
-    io.emit('notification', textFromEditor);
 
-  });
+  //some room will be a variable. 
+  // io.to(usersRoom).emit(usersRoom);
+  //listen for a signal called add-customer. General code
+  // socket.on('add-customer', function(textFromEditor) {
+  //   console.log("Just heard a add-customer from Joseph");
+  //   //send a signal to frontEnd called notification
+  //   io.emit('notification', textFromEditor);
+
+  // });
+//general code
+  socket.on('/create', function(data) {
+    usersRoom = data.title
+    //Have the socket join a rooom that is named after the title of their document
+    socket.join(data.title);
+    //Listen for a emit from client that's message is the title of the document
+    socket.on(data.title, function(data) {
+      //send a signal to frontEnd called notification
+      socket.broadcast.emit('notification', data);
+      });
+    });
+  //working on chat feature with sockets
+    socket.on('new message', function(message) {
+      //general algorithim for storing messages shall go here. 
+
+      //hard coded message document to test persisting chat data
+      var JosephMessages = new db.messages({
+        nameOfChat: "Joseph", 
+        messageContent: "This is a message"
+      });
+      //save josephMessages document into the database
+      JosephMessages.save(function(err, results){
+        if (err) {
+          console.log("err", err);
+        }
+        else {
+          console.log("Saved into MONGODB Success")
+        }
+        //search for messages that have Joseph as the name of their chat
+        db.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
+          console.log("ALL THE JOSEPH MESSAGES", results);
+        });
+      })
+
+      //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
+      io.emit('publish message', message);
+      });
 });
 
+//content will hold the data from the uploaded file
+var content;
+//Need to build this function to get around asynchronous behavior.
+var sendFileDataToClient = function(data) {
+  //send the data from the file to the client. 
+  io.emit('fileData', content);
+}
+
+//Initiating the file upload. Immediately happens after someone clickes the upload file button
+app.post('/fileUpload', function(req, res, next) {
+  //collect the data from the file in a human readable form. 
+     fs.readFile(req.file.path, 'ascii', function ( error, data ) {
+      if ( error ) {
+        console.error( error );
+      } else {
+        //content is being asynchronously set to the data in the file
+        content = data;
+        //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
+        sendFileDataToClient(content)
+
+      }
+  });
+     //DELETE readFile in package.json
+});
 

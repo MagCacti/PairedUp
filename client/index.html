@@ -50,7 +50,23 @@
       </div><!--/.nav-collapse -->
     </div>
   </nav>
-   
+  <!-- Chat Template -->
+   <form ng-submit="submit()" ng-controller="ExampleController">
+     Enter text and hit enter:
+     <input type="text" ng-model="text" name="text" />
+     <input type="submit" id="submit" value="Submit" />
+
+     <pre>list={{list}}</pre>
+   </form>
+<!-- Ending Chat Template -->
+
+<!-- Form for uploading files -->
+<form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+    <input type="file" name="string">
+    <input type="submit" value="Upload File">
+</form>
+<!-- Ending form for uploading files -->
+
     <!-- NG-VIEW BEGIN-->
     <div ui-view></div>
      <!--NG-VIEW END-->
@@ -60,6 +76,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="assets/lib/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
@@ -72,7 +89,7 @@
     <script type="text/javascript" src="../bower_components/ace-builds/src-min-noconflict/ace.js"></script>
      <script type="text/javascript" src="../bower_components/angular-ui-ace/ui-ace.js"></script>
     <script src="//cdn.jsdelivr.net/satellizer/0.13.1/satellizer.min.js"></script>
-    <script src="../bower_components/angular-route/angular-route.js"></script>
+    <!-- // <script src="../bower_components/angular-route/angular-route.js"></script> -->
     <script src="app.js"></script>
 
     <!-- Google Maps JavaScript API v3 -->
@@ -83,7 +100,7 @@
 
 
    
-    <script src="assets/lib/build/angular-ice.js"></script>
+    <!-- // <script src="assets/lib/build/angular-ice.js"></script> -->
 
     <script src="./codeshare/codeshare.controller.js"></script>
     
