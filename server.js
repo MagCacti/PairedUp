@@ -205,7 +205,7 @@ app.post('/auth/github', function(req, res) {
 
 var usersRoom;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
-io.on('connection', function (socket) {æ
+io.on('connection', function (socket) {
   console.log('new connection');
 
   //the socket.request property represents the handshake HTTP request
