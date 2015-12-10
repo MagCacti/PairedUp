@@ -20,6 +20,7 @@
     "body-parser": "^1.14.1",
     "chai": "^3.4.1",
     "cookie-parser": "^1.4.0",
+    "cookie-session": "^1.2.0",
     "express": "^4.13.3",
     "express-favicon": "^1.0.1",
     "express-session": "^1.12.1",
