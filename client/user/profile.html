@@ -1,14 +1,22 @@
-<div>
+<div class="col-md-2"> 
+  <div class="well" ng-repeat=" file in filesList">{{ file.title }} 
+    <button ng-click='delete(file.id)'>Delete</button>
+    <button ng-click='edit(file.id)'>Edit</button>
+  </div>
+</div> 
+
+<div class="container">
   <article>
-    <img src="https://avatars0.githubusercontent.com/u/10456737?v=3&s=400" class="img-responsive img-circle animated zoomIn">
+    <img src="https://avatars0.githubusercontent.com/u/10456737?v=3&s=400" class="img-circle">
   </article>
   <h1>Aheri Stanford-Asiyo</h1>
 
   <ul class="nav nav-pills">
-  <li><a href="#">Messages <span class="badge">3</span></a></li>
-  <li><a href="#">Saved Codeshares <span class="badge">2</span></a></li>
-</ul>
+    <li><a href="#">Messages <span class="badge">3</span></a></li>
+    <li><a href="#">Saved Codeshares <span class="badge">2</span></a></li>
+  </ul>
 </div>
+
 
 <div class="bluecacti">
 
@@ -69,21 +77,14 @@
 
 </div>
 
-<p>    // lastname: String,
-    // password: String, 
-    // officeHours: String,
-    // angular: String, 
-    // node: String, 
-    // javascript: String, 
-    // skill: String,
-    // interest: String
-</p>
 <div class="importante">
  <time>Office Hours</time>
 </div>
 
 <div class="wrapper-padding">
 
+
+<!-- What follows is sample code from  http://themesforever.com/templates/enterprise/ we may want to consider for inspiration:  -->
               <!-- about me -->
               <section class="margin-bottom" id="about-me">
 
@@ -110,8 +111,7 @@
                     <p class="lead text-center">
                       <i class="fa fa-level-down"></i>
                     </p>
-                    <a href="#" class="btn btn-lg btn-block btn-default">
-                      <i class="fa fa-file-text-o"></i>&nbsp; Resume PDF
+                    
                     </a>
 
                   </div>
@@ -122,14 +122,7 @@
 
                   <div class="col-md-5 col-lg-3">
 
-                    <article class="media">
 
-                      <div class="pull-left">
-                        <span class="fa fa-phone bg-primary text-primary animated rotateIn"></span>
-                      </div>
-                      <div class="media-body animated fadeInRight">+1 650-253-0000</div>
-
-                    </article>
 
                   </div>
 
@@ -138,24 +131,16 @@
                     <article class="media">
 
                       <div class="pull-left">
-                        <span class="fa fa-envelope bg-primary text-primary animated rotateIn"></span>
+                        
                       </div>
-                      <div class="media-body animated fadeInRight">timforeman@switchfoot.com</div>
-
+                    
                     </article>
 
                   </div>
 
                   <div class="col-md-12 col-lg-5">
 
-                    <article class="media">
-
-                      <div class="pull-left">
-                        <span class="fa fa-map-marker bg-primary text-primary animated rotateIn"></span>
-                      </div>
-                      <div class="media-body animated fadeInRight">1600 Amphitheatre Parkway Mountain View</div>
-
-                    </article>
+                    
 
                   </div>
 
@@ -170,10 +155,10 @@
                 <p class="margin-bottom"><small>Curabitur pretium tincidunt lacus</small></p>
 
                 <div class="row">
-                  <!--lenguajes block-->
+                 
                   <div class="col-lg-6 margin-bottom">
 
-                    <h4 class="margin-bottom">Lenguajes</h4>
+                    <h4 class="margin-bottom">Languages</h4>
 
                     <div class="progress">
                       <div class="progress-bar" style="width: 85%">Java</div>
@@ -206,7 +191,7 @@
                       </div>
                     </div>
                   
-                  </div><!--/ lenguajes block-->
+                  </div><!--/ Languages block-->
 
                   <!--databases-->
                   <div class="col-lg-6 margin-bottom">
