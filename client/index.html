@@ -48,10 +48,10 @@
         <ul class="nav navbar-nav">
           <li ng-if="!isAuthenticated()"><a ui-sref="login">Login</a></li>
 
-          <li ng-if="isAuthenticated()"><a ui-sref="profile">Profile</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="logout">Logout</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="codeshare">Codeshare</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="messages">Messages</a></li>
+          <li ng-if="!isAuthenticated()"><a ui-sref="profile">Profile</a></li>
+          <li ng-if="!isAuthenticated()"><a ui-sref="logout">Logout</a></li>
+          <li ng-if="!isAuthenticated()"><a ui-sref="codeshare">Codeshare</a></li>
+          <li ng-if="!isAuthenticated()"><a ui-sref="messages">Messages</a></li>
 
         </ul>
       </div><!--/.nav-collapse -->
