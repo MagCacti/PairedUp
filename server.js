@@ -95,7 +95,7 @@ function ensureAuthenticated(req, res, next) {
 
   var payload = null;
   try {
-    payload = jwt.decode(token, config.TOKEN_SECRET);
+    payload = jwt.decode(token, 'Shhhh');
   }
   catch (err) {
     return res.status(401).send({ message: err.message });
@@ -205,7 +205,7 @@ app.post('/auth/github', function(req, res) {
   var params = {
     code: req.body.code,
     client_id: req.body.clientId,
-    client_secret: config.GITHUB_SECRET,
+    client_secret: '881163697cad6c7cc246638d4b98819dd5cf679e',
     redirect_uri: req.body.redirectUri
   };
 
