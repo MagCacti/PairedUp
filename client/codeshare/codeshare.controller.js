@@ -1,7 +1,7 @@
 angular.module('myApp.codeshare', [ ])
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
-    //A socket connection to our server.
+  //A socket connection to our server.
   var socket = io.connect("https://paired-up.herokuapp.com");
   return {
     //listen to events.
@@ -22,30 +22,22 @@ angular.module('myApp.codeshare', [ ])
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[2];
 
-  // var comm = new Icecomm('');
+  // Will use to hold all the text in editor
 
-  //       comm.connect('test');
-
-  //       comm.on('local', function(peer) {
-  //         localVideo.src = peer.stream;
-  //       });
-
-  //       comm.on('connected', function(peer) {
-  //         document.body.appendChild(peer.getVideo());
-  //       });
-
-  //       comm.on('disconnect', function(peer) {
-  //         document.getElementById(peer.ID).remove();
-  //       });
-  //Will use to hold all the text in editor
   $scope.textInEditor;
+  // 'textInEditor' refers to the text in the codeshare itself.  This variable was created to help implement the file upload feature.
   $scope.doc;
+  // 'scope.doc' refers to the document object. 
+
   $scope.aceOption = {
+    useWrapMode : true,
+    showGutter: true,
+    theme:'chaos',
+    firstLineNumber: 1,
     mode: $scope.mode.toLowerCase(),
     onLoad: function (_ace) {
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
-          
       };
       //store the document of the session to a variable. 
       $scope.doc = _ace.getSession().getDocument();
@@ -59,12 +51,10 @@ angular.module('myApp.codeshare', [ ])
       if ($scope.textInEditor !== sessionDoc.getValue() ) {
         //setting $scope.textInEditor equal to the text in the document
         $scope.textInEditor = sessionDoc.getValue();
-
          //send a signal with the title from the document and the text from the document. 
          socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
-        
       }
-     
+
       //When a signal(called notification) is sent, then run the callback function.
       //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put notification
       socket.on('notification', function(data) {
@@ -84,6 +74,7 @@ angular.module('myApp.codeshare', [ ])
       });
     }
   };
+
   //listening to when the server emits the file's data.
   socket.on("fileData", function( data) {
     //$scope.textInEditor will be set to the text (called data) from the file
@@ -138,7 +129,7 @@ angular.module('myApp.codeshare', [ ])
 
   };
 
-  function selectId (id){
+  function selectId (id) {
     for(var i = 0; i < $scope.filesList.length; i++){
       if($scope.filesList[i].id === id){
         return i;
