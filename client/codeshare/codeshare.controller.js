@@ -92,13 +92,7 @@ angular.module('myApp.codeshare', [ ])
    $scope.doc.setValue($scope.textInEditor);
   });
 
-  $scope.aceModel = 'var x = 'you';
-        var y = 'me';
-        var coolCollaboration = function (x, y) {
-        Type code here
-      }';
- 
-  
+  $scope.aceModel = 'Type your code here!';
 
   $scope.add = function(){
     $scope.id++
