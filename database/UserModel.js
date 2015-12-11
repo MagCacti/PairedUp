@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var config = require('../config.js');
 var Schema = mongoose.Schema;
 
 //Line 5 or line 10. Not both. 
@@ -8,12 +9,16 @@ var Schema = mongoose.Schema;
 // Since you're connecting to a local instance, you can skip the username and password and use the following URI:
 
 var uri = 'mongodb://username:password@ds061954.mongolab.com:61954/heroku_z1qhwknn'; //|| 'mongodb://localhost/users'
+
+//var uri = config.MONGO_URI; //USE THIS VERSION ONLY FOR DEVELOPMENT/LOCALHOST 
+
 var db = require('mongoose').connect(uri);
 
 var userSchema = new Schema({
- username: String, // from Github
- name: String,
- picture: String // from Github
+ displayName: String,
+ // name: String,
+ picture: String,
+ github: String
  // lastname: String,
  // password: String, 
  // officeHours: String,
@@ -25,8 +30,8 @@ var userSchema = new Schema({
 });
 
 var messageSchema = new Schema({
- chatName: String,
- chatContent: String //we could optimize this with a key-store database which would return info in constant time.
+ nameOfChat: String,
+ messageContent: String //we could optimize this with a key-store database which would return info in constant time.
 });
 
 // userSchema.methods.speak = function () {
@@ -34,7 +39,8 @@ var messageSchema = new Schema({
 //  console.log(greeting);
 // }
 
-var Message = mongoose.model("Message", userSchema);
+var Message = mongoose.model('Messages', messageSchema);
+
 var User = mongoose.model("User", userSchema);
 
 // var Joseph = new User({

@@ -9,37 +9,26 @@
     <div class="well" ng-repeat=" file in filesList">{{ file.title }} 
       <button ng-click='delete(file.id)'>Delete</button>
       <button ng-click='edit(file.id)'>Edit</button>
+      <button ng-click='shareWith(file.id)'>ShareWith</button>
+      
     </div>
   </div> 
 
   <div class="col-md-8">
+
     <input ng-model="title">
 
     <!-- 'Add' Button: -->
-    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Add</a>
+    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Create New</a>
 
     <!-- 'Update' Button -->
-    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update</a>
+    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update Changes</a>
     
-    <!-- Codeshare Editor -->
-    <div class="ace_editor" 
-    ng-model="aceModel"
-    ui-ace="{
-      useWrapMode : true,
-      showGutter: true, 
-      theme:'chaos',
-      mode: 'javascript',
-      firstLineNumber: 1,
-      onLoad: aceLoaded,
-      onChange: aceChanged
-      }">var x = 'you';
-      var y = 'me';
-      var coolCollaboration = function (x, y) {
-      Type code here
-      }
-    </div>
+    <!-- Codeshare Editor: -->
+    <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
 
     <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+
   </div>
   
   <div class="col-md-2">
@@ -62,187 +51,14 @@
   -The ui-ace dependency is in bower:
   bower install angular-ui-ace#bower
   or bower install -g 'dash dash' save angular-ui-ace#bower
-	-Considered: implementing the ace raw 
+  -Considered: implementing the ace raw 
     https://ace.c9.io/
 -->
 
 <!-- Description of how the ui-ace object options works: -->
 
-<!-- <div ui-ace="{
-  useWrapMode : true, // wrap text
-  showGutter: true, // show or hide line numbers
-  theme:'chaos', // set color palette
-  mode: 'javascript', // language, or xml, or json
-  firstLineNumber: 1, // starting line number
-  onLoad: aceLoaded, // we can cusomize this function
-  onChange: aceChanged // we can customize this 'listener'
-}" -->
-
-<!-- <i>Theme: chaos (nice, professional)</i>
-<div ui-ace="{
-useWrapMode : true,
-showGutter: true, 
-theme:'chaos',
-mode: 'javascript',
-firstLineNumber: 1,
-onLoad: aceLoaded,
-onChange: aceChanged
-}">var x = 'you';
-var y = 'me';
-var coolCollaboration = function (x, y) {
-Type code here
-}</div> -->
-
-<!-- <i>Theme: ambiance </i>
-<div ui-ace="{
-  useWrapMode : false,
-  showGutter: true,
-  theme:'ambiance',
-  mode: 'css',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}">body {
-  padding-top: 50px;
-}
-</div> -->
-
-<!-- <div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'chrome',
-  mode: 'xml',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div> -->
-
-<!-- <i>Theme: clouds (yellow subtle yuck) -->
-<!-- <div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'clouds',
-  mode: 'xml',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div> -->
-
-<!--<script type="text/javascript">var x = 'javascript'</script>
-
-<i>Theme: clouds_midnight (very clean and pleasant)</i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: true,
-  theme:'clouds_midnight',
-  mode: 'html',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"><html></html></div>
-
-<i>Theme: cobalt (looks kinda boss)</i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'cobalt',
-  mode: 'ruby',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
--->
-<!-- <i>Themes: crimson and dawn (boring) -->
-<!-- <div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'crimson_editor',
-  mode: 'xml',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
 
 
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'dawn',
-  mode: 'xml',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div> -->
-
-<!-- i>Theme: dreamweaver - javascript</i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'dreamweaver',
-  mode: 'javascript',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-<i><i>Theme: eclipse</i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'eclipse',
-  mode: 'json',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'idle_fingers',
-  mode: 'json',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-<i>Theme:'merbivore'</i>
-
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'merbivore',
-  mode: 'json',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-<i>Theme:'tomorrow_night_eighties'</i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'tomorrow_night_eighties',
-  mode: 'json',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-<i>Theme: twilight </i>
-<div ui-ace="{
-  useWrapMode : true,
-  showGutter: false,
-  theme:'twilight',
-  mode: 'json',
-  firstLineNumber: 1,
-  onLoad: aceLoaded,
-  onChange: aceChanged
-}"></div>
-
-
--->
-<!-- class="ace_editor" We would add this class to use the CSS height and width assignments.--> 
 
 
 
