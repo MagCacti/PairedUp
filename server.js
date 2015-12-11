@@ -250,7 +250,7 @@ app.post('/auth/github', function(req, res) {
             var token = createJWT(existingUser);
             return res.send({ token: token, user: existingUser });
           }
-          var user = new User();
+          var user = new User.user();
           user.github = profile.id;
           user.picture = profile.avatar_url;
           user.displayName = profile.name;
