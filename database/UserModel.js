@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var config = require('../config.js');
+//var config = require('../config.js');
 var Schema = mongoose.Schema;
 
 //Line 5 or line 10. Not both. 
