@@ -13,7 +13,7 @@ var request = require('request');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var path = require('path');
-var config = require('./config.js');
+// var config = require('./config.js'); // removed for deployment 10/10
 var mongoose = require('mongoose');
 var app = express();
 
