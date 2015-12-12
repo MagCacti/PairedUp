@@ -36,9 +36,9 @@ angular.module('myApp', [
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController',
-      resolve: {
-        loginRequired: loginRequired
+      controller: 'ProfileController' //,
+      // resolve: {
+      //   loginRequired: loginRequired
       }
     })
 
@@ -82,9 +82,9 @@ angular.module('myApp', [
 	      var deferred = $q.defer();
 	      if ($auth.isAuthenticated()) {
 	        deferred.resolve();
-          console.log('hi, i am in');
+          console.log('User has been authenticated');
 	      } else {
-	        $location.path('/codeshare');
+	        $location.path('/login');
           console.log('User is not yet authenticated.');
 	      }
 	      return deferred.promise;
