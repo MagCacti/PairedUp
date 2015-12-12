@@ -84,7 +84,8 @@ angular.module('myApp', [
 	        deferred.resolve();
           console.log('hi, i am in');
 	      } else {
-	        $location.path('/login');
+	        $location.path('/codeshare');
+          console.log('User is not yet authenticated.');
 	      }
 	      return deferred.promise;
 	    }
