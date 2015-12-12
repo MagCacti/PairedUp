@@ -39,7 +39,7 @@ angular.module('myApp', [
       controller: 'ProfileController' //,
       // resolve: {
       //   loginRequired: loginRequired
-      }
+      //}
     })
 
     .state('codeshare', {
