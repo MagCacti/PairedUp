@@ -47,6 +47,12 @@ angular.module('myApp', [
 			controller: 'CodeShareController'
 		})
 
+    .state('chat', {
+      url: '/chat',
+      templateUrl: 'chat/chat.html',
+      controller: 'ExampleController'
+    })
+
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
@@ -84,7 +90,7 @@ angular.module('myApp', [
 
 })
 
-.controller('LoginController', function($scope, $auth, $location) {
+.controller('LoginController', function($scope, $auth, $location, $http) {
 
 
    // $scope.login = function() {
@@ -100,10 +106,15 @@ angular.module('myApp', [
    //  };
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider)
-      .then(function() {
+      .then(function(response) {
+          var test = response.data;
 
+          console.log('this is suppose to be the current logged user', test);
           console.log('You have successfully signed in with ' + provider + '!');
           $location.path('/profile')
+         $http.post('/api/me', {user: test}).then(function(result) {
+          console.log("This is the users data on the frontEnd", result);
+         })
         })
         .catch(function(error) {
           if (error.error) {
@@ -148,7 +159,7 @@ angular.module('myApp', [
     return {
       getProfile: function() {
         console.log('inside the factory-------------');
-        return $http.get('/api/me');
+        return;// $http.post('/api/me', {});
       },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);

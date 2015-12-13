@@ -16,6 +16,7 @@ var path = require('path');
 var config = require('./config.js');
 var mongoose = require('mongoose');
 var app = express();
+var router = express.Router();
 
 //I believe we need if we want to check req.file
 var upload = multer({ dest: 'uploads/' });
@@ -49,6 +50,7 @@ app.set('port', process.env.PORT || 8080);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(app.router);
 
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -163,34 +165,49 @@ app.all('/*', function(req, res, next) {
  |--------------------------------------------------------------------------
  */
 
-app.get('/api/me', function(req, res) {
-  var test = Object.keys(req);
-  console.log('req', req.params);
-  User.user.findById(req.user, function(err, user) {
+//  app.use('/api/me', function (req, res, next) {
+//   console.log('Request Type:', req.method);
+//   next();
+// });
+// Initial dummy route for testing
+// http://localhost:3000/api
+// router.get('/', function(req, res) {
+//   res.json({ message: 'You are running dangerously low on beer!' });
+// });
+
+// Register all our routes with /api
+// app.use('/api', router);
+
+router.post('/me', function(req, res) {
+  // var test = Object.keys(req);
+  // var test1 = JSON.parse(req);
+  console.log("********************************************")
+  console.log('req-----------', req.body);
+  User.user.findById(req.body.user.user._id, function(err, user) {
     console.log('this is the user crap', user)
     console.log('this, is the err', err);
     res.send(user);
   });
 });
-
+app.use('/api', router);
 /*
  |--------------------------------------------------------------------------
  | PUT /api/me
  |--------------------------------------------------------------------------
  */
 
-app.put('/api/me', function(req, res) {
-  User.user.findById(req.user, function(err, user) {
-    if (!user) {
-      return res.status(400).send({ message: 'User not found' });
-    }
-    user.displayName = req.body.displayName || user.displayName;
-    user.email = req.body.email || user.email;
-    user.save(function(err) {
-      res.status(200).end();
-    });
-  });
-});
+// app.put('/api/me', function(req, res) {
+//   User.user.findById(req.user, function(err, user) {
+//     if (!user) {
+//       return res.status(400).send({ message: 'User not found' });
+//     }
+//     user.displayName = req.body.displayName || user.displayName;
+//     user.email = req.body.email || user.email;
+//     user.save(function(err) {
+//       res.status(200).end();
+//     });
+//   });
+// });
 
 /*
  |--------------------------------------------------------------------------
@@ -204,7 +221,7 @@ app.put('/api/me', function(req, res) {
 
 
 app.post('/auth/github', function(req, res) {
-  console.log('heeyyy work it', res)
+  // console.log('heeyyy work it', res)
   var accessTokenUrl = 'https://github.com/login/oauth/access_token';
   var userApiUrl = 'https://api.github.com/user';
   var params = {
@@ -224,38 +241,38 @@ app.post('/auth/github', function(req, res) {
       console.log('this is a profile', profile);
       // Step 3a. Link user accounts.
       if (req.headers.authorization) {
-        console.log('inside authorization if statement ---------------');
-        // User.user.findOne({ github: profile.id }, function(err, existingUser) {
-        //   console.log('this is the user in the database', existingUser);
-        //   if (existingUser) {
-        //     return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
-        //   }
-        //   var token = req.headers.authorization.split(' ')[1];
-        //   // console.log('this is the token', token)
-        //   var payload = jwt.decode(token, config.TOKEN_SECRET);
-        //   User.user.findById(payload.sub, function(err, user) {
-        //     if (!user) {
-        //       return res.status(400).send({ message: 'User not found' });
-        //     }
-        //     user.github = profile.id;
-        //     user.picture = user.picture || profile.avatar_url;
-        //     user.displayName = user.displayName || profile.name;
-        //     user.save(function() {
-        //       var token = createJWT(user);
-        //       res.send({ token: token });
-        //     });
-        //   });
-        // });
-      }
-      // } else {
+        // console.log('inside authorization if statement ---------------');
+        User.user.findOne({ github: profile.id }, function(err, existingUser) {
+          console.log('this is the user in the database', existingUser);
+          if (existingUser) {
+            return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
+          }
+          var token = req.headers.authorization.split(' ')[1];
+          // console.log('this is the token', token)
+          var payload = jwt.decode(token, config.TOKEN_SECRET);
+          User.user.findById(payload.sub, function(err, user) {
+            if (!user) {
+              return res.status(400).send({ message: 'User not found' });
+            }
+            user.github = profile.id;
+            user.picture = user.picture || profile.avatar_url;
+            user.displayName = user.displayName || profile.name;
+            user.save(function() {
+              var token = createJWT(user);
+              res.send({ token: token });
+            });
+          });
+        });
+      
+      } else {
         // Step 3b. Create a new user account or return an existing one.
         User.user.findOne({ github: profile.id }, function(err, existingUser) {
           if (existingUser) {
-            console.log('i am the existing user', existingUser)
+            // console.log('i am the existing user', existingUser)
             var token = createJWT(existingUser);
             return res.send({ token: token, user: existingUser });
           }
-          var user = new User();
+          var user = new User.user();
           user.github = profile.id;
           user.picture = profile.avatar_url;
           user.displayName = profile.name;
@@ -264,7 +281,7 @@ app.post('/auth/github', function(req, res) {
             res.send({ token: token, user: user });
           });
         });
-      
+      }
     });
   });
 });

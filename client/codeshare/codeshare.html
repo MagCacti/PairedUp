@@ -13,6 +13,10 @@
     </div>
   </div> 
     <div class="col-md-8">
+        <form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+            <input type="file" name="string">
+            <input type="submit" value="Upload File">
+        </form>
       <input ng-model="title">
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>

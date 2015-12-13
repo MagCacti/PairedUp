@@ -10,7 +10,17 @@ var Schema = mongoose.Schema;
 
 
 var uri = config.MONGO_URI; 
-var db = require('mongoose').connect(uri);
+mongoose.connect(uri);
+
+var db = mongoose.connection;
+db.on('error', function(err){
+  console.log('connection error', err);
+
+});
+
+db.once('open', function(){
+  console.log('connect');
+});
 
 var userSchema = new Schema({
  displayName: String,
