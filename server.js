@@ -7,48 +7,58 @@ var fs = require('fs');
 //Need if we want to check req.file; 
 var multer  = require('multer')
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 // var cors = require('cors');
 var request = require('request');
-var jwt = require('jwt-simple');
-var moment = require('moment');
+// var jwt = require('jwt-simple');
+// var moment = require('moment');
 var path = require('path');
 var config = require('./config.js');
 var mongoose = require('mongoose');
 var app = express();
+var http = require('http');
+var server = http.Server(app);
+var passport = require('passport');
+var flash    = require('connect-flash');
+var GitHubStrategy = require('passport-github').Strategy;
+var GITHUB_CLIENT_ID = ""
+var GITHUB_CLIENT_SECRET = "";
+var session = require('express-session');
+var morgan = require('morgan');
+var logger = require('morgan');
+// var router = express.Router();
 
 //I believe we need if we want to check req.file
 var upload = multer({ dest: 'uploads/' });
 
 //I believe we need if we want to check req.file
-app.use(upload.single('string'));
-//DELETE BusBoy in package.json
-//for the image on the top left corner of the tab, on the web browser                             
-app.use(favicon(__dirname + "/favicon.ico"));
-
-var http = require('http');
-
-// //should have access to user mongoose model and message mongoose model with this.
-// var User = require('./database/UserModel');
-//I believe server is an instance of a event emitter. An object with many requesthandle properties. That is a tenative assessment. 
-//Necessary for making sockets.
-var server = http.Server(app);
-//The docs are not clear on the next two lines.Both lines are necessary for sockets.
+//The docs are not clear on the next two lines. Both lines are necessary for sockets.
 var socketio = require('socket.io');
 var io = socketio(server);
-//listening to server
 server.listen(8080);
 console.log("App listening on port 8080");
 
 
-var User = require('./database/UserModel');
+var db = require('./database/UserModel');
+var User = db.user
 
 
 app.set('port', process.env.PORT || 8080);
-// app.use(cors());
+app.use(upload.single('string'));
+app.use(favicon(__dirname + "/favicon.ico"));
+app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/client'));                 
+//serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+// Initialize Passport!  Also use passport.session() middleware, to support
+  // persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true }));
 
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -58,95 +68,6 @@ if (app.get('env') === 'production') {
   });
 }
 
-app.use(express.static(__dirname + '/client'));                 
-//serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
-
-
-//for every path request. 
-// app.get('*', function(req, res) {
-//   // load the single view file (angular will handle the page changes on the front-end)
-//         res.sendFile(__dirname + '/client/index.html'); 
-//     });
-
-// app.use(bodyParser.urlencoded({'extended':'true'}));            
-
-//need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
-// app.use(bodyParser.json());                                  
-
-            
-
-//need this so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
-
-// Once the server is running, it will be available for socket clients to connect. A client trying to establish a connection with the Socket.io server will start by initiating the handshaking process.
-
-/*
- |--------------------------------------------------------------------------
- | Login Required Middleware
- |--------------------------------------------------------------------------
- */
-
- //makes sure that user is authenticated
-
-function ensureAuthenticated(req, res, next) {
-  if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
-  }
-  var token = req.headers.authorization.split(' ')[1];
-
-  var payload = null;
-  try {
-    payload = jwt.decode(token, config.TOKEN_SECRET);
-  }
-  catch (err) {
-    return res.status(401).send({ message: err.message });
-  }
-
-  if (payload.exp <= moment().unix()) {
-    return res.status(401).send({ message: 'Token has expired' });
-  }
-  req.user = payload.sub;
-  next();
-}
-
-
-/*
- |--------------------------------------------------------------------------
- | Sockets Connection
- |--------------------------------------------------------------------------
- */
-
-
-
-
-
-
-
-
-
-
-/*
- |--------------------------------------------------------------------------
- | Generate JSON Web Token
- |--------------------------------------------------------------------------
- */
-
-
-
-function createJWT(user){
-  var payload = {
-    sub: user._id,
-    iat: moment().unix(),
-    exp: moment().add(14, 'days').unix()
-  };
-  return jwt.encode(payload, 'shhhh');
-}
-
-
-/*
-A request handler is a function that will be executed every time the server receives a particular request, usually defined by an HTTP method (e.g., GET) and the URL path (i.e., the URL without the protocol, host, and port). The Express.js request handler needs at least two parameters—request, or simply req, and response, or res.
-*/
-
 //to allow cross origin (need to add more to this comment.)
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -155,144 +76,182 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-
-
-/*
- |--------------------------------------------------------------------------
- | GET /api/me
- |--------------------------------------------------------------------------
- */
-
-app.get('/api/me', function(req, res) {
-  var test = Object.keys(req);
-  console.log('req', req.params);
-  User.user.findById(req.user, function(err, user) {
-    console.log('this is the user crap', user)
-    console.log('this, is the err', err);
-    res.send(user);
-  });
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.  However, since this example does not
+//   have a database of user records, the complete GitHub profile is serialized
+//   and deserialized.
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
 });
 
+app.get('/', function(req, res){
+  console.log("Hello");
+  // res.send("hello world");
+  // res.render('index.html', { user: req.user });
+});
+
+// Use the GitHubStrategy within Passport.
+//   Strategies in Passport require a `verify` function, which accept
+//   credentials (in this case, an accessToken, refreshToken, and GitHub
+//   profile), and invoke a callback with a user object.
+var globalProfile;
+// GET /auth/github
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in GitHub authentication will involve redirecting
+//   the user to github.com.  After authorization, GitHubwill redirect the user
+//   back to this application at /auth/github/callback
+//Step 1
+app.get('/auth/github',
+  passport.authenticate('github'),
+  function(req, res){
+    console.log("hello I am in authenticated");
+    // The request will be redirected to GitHub for authentication, so this
+    // function will not be called.
+  });
+
+// GET /auth/github/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+//Step 2
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  //This is the request handler that will be called when they click the log in to get hub. 
+  function(req, res) {
+    console.log("This is the request handler that will be called when they click the log in to github");
+    //res.redirect('/');
+    res.redirect('http://localhost:8080/#/profile');
+  });
+
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+
+// This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
+//Step 3
+app.get('/account', ensureAuthenticated, function(req, res){
+  console.log('this is the req.user in the account route', req.user);
+  res.json(req.user);
+});
+
+app.get('/login', function(req, res){
+    console.log('this is the req.user in the login route', req);
+
+  res.json({profile: globalProfile});
+});
+
+
+
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+//Step 4:
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
+}
+
+
+
+passport.use(new GitHubStrategy({
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:8080/auth/github/callback"
+  },
+  //Step 5
+  function(accessToken, refreshToken, profile, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+      // console.log("accessToken", accessToken);
+      // console.log("refreshToken",refreshToken );
+      console.log("profile", profile);
+      console.log("This is the avatar_url:::::::", profile._json.avatar_url)
+      // User.findOrCreate
+      // var user;
+      User.findOne({github: profile.id}, function (err, user) {
+        if (user) {
+          console.log('this is the user', user);
+        globalProfile = user;
+        }else {
+          var user = new User();
+          user.github = profile.id;
+          user.picture = profile._json.avatar_url;
+          user.displayName = profile.displayName;
+          user.save(function() {
+            console.log(user + ' was saved');
+          });
+          globalProfile = user;
+        }
+      });
+      //TODO: This is where I will have to do actuall login stuff. Like saving user to database;
+      // To keep the example simple, the user's GitHub profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the GitHub account with a user record in your database,
+      // and return that user instead.
+      // globalProfile = profile;
+      return done(null, profile);
+    });
+  }
+));
+
 /*
+
  |--------------------------------------------------------------------------
  | PUT /api/me
  |--------------------------------------------------------------------------
  */
 
-app.put('/api/me', function(req, res) {
-  User.user.findById(req.user, function(err, user) {
-    if (!user) {
-      return res.status(400).send({ message: 'User not found' });
-    }
-    user.displayName = req.body.displayName || user.displayName;
-    user.email = req.body.email || user.email;
-    user.save(function(err) {
-      res.status(200).end();
-    });
-  });
-});
+// app.put('/api/me', function(req, res) {
+//   User.user.findById(req.user, function(err, user) {
+//     if (!user) {
+//       return res.status(400).send({ message: 'User not found' });
+//     }
+//     user.displayName = req.body.displayName || user.displayName;
+//     user.email = req.body.email || user.email;
+//     user.save(function(err) {
+//       res.status(200).end();
+//     });
+//   });
+// });
 
-/*
- |--------------------------------------------------------------------------
- | Login with GitHub
- |--------------------------------------------------------------------------
- */
-
-
-
-
-
-
-app.post('/auth/github', function(req, res) {
-  console.log('heeyyy work it', res)
-  var accessTokenUrl = 'https://github.com/login/oauth/access_token';
-  var userApiUrl = 'https://api.github.com/user';
-  var params = {
-    code: req.body.code,
-    client_id: req.body.clientId,
-    client_secret: config.GITHUB_SECRET,
-    redirect_uri: req.body.redirectUri
-  };
-
-  // Step 1. Exchange authorization code for access token.
-  request.get({ url: accessTokenUrl, qs: params }, function(err, response, accessToken) {
-    accessToken = qs.parse(accessToken);
-    var headers = { 'User-Agent': 'Satellizer' };
-
-    // Step 2. Retrieve profile information about the current user.
-    request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
-      console.log('this is a profile', profile);
-      // Step 3a. Link user accounts.
-      if (req.headers.authorization) {
-        console.log('inside authorization if statement ---------------');
-        // User.user.findOne({ github: profile.id }, function(err, existingUser) {
-        //   console.log('this is the user in the database', existingUser);
-        //   if (existingUser) {
-        //     return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
-        //   }
-        //   var token = req.headers.authorization.split(' ')[1];
-        //   // console.log('this is the token', token)
-        //   var payload = jwt.decode(token, config.TOKEN_SECRET);
-        //   User.user.findById(payload.sub, function(err, user) {
-        //     if (!user) {
-        //       return res.status(400).send({ message: 'User not found' });
-        //     }
-        //     user.github = profile.id;
-        //     user.picture = user.picture || profile.avatar_url;
-        //     user.displayName = user.displayName || profile.name;
-        //     user.save(function() {
-        //       var token = createJWT(user);
-        //       res.send({ token: token });
-        //     });
-        //   });
-        // });
-      }
-      // } else {
-        // Step 3b. Create a new user account or return an existing one.
-        User.user.findOne({ github: profile.id }, function(err, existingUser) {
-          if (existingUser) {
-            console.log('i am the existing user', existingUser)
-            var token = createJWT(existingUser);
-            return res.send({ token: token, user: existingUser });
-          }
-          var user = new User();
-          user.github = profile.id;
-          user.picture = profile.avatar_url;
-          user.displayName = profile.name;
-          user.save(function() {
-            var token = createJWT(user);
-            res.send({ token: token, user: user });
-          });
-        });
-      
-    });
-  });
-});
 
 /*
  |--------------------------------------------------------------------------
  | Unlink Provider
  |--------------------------------------------------------------------------
  */
-app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
-  var provider = req.body.provider;
-  var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
-    'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
+// app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
+//   var provider = req.body.provider;
+//   var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
+//     'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
 
-  if (providers.indexOf(provider) === -1) {
-    return res.status(400).send({ message: 'Unknown OAuth Provider' });
-  }
+//   if (providers.indexOf(provider) === -1) {
+//     return res.status(400).send({ message: 'Unknown OAuth Provider' });
+//   }
 
-  User.user.findById(req.user, function(err, user) {
-    if (!user) {
-      return res.status(400).send({ message: 'User Not Found' });
-    }
-    user[provider] = undefined;
-    user.save(function() {
-      res.status(200).end();
-    });
-  });
-});
+//   User.user.findById(req.user, function(err, user) {
+//     if (!user) {
+//       return res.status(400).send({ message: 'User Not Found' });
+//     }
+//     user[provider] = undefined;
+//     user.save(function() {
+//       res.status(200).end();
+//     });
+//   });
+// });
 
 
 
@@ -376,6 +335,10 @@ app.post('/fileUpload', function(req, res, next) {
 
       }
   });
-     //DELETE readFile in package.json
 });
+
+
+
+  
+
 

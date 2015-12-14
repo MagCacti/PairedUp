@@ -17,10 +17,7 @@ angular.module('myApp', [
 		.state('login', {
 			url: '/login',
 			templateUrl: 'auth/login/login.html',
-			controller: 'LoginController',
-      resolve: {
-        skipIfLoggedIn: skipIfLoggedIn
-      }
+			controller: 'LoginController'
 		})
     .state('logout', {
       url: '/logout',
@@ -35,10 +32,7 @@ angular.module('myApp', [
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController',
-      resolve: {
-        loginRequired: loginRequired
-      }
+      controller: 'ProfileController'
     })
 
 		.state('codeshare', {
@@ -46,6 +40,12 @@ angular.module('myApp', [
 			templateUrl: 'codeshare/codeshare.html',
 			controller: 'CodeShareController'
 		})
+
+    .state('chat', {
+      url: '/chat',
+      templateUrl: 'chat/chat.html',
+      controller: 'ExampleController'
+    })
 
 	$urlRouterProvider.otherwise('/');
 
@@ -84,7 +84,7 @@ angular.module('myApp', [
 
 })
 
-.controller('LoginController', function($scope, $auth, $location) {
+.controller('LoginController', function($scope, $auth, $location, $http) {
 
 
    // $scope.login = function() {
@@ -100,10 +100,15 @@ angular.module('myApp', [
    //  };
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider)
-      .then(function() {
+      .then(function(response) {
+          var test = response.data;
 
+          console.log('this is suppose to be the current logged user', test);
           console.log('You have successfully signed in with ' + provider + '!');
           $location.path('/profile')
+         $http.post('/api/me', {user: test}).then(function(result) {
+          console.log("This is the users data on the frontEnd", result);
+         })
         })
         .catch(function(error) {
           if (error.error) {
@@ -145,10 +150,21 @@ angular.module('myApp', [
 
 
 .factory('Account', function($http) {
+
     return {
       getProfile: function() {
         console.log('inside the factory-------------');
-        return $http.get('/api/me');
+          return $http.get('/account')
+        // .then(function(req, res){
+        //   console.log('this is a successful callback of /account', res);
+        //   console.log('this is a successful callback of /account for req', req);
+        //   console.log(typeof req);
+        //   // var test = JSON.parse(req);
+        //   // console.log(test);
+        //   console.log('this is req.data.whatever', req.data.profile.username)
+        //   // $scope.username = req.data.profile.username;
+        // })
+      
       },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);
