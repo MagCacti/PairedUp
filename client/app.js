@@ -57,7 +57,7 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-    clientId: TOKEN_SECRET,
+    clientId: "3c30b4028da7c634cb9a",
     url: '/auth/github',
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     redirectUri: window.location.origin,
