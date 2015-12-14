@@ -57,7 +57,7 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-    clientId: "6ffd349ee17a258a13ff",
+    clientId: TOKEN_SECRET,
     url: '/auth/github',
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     redirectUri: window.location.origin,
@@ -165,11 +165,11 @@ angular.module('myApp', [
 
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
-  var socket = io.connect("https://paired-up.herokuapp.com");// for localhost use the alternative: || "http://localhost:8080");
+  var socket = io.connect("https://paired-up.herokuapp.com");// for localhost use the alternative: || "http://localhost:8080"); 
   return {
     //listen to events.
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
+    on: function(eventName, callback) {
+      socket.on(eventName, callback); 
     },
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
