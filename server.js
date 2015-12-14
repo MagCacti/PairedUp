@@ -90,26 +90,26 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
  //makes sure that user is authenticated
 
-function ensureAuthenticated(req, res, next) {
-  if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
-  }
-  var token = req.headers.authorization.split(' ')[1];
+// function ensureAuthenticated(req, res, next) {
+//   if (!req.headers.authorization) {
+//     return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
+//   }
+//   var token = req.headers.authorization.split(' ')[1];
 
-  var payload = null;
-  try {
-    payload = jwt.decode(token, config.TOKEN_SECRET);
-  }
-  catch (err) {
-    return res.status(401).send({ message: err.message });
-  }
+//   var payload = null;
+//   try {
+//     payload = jwt.decode(token, config.TOKEN_SECRET);
+//   }
+//   catch (err) {
+//     return res.status(401).send({ message: err.message });
+//   }
 
-  if (payload.exp <= moment().unix()) {
-    return res.status(401).send({ message: 'Token has expired' });
-  }
-  req.user = payload.sub;
-  next();
-}
+//   if (payload.exp <= moment().unix()) {
+//     return res.status(401).send({ message: 'Token has expired' });
+//   }
+//   req.user = payload.sub;
+//   next();
+// }
 
 
 /*
@@ -178,18 +178,18 @@ app.all('/*', function(req, res, next) {
 // Register all our routes with /api
 // app.use('/api', router);
 
-router.post('/me', function(req, res) {
-  // var test = Object.keys(req);
-  // var test1 = JSON.parse(req);
-  console.log("********************************************")
-  console.log('req-----------', req.body);
-  User.user.findById(req.body.user.user._id, function(err, user) {
-    console.log('this is the user crap', user)
-    console.log('this, is the err', err);
-    res.send(user);
-  });
-});
-app.use('/api', router);
+// router.post('/me', function(req, res) {
+//   // var test = Object.keys(req);
+//   // var test1 = JSON.parse(req);
+//   console.log("********************************************")
+//   console.log('req-----------', req.body);
+//   User.user.findById(req.body.user.user._id, function(err, user) {
+//     console.log('this is the user crap', user)
+//     console.log('this, is the err', err);
+//     res.send(user);
+//   });
+// });
+// app.use('/api', router);
 /*
  |--------------------------------------------------------------------------
  | PUT /api/me
@@ -220,71 +220,71 @@ app.use('/api', router);
 
 
 
-app.post('/auth/github', function(req, res) {
-  // console.log('heeyyy work it', res)
-  var accessTokenUrl = 'https://github.com/login/oauth/access_token';
-  var userApiUrl = 'https://api.github.com/user';
-  var params = {
-    code: req.body.code,
-    client_id: req.body.clientId,
-    client_secret: config.GITHUB_SECRET,
-    redirect_uri: req.body.redirectUri
-  };
+// app.post('/auth/github', function(req, res) {
+//   // console.log('heeyyy work it', res)
+//   var accessTokenUrl = 'https://github.com/login/oauth/access_token';
+//   var userApiUrl = 'https://api.github.com/user';
+//   var params = {
+//     code: req.body.code,
+//     client_id: req.body.clientId,
+//     client_secret: config.GITHUB_SECRET,
+//     redirect_uri: req.body.redirectUri
+//   };
 
-  // Step 1. Exchange authorization code for access token.
-  request.get({ url: accessTokenUrl, qs: params }, function(err, response, accessToken) {
-    accessToken = qs.parse(accessToken);
-    var headers = { 'User-Agent': 'Satellizer' };
+//   // Step 1. Exchange authorization code for access token.
+//   request.get({ url: accessTokenUrl, qs: params }, function(err, response, accessToken) {
+//     accessToken = qs.parse(accessToken);
+//     var headers = { 'User-Agent': 'Satellizer' };
 
-    // Step 2. Retrieve profile information about the current user.
-    request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
-      console.log('this is a profile', profile);
-      // Step 3a. Link user accounts.
-      if (req.headers.authorization) {
-        // console.log('inside authorization if statement ---------------');
-        User.user.findOne({ github: profile.id }, function(err, existingUser) {
-          console.log('this is the user in the database', existingUser);
-          if (existingUser) {
-            return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
-          }
-          var token = req.headers.authorization.split(' ')[1];
-          // console.log('this is the token', token)
-          var payload = jwt.decode(token, config.TOKEN_SECRET);
-          User.user.findById(payload.sub, function(err, user) {
-            if (!user) {
-              return res.status(400).send({ message: 'User not found' });
-            }
-            user.github = profile.id;
-            user.picture = user.picture || profile.avatar_url;
-            user.displayName = user.displayName || profile.name;
-            user.save(function() {
-              var token = createJWT(user);
-              res.send({ token: token });
-            });
-          });
-        });
+//     // Step 2. Retrieve profile information about the current user.
+//     request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
+//       console.log('this is a profile', profile);
+//       // Step 3a. Link user accounts.
+//       if (req.headers.authorization) {
+//         // console.log('inside authorization if statement ---------------');
+//         User.user.findOne({ github: profile.id }, function(err, existingUser) {
+//           console.log('this is the user in the database', existingUser);
+//           if (existingUser) {
+//             return res.status(409).send({ message: 'There is already a GitHub account that belongs to you' });
+//           }
+//           var token = req.headers.authorization.split(' ')[1];
+//           // console.log('this is the token', token)
+//           var payload = jwt.decode(token, config.TOKEN_SECRET);
+//           User.user.findById(payload.sub, function(err, user) {
+//             if (!user) {
+//               return res.status(400).send({ message: 'User not found' });
+//             }
+//             user.github = profile.id;
+//             user.picture = user.picture || profile.avatar_url;
+//             user.displayName = user.displayName || profile.name;
+//             user.save(function() {
+//               var token = createJWT(user);
+//               res.send({ token: token });
+//             });
+//           });
+//         });
       
-      } else {
-        // Step 3b. Create a new user account or return an existing one.
-        User.user.findOne({ github: profile.id }, function(err, existingUser) {
-          if (existingUser) {
-            // console.log('i am the existing user', existingUser)
-            var token = createJWT(existingUser);
-            return res.send({ token: token, user: existingUser });
-          }
-          var user = new User.user();
-          user.github = profile.id;
-          user.picture = profile.avatar_url;
-          user.displayName = profile.name;
-          user.save(function() {
-            var token = createJWT(user);
-            res.send({ token: token, user: user });
-          });
-        });
-      }
-    });
-  });
-});
+//       } else {
+//         // Step 3b. Create a new user account or return an existing one.
+//         User.user.findOne({ github: profile.id }, function(err, existingUser) {
+//           if (existingUser) {
+//             // console.log('i am the existing user', existingUser)
+//             var token = createJWT(existingUser);
+//             return res.send({ token: token, user: existingUser });
+//           }
+//           var user = new User.user();
+//           user.github = profile.id;
+//           user.picture = profile.avatar_url;
+//           user.displayName = profile.name;
+//           user.save(function() {
+//             var token = createJWT(user);
+//             res.send({ token: token, user: user });
+//           });
+//         });
+//       }
+//     });
+//   });
+// });
 
 /*
  |--------------------------------------------------------------------------
@@ -396,3 +396,143 @@ app.post('/fileUpload', function(req, res, next) {
      //DELETE readFile in package.json
 });
 
+
+var passport = require('passport');
+var flash    = require('connect-flash');
+// var cookieParser = require('cookie-parser');
+app.use(flash()); // use connect-flash for flash messages stored in session
+/*Done WIth Scotch Example*/
+// var util = require('util')
+var GitHubStrategy = require('passport-github').Strategy;
+var GITHUB_CLIENT_ID = ""
+var GITHUB_CLIENT_SECRET = "";
+// var bodyParser = require('body-parser');
+var session = require('express-session');
+var morgan = require('morgan');
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.  However, since this example does not
+//   have a database of user records, the complete GitHub profile is serialized
+//   and deserialized.
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+// Initialize Passport!  Also use passport.session() middleware, to support
+  // persistent login sessions (recommended).
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(express.static(__dirname + '/public'));
+// app.use(bodyParser.json());
+app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true }));
+app.get('/', function(req, res){
+  console.log("Hello");
+  // res.send("hello world");
+  // res.render('index.html', { user: req.user });
+});
+
+// Use the GitHubStrategy within Passport.
+//   Strategies in Passport require a `verify` function, which accept
+//   credentials (in this case, an accessToken, refreshToken, and GitHub
+//   profile), and invoke a callback with a user object.
+var globalProfile;
+// GET /auth/github
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in GitHub authentication will involve redirecting
+//   the user to github.com.  After authorization, GitHubwill redirect the user
+//   back to this application at /auth/github/callback
+//Step 1
+app.get('/auth/github',
+  passport.authenticate('github'),
+  function(req, res){
+    console.log("hello I am in authenticat")
+    // The request will be redirected to GitHub for authentication, so this
+    // function will not be called.
+  });
+
+// GET /auth/github/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+//Step 2
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  //This is the request handler that will be called when they click the log in to get hub. 
+  function(req, res) {
+    console.log("This is the request handler that will be called when they click the log in to github");
+    //res.redirect('/');
+    res.redirect('http://localhost:8080/#/profile');
+  });
+
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+
+// This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
+//Step 3
+app.get('/account', ensureAuthenticated, function(req, res){
+  console.log('this is the req.user in the account route', req.user);
+  res.json(req.user);
+});
+app.get('/login', function(req, res){
+    console.log('this is the req.user in the login route', req);
+
+  res.json({profile: globalProfile});
+});
+
+
+
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+//Step 4:
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
+}
+
+
+
+passport.use(new GitHubStrategy({
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:8080/auth/github/callback"
+  },
+  //Step 5
+  function(accessToken, refreshToken, profile, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+      // console.log("accessToken", accessToken);
+      // console.log("refreshToken",refreshToken );
+      // console.log("profile", profile);
+
+      //TODO: This is where I will have to do actuall login stuff. Like saving user to database;
+      // To keep the example simple, the user's GitHub profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the GitHub account with a user record in your database,
+      // and return that user instead.
+      globalProfile = profile;
+      return done(null, profile);
+    });
+  }
+));
+  
+
+// app.listen(8080);
+// app.listen(3000);
+
+/*END PASSPORT*/

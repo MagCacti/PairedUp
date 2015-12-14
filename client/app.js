@@ -17,10 +17,7 @@ angular.module('myApp', [
 		.state('login', {
 			url: '/login',
 			templateUrl: 'auth/login/login.html',
-			controller: 'LoginController',
-      resolve: {
-        skipIfLoggedIn: skipIfLoggedIn
-      }
+			controller: 'LoginController'
 		})
     .state('logout', {
       url: '/logout',
@@ -35,10 +32,7 @@ angular.module('myApp', [
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController',
-      resolve: {
-        loginRequired: loginRequired
-      }
+      controller: 'ProfileController'
     })
 
 		.state('codeshare', {
@@ -156,10 +150,21 @@ angular.module('myApp', [
 
 
 .factory('Account', function($http) {
+
     return {
       getProfile: function() {
         console.log('inside the factory-------------');
-        return;// $http.post('/api/me', {});
+          return $http.get('/account')
+        // .then(function(req, res){
+        //   console.log('this is a successful callback of /account', res);
+        //   console.log('this is a successful callback of /account for req', req);
+        //   console.log(typeof req);
+        //   // var test = JSON.parse(req);
+        //   // console.log(test);
+        //   console.log('this is req.data.whatever', req.data.profile.username)
+        //   // $scope.username = req.data.profile.username;
+        // })
+      
       },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);
