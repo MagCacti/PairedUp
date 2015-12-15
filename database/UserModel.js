@@ -12,7 +12,18 @@ var uri = 'mongodb://username:password@ds061954.mongolab.com:61954/heroku_z1qhwk
 
 //var uri = config.MONGO_URI; //USE THIS VERSION ONLY FOR DEVELOPMENT/LOCALHOST 
 
-var db = require('mongoose').connect(uri);
+mongoose.connect(uri);
+
+var db = mongoose.connection;
+
+db.on('error', function(err){
+  console.log('connection error', err);
+
+});
+
+db.once('open', function(){
+  console.log('connect');
+});
 
 var userSchema = new Schema({
  displayName: String,
