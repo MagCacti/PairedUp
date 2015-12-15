@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var config = require('../config.js');
 var Schema = mongoose.Schema;
 
 //Line 5 or line 10. Not both. 
@@ -8,12 +9,22 @@ var Schema = mongoose.Schema;
 // Since you're connecting to a local instance, you can skip the username and password and use the following URI:
 
 
-var uri = 'mongodb://localhost/users'; 
-var db = require('mongoose').connect(uri);
+var uri = config.MONGO_URI; 
+mongoose.connect(uri);
+
+var db = mongoose.connection;
+db.on('error', function(err){
+  console.log('connection error', err);
+
+});
+
+db.once('open', function(){
+  console.log('connect');
+});
 
 var userSchema = new Schema({
  displayName: String,
- name: String,
+ // name: String,
  picture: String,
  github: String
  // lastname: String,
@@ -26,14 +37,17 @@ var userSchema = new Schema({
  // interest: String
 });
 
-
+var messageSchema = new Schema({
+    nameOfChat: String, 
+    messageContent: String
+});
 // userSchema.methods.speak = function () {
 //  var greeting = this.username? "Meow name is " + this.username: "I don't have a name";
 //  console.log(greeting);
 // }
 
 
-
+var Message = mongoose.model('Messages', messageSchema);
 var User = mongoose.model("User", userSchema);
 
 // var Joseph = new User({
@@ -57,4 +71,7 @@ var User = mongoose.model("User", userSchema);
 /*Ultimate Product
 
 */
-module.exports = User;
+module.exports = {
+    user: User,
+    messages: Message
+};
