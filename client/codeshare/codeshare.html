@@ -19,10 +19,18 @@
             <input type="file" name="string">
             <input type="submit" value="Upload File">
         </form>
+
+    <!-- 'Add' Button: -->
+    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Create New</a>
+
+    <!-- 'Update' Button -->
+    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update Changes</a>
+    
       <input ng-model="title">
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
     </div>
+
     <div class="col-md-2">
 
     <!-- <video id="localVideo" autoplay></video> -->
@@ -49,22 +57,16 @@
         <!-- <<  </li></ul> --> 
       <!-- </div> -->
 
-  <div class="col-md-8">
+  
 
-    <input ng-model="title">
+    
 
-    <!-- 'Add' Button: -->
-    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Create New</a>
-
-    <!-- 'Update' Button -->
-    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update Changes</a>
     
     <!-- Codeshare Editor: -->
 <!--     <div ui-ace="aceOption" class="ng-untouched ng-valid ace_editor ace-tm ng-dirty ng-valid-parse" ng-model="aceModel"></div>
 
     <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
  -->
-  </div>
   
   <div class="col-md-2">
 <!--Icecomm Code (temp removal)--> 
