@@ -133,7 +133,7 @@ app.get('/auth/github/callback',
   function(req, res) {
     console.log("This is the request handler that will be called when they click the log in to github");
     //res.redirect('/');
-    res.redirect('http://localhost:8080/#/profile');
+    res.redirect('https://paired-up.herokuapp.com/#/profile');
   });
 
 
