@@ -6,14 +6,14 @@
     <div ng-repeat=" file in filesList"><!-- {{ file.title }}  -->
       <button ng-click='delete(file.id)'>Delete</button>
       <!-- Edit function tied to button with the name of the document -->
-      <button ng-click='edit(file.id)'>Edit {{file.title}}</button>
+      <button ng-click='edit(file.id)'>Edit {{file.title}}</button><a href="{{file.title}}" download>{{file.title}}</a>
       <!-- Share with button, can be improved later. Need to ask the user who they would like to share with.  -->
       <button ng-click='shareWith(file.id)'>ShareWith</button>
       <button ng-click='update(file.id)'>Update</button>
     </div>
   </div> 
     <div class="col-md-8">
-        <form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+        <form action="/fileUpload" enctype="multipart/form-data" method="post">
             <input type="file" name="string">
             <input type="submit" value="Upload File">
         </form>
@@ -22,6 +22,8 @@
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
     </div>
     <div class="col-md-2">
+
+       <a download href="http://blog.techdev.de/an-angularjs-directive-to-download-pdf-files/">download this</a>
 
     <!-- <video id="localVideo" autoplay></video> -->
       <!-- <icecomm-connect room="custom room"></icecomm-connect>
