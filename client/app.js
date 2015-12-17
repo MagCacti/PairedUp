@@ -6,8 +6,8 @@ angular.module('myApp', [
 	'myApp.codeshare',
    //for client side sockets
   'btford.socket-io',
-    //for the authentication.
-   'satellizer'
+      //for the authentication.
+  'satellizer'
    // 'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
@@ -17,40 +17,46 @@ angular.module('myApp', [
 		.state('login', {
 			url: '/login',
 			templateUrl: 'auth/login/login.html',
-			controller: 'LoginController',
-      resolve: {
-        skipIfLoggedIn: skipIfLoggedIn
-      }
+			controller: 'LoginController'
 		})
     .state('logout', {
       url: '/logout',
       template: null,
       controller: 'LogoutController'
     })
-		.state('map', {
-			url: '/map',
-			templateUrl: 'map/map.html'
-		})
+    .state('map', {
+      url: '/map',
+      templateUrl: 'map/map.html'
+    })
 
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController',
-      resolve: {
-        loginRequired: loginRequired
-      }
+      controller: 'ProfileController' 
     })
 
-		.state('codeshare', {
-			url: '/codeshare',
-			templateUrl: 'codeshare/codeshare.html',
-			controller: 'CodeShareController'
-		})
+    .state('codeshare', {
+      url: '/codeshare',
+      templateUrl: 'codeshare/codeshare.html',
+      controller: 'CodeShareController'
+    })
+
+    .state('messages', {
+      url: '/messages',
+      templateUrl: 'messages/messages.html',
+      controller: 'ExampleController'
+    })
+
+    .state('chat', {
+      url: '/chat',
+      templateUrl: 'chat/chat.html',
+      controller: 'ExampleController'
+    })
 
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-    clientId: "6ffd349ee17a258a13ff",
+    clientId: "3c30b4028da7c634cb9a",
     url: '/auth/github',
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     redirectUri: window.location.origin,
@@ -75,17 +81,18 @@ angular.module('myApp', [
 	      var deferred = $q.defer();
 	      if ($auth.isAuthenticated()) {
 	        deferred.resolve();
-          console.log('hi, i am in');
+          console.log('User has been authenticated');
 	      } else {
 	        $location.path('/login');
+          console.log('User is not yet authenticated.');
 	      }
 	      return deferred.promise;
 	    }
 
 })
 
-.controller('LoginController', function($scope, $auth, $location) {
-
+.controller('LoginController', function($scope, $auth, $location, $http) {
+  
 
    // $scope.login = function() {
    //    $auth.login($scope.user)
@@ -98,12 +105,18 @@ angular.module('myApp', [
    //        // toastr.error(error.data.message, error.status);
    //      });
    //  };
+
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider)
-      .then(function() {
+      .then(function(response) {
+          var test = response.data;
 
+          console.log('this is suppose to be the current logged user', test);
           console.log('You have successfully signed in with ' + provider + '!');
           $location.path('/profile')
+         $http.post('/api/me', {user: test}).then(function(result) {
+          console.log("This is the users data on the frontEnd", result);
+         })
         })
         .catch(function(error) {
           if (error.error) {
@@ -123,9 +136,7 @@ angular.module('myApp', [
 })
 
 /*
-
   Nav Bar Controller
-
 */
 
 .controller('NavbarController', function($scope, $auth) {
@@ -145,10 +156,21 @@ angular.module('myApp', [
 
 
 .factory('Account', function($http) {
+
     return {
       getProfile: function() {
         console.log('inside the factory-------------');
-        return $http.get('/api/me');
+          return $http.get('/account')
+        // .then(function(req, res){
+        //   console.log('this is a successful callback of /account', res);
+        //   console.log('this is a successful callback of /account for req', req);
+        //   console.log(typeof req);
+        //   // var test = JSON.parse(req);
+        //   // console.log(test);
+        //   console.log('this is req.data.whatever', req.data.profile.username)
+        //   // $scope.username = req.data.profile.username;
+        // })
+      
       },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);
@@ -158,11 +180,11 @@ angular.module('myApp', [
 
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
-  var socket = io.connect("http://localhost:8080");
+  var socket = io.connect("https://paired-up.herokuapp.com");// for localhost use the alternative: || "http://localhost:8080"); 
   return {
     //listen to events.
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
+    on: function(eventName, callback) {
+      socket.on(eventName, callback); 
     },
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
@@ -195,4 +217,3 @@ angular.module('myApp', [
         }
     };
 }]);
-

@@ -1,5 +1,5 @@
 {
-  "name": "testapp",
+  "name": "PairedUp",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,20 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kmcelveen/PairedUp.git"
+    "url": "git+https://github.com/MagCacti/PairedUp.git"
   },
   "author": "MagCacti",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kmcelveen/PairedUp/issues"
+    "url": "https://github.com/MagCacti/PairedUp/issues"
   },
-  "homepage": "https://github.com/kmcelveen/PairedUp#readme",
+  "homepage": "https://github.com/MagCact/PairedUp#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
     "chai": "^3.4.1",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.0",
-    "cors": "^2.7.1",
     "cookie-session": "^1.2.0",
+    "cors": "^2.7.1",
     "express": "^4.13.3",
     "express-favicon": "^1.0.1",
     "express-session": "^1.12.1",

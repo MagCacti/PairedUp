@@ -1,17 +1,17 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $auth, Account) {
+  .controller('ProfileController', function($scope, $http, $auth, Account) {
     $scope.getProfile = function() {
       Account.getProfile()
         .then(function(response) {
           console.log('inside profile controller------')
-          var test = JSON.stringify(response);
-          console.log('this is the response', test);
-          $scope.user = response.data;
+          console.log('this is the response', response);
+          $scope.user = response.data.profile;
         })
         .catch(function(response) {
           // toastr.error(response.data.message, response.status);
         });
     };
+
     $scope.updateProfile = function() {
       Account.updateProfile($scope.user)
         .then(function() {

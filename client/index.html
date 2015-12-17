@@ -5,18 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="30DaysofJavascriptTemplate">
-    <meta name="Carine Todmia" content="">
+    <meta name="description" content="PairedUp: Learn, Share, Code ...and give back.">
+    <meta name="keywords" content="Code, mentor, share, pair, JavaScript, Telegraph">
     
-    <title>MagiCati</title>
-    <!-- Latest compiled and minified CSS -->
+    <title>PairedUp!</title>
+<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
     
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
+
     <!-- Custom styles for this template -->
-    <link href="styles/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -24,11 +25,12 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <!-- script src="https://cdn.icecomm.io/icecomm.js"></script> -->
+
   </head>
 
   <body>
 
+<!-- Narrow Nav-Bar (default 1)-->
   <nav ng-controller="NavbarController" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
@@ -38,35 +40,39 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+
+<!-- Wide Nav-Bar (default 2)-->
         <a class="navbar-brand" ui-sref-active="active" href="#">Paired-Up!</a>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li ng-if="!isAuthenticated()"><a ui-sref="login">Login</a></li>
+          <li><a ui-sref="login">Login</a></li>
 
-          <li ng-if="isAuthenticated()"><a ui-sref="profile">Profile</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="logout">Logout</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="codeshare">Codeshare</a></li>
-          <li ng-if="isAuthenticated()"><a ui-sref="chat">Chat</a></li>
+          <li><a ui-sref="profile">Profile</a></li>
+          <li><a ui-sref="logout">Logout</a></li>
+          <li><a ui-sref="codeshare">Codeshare</a></li>
+          <li><a ui-sref="chat">Chat</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </nav>
+
+  <a href="/auth/github">login with Passport Github</a>
   <!-- Chat Template -->
-   <form ng-submit="submit()" ng-controller="ExampleController">
+   <!-- <form ng-submit="submit()" ng-controller="ExampleController">
      Enter text and hit enter:
      <input type="text" ng-model="text" name="text" />
      <input type="submit" id="submit" value="Submit" />
 
      <pre>list={{list}}</pre>
-   </form>
+   </form> -->
 <!-- Ending Chat Template -->
 
 <!-- Form for uploading files -->
-<form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+<!-- <form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
     <input type="file" name="string">
     <input type="submit" value="Upload File">
-</form>
+</form> -->
 <!-- Ending form for uploading files -->
 
     <!-- NG-VIEW BEGIN-->
@@ -80,19 +86,36 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
     <script src="assets/lib/angular.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+    
     <!-- Angular UI Boostrap  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../bower_components/angular-socket-io/socket.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
-    <script type="text/javascript" src="../bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-     <script type="text/javascript" src="../bower_components/angular-ui-ace/ui-ace.js"></script>
-    <script src="//cdn.jsdelivr.net/satellizer/0.13.1/satellizer.min.js"></script>
 
-    <!-- // <script src="../bower_components/angular-route/angular-route.js"></script> -->
+<!-- These Bower Components are now being statically served and have been commented out: -->
+
+    <!-- <script type="text/javascript" src="../bower_components/angular-socket-io/socket.min.js"></script> --> 
+
+    <!-- Added at deployment. Replaces above bower-installed socket version.: -->
+      <script type="text/javascript" src="assets/lib/btford-socket.io.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
+
+    <!-- Replace bower version with statically served version of ace-builds ace file: -->
+   <script type="text/javascript" src="assets/lib/ace-builds.min.noconflict.js"></script> 
+    <!-- <script type="text/javascript" src="./bower_components/ace-builds/src-min-noconflict/ace.js"></script> -->
+
+    <!-- Replace bower ui-ace.js with a statically served file for deployment: -->
+    <script type="text/javascript" src="assets/lib/ui-ace.js"></script> 
+    <!-- <script type="text/javascript" src="./bower_components/angular-ui-ace/ui-ace.min.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/satellizer/0.13.1/satellizer.min.js"></script>
+  <!--   // <script src="../bower_components/angular-route/angular-route.js"></script> -->
+
     <script src="app.js"></script>
 
     <!-- Google Maps JavaScript API v3 -->
@@ -101,8 +124,6 @@
     // gmaps.js
     // <script type="text/javascript" src="assets/lib/gmaps.js"></script> -->
 
-
-   
     <!-- // <script src="assets/lib/build/angular-ice.js"></script> -->
     <script src="userprofile/userprofilecontroller.js"></script>
     <script src="./codeshare/codeshare.controller.js"></script>
