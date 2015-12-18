@@ -1,8 +1,9 @@
 
 <h1>The Codesharing experience will live here </h1>
 <div class="row">
-  <div class="col-md-2"> 
+  <div class="col-md-4"> 
     <button ng-click='add()'>Add</button>
+    <div tree-view="structure" tree-view-options="options"></div>
     <div ng-repeat=" file in filesList"><!-- {{ file.title }}  -->
       <button ng-click='delete(file.id)'>Delete</button>
       <!-- Edit function tied to button with the name of the document -->
@@ -12,7 +13,7 @@
       <button ng-click='update(file.id)'>Update</button>
     </div>
   </div> 
-    <div class="col-md-8">
+    <div class="col-md-4">
         <form action="/fileUpload" enctype="multipart/form-data" method="post">
             <input type="file" name="string">
             <input type="submit" value="Upload File">
@@ -23,8 +24,7 @@
     </div>
     <div class="col-md-2">
 
-       <a download href="http://blog.techdev.de/an-angularjs-directive-to-download-pdf-files/">download this</a>
-
+      
     <!-- <video id="localVideo" autoplay></video> -->
       <!-- <icecomm-connect room="custom room"></icecomm-connect>
       <icecomm-local><video ng-if="local" autoplay class="icecomm-local"' +

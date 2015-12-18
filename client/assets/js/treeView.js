@@ -245,7 +245,7 @@
 						'</div>' +
 						'<a href="https://www.udemy.com/learn-angularjs/learn/#/lecture/1669392" class="tree-item" ng-repeat="file in ' + attrs.treeViewNode + '.' + filesProperty + '" ng-click="selectFile(file, $event)" ng-class="{ selected: isSelected(file) }">' +
 							'<span class="tree-item-name"><i ng-class="getFileIconClass(file)"></i> {{ file.' + displayProperty + ' }}</span>' +
-						'</a>' + '<button ng-click="addNode()">ADD</button>' +'<input ng-model="newNodeName">';
+						'</a>';
 
 					//Rendering template.
 					element.html('').append($compile(template)(scope));

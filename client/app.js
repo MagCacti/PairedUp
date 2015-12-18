@@ -28,11 +28,36 @@ angular.module('myApp', [
 			templateUrl: 'map/map.html'
 		})
 
-    .state('profile', {
+  .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
       controller: 'ProfileController'
     })
+
+  .state('profile.start', {
+    url: '/start',
+    templateUrl: 'userprofile/start.html',
+    controller: 'ProfileController'
+  })
+
+    .state('profile.currentskills', {
+      url: '/currentskills',
+      templateUrl: 'userprofile/currentskills.html',
+      controller: 'ProfileController'
+    })
+    .state('profile.futureskills', {
+      url: '/futureskills',
+      templateUrl: 'userprofile/futureskills.html',
+      controller: 'ProfileController'
+    })
+
+     .state('profile.summary', {
+      url: '/summary',
+      templateUrl: 'userprofile/summary.html',
+      controller: 'ProfileController'
+    })
+
+
 
 		.state('codeshare', {
 			url: '/codeshare',
