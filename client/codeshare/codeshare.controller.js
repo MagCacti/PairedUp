@@ -1,4 +1,4 @@
-angular.module('myApp.codeshare', [ ])
+angular.module('myApp.codeshare', ['Icecomm'])
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
@@ -22,21 +22,7 @@ angular.module('myApp.codeshare', [ ])
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[0];
 
-  // var comm = new Icecomm('');
-
-  //       comm.connect('test');
-
-  //       comm.on('local', function(peer) {
-  //         localVideo.src = peer.stream;
-  //       });
-
-  //       comm.on('connected', function(peer) {
-  //         document.body.appendChild(peer.getVideo());
-  //       });
-
-  //       comm.on('disconnect', function(peer) {
-  //         document.getElementById(peer.ID).remove();
-  //       });
+  
   //Will use to hold all the text in editor
   $scope.textInEditor;
   $scope.doc;
@@ -152,7 +138,25 @@ angular.module('myApp.codeshare', [ ])
       }
     }
   };
+  var comm = new Icecomm('xavqKe7oRPZ9Kl0JeYOQVYoTB8XJv4sYLslJoMPGfWlt7aO', {debug: true});
 
+        comm.connect('test');
+
+        comm.on('local', function(peer) {
+          localVideo.src = peer.stream;
+        });
+
+        comm.on('remote', function(peer){
+          remoteVideo.src = peer.stream;
+        });
+
+        comm.on('connected', function(peer) {
+          remoteVideo.src = peer.stream;
+          remoteVideo.id = peer.ID;
+        });
+        comm.on('disconnect', function(peer) {
+          document.getElementById(peer.ID).remove();
+        });
 
 }]);
 

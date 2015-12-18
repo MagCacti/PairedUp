@@ -7,8 +7,8 @@ angular.module('myApp', [
    //for client side sockets
   'btford.socket-io',
     //for the authentication.
-   'satellizer'
-   // 'Icecomm'
+   'satellizer',
+   'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
@@ -87,44 +87,7 @@ angular.module('myApp', [
 .controller('LoginController', function($scope, $auth, $location, $http) {
 
 
-   // $scope.login = function() {
-   //    $auth.login($scope.user)
-   //      .then(function() {
-   //    console.log($scope.user);
-   //        // toastr.success('You have successfully signed in!');
-   //        $location.path('/');
-   //      })
-   //      .catch(function(error) {
-   //        // toastr.error(error.data.message, error.status);
-   //      });
-   //  };
-    $scope.authenticate = function(provider) {
-      $auth.authenticate(provider)
-      .then(function(response) {
-          var test = response.data;
 
-          console.log('this is suppose to be the current logged user', test);
-          console.log('You have successfully signed in with ' + provider + '!');
-          $location.path('/profile')
-         $http.post('/api/me', {user: test}).then(function(result) {
-          console.log("This is the users data on the frontEnd", result);
-         })
-        })
-        .catch(function(error) {
-          if (error.error) {
-            // Popup error - invalid redirect_uri, pressed cancel button, etc.
-            console.log(error);
-            // toastr.error(error.error);
-          } else if (error.data) {
-            // HTTP response error from server
-            // toastr.error(error.data.message, error.status);
-            console.log('hiii')
-          } else {
-            // toastr.error(error);
-            console.log('heyyyy');
-          }
-        });
-    };
 })
 
 /*

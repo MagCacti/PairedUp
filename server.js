@@ -20,8 +20,6 @@ var server = http.Server(app);
 var passport = require('passport');
 var flash    = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy;
-var GITHUB_CLIENT_ID = ""
-var GITHUB_CLIENT_SECRET = "";
 var session = require('express-session');
 var morgan = require('morgan');
 var logger = require('morgan');
@@ -167,8 +165,8 @@ function ensureAuthenticated(req, res, next) {
 
 
 passport.use(new GitHubStrategy({
-    clientID: GITHUB_CLIENT_ID,
-    clientSecret: GITHUB_CLIENT_SECRET,
+    clientID: config.GITHUB_CLIENT_ID,
+    clientSecret: config.GITHUB_SECRET,
     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
   },
   //Step 5
