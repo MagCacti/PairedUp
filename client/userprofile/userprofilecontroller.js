@@ -1,9 +1,10 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $http, $auth, Account) {
+  .controller('ProfileController', function($scope, $http, $auth, Account, profiledata) {
     $scope.getProfile = function() {
+
       Account.getProfile()
         .then(function(response) {
-          console.log('inside profile controller------')
+          console.log('inside profile profiledata------', profiledata.skills)
           console.log('this is the response', response);
           $scope.user = response.data.profile;
         })

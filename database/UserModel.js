@@ -26,16 +26,21 @@ var userSchema = new Schema({
  displayName: String,
  // name: String,
  picture: String,
- github: String
- // lastname: String,
- // password: String, 
- // officeHours: String,
- // angular: String, 
- // node: String, 
- // javascript: String, 
- // skill: String,
- // interest: String
+ github: String,
+ skills: {
+ 	angular: Number,
+ 	node: Number,
+ 	jquery: Number,
+ 	css: Number,
+ 	html: Number
+ }
 });
+
+// var skillsSchema = new mongoose.Schema({
+//   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+// });
+
+// mongoose.model('Skills', skillsSchema);
 
 var messageSchema = new Schema({
     nameOfChat: String, 
@@ -73,5 +78,6 @@ var User = mongoose.model("User", userSchema);
 */
 module.exports = {
     user: User,
-    messages: Message
+    messages: Message,
+   
 };

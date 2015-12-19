@@ -114,6 +114,29 @@ app.get('/auth/github',
     // The request will be redirected to GitHub for authentication, so this
     // function will not be called.
   });
+// app.get('/profile/skills', function(req, res){
+//   // console.log("hey we hit this endpoint from the skills profile", req.body)
+
+// })
+
+app.get('/skills', function(req, res, next){
+  User.find(function(err, user){
+    if(err){next(err);}
+    res.json(user);
+  })
+})
+
+// app.post('/skills', function(req, res, next){
+//         var user = new User()
+//         console.log('this is user.skils', user.skills)
+//         user.skills = req.body
+//         user.save(function(){
+//           res.send('you saved the skills')
+//         })
+//       })
+//       console.log("Hey you are posting to the profile skills", req);
+
+// });
 
 // GET /auth/github/callback
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -144,12 +167,12 @@ app.get('/logout', function(req, res){
 // This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
 //Step 3
 app.get('/account', ensureAuthenticated, function(req, res){
-  console.log('this is the req.user in the account route', req.user);
+  console.log('this is the req.user in the account route');
   res.json(req.user);
 });
 
 app.get('/login', function(req, res){
-    console.log('this is the req.user in the login route', req);
+    console.log('this is the req.user in the login route');
 
   res.json({profile: globalProfile});
 });
@@ -341,9 +364,4 @@ app.post('/fileUpload', function(req, res, next) {
       }
   });
 });
-
-
-
-  
-
 

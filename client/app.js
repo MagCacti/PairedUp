@@ -6,7 +6,9 @@ angular.module('myApp', [
    //for client side sockets
   'btford.socket-io',
     //for the authentication.
-   'satellizer'
+   'satellizer',
+   'myApp.services',
+   'myApp.current'
    // 'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
@@ -43,7 +45,12 @@ angular.module('myApp', [
     .state('profile.currentskills', {
       url: '/currentskills',
       templateUrl: 'userprofile/currentskills.html',
-      controller: 'ProfileController'
+      controller: 'CurrentSkillsController',
+      // resolve: {
+      //     profilePromise: ['profiledata', function(profile){
+      //       return profiledata.getAll();
+      //     }]
+      //   }
     })
     .state('profile.futureskills', {
       url: '/futureskills',
@@ -56,9 +63,7 @@ angular.module('myApp', [
       templateUrl: 'userprofile/summary.html',
       controller: 'ProfileController'
     })
-
-
-
+     
 		.state('codeshare', {
 			url: '/codeshare',
 			templateUrl: 'codeshare/codeshare.html',
@@ -133,6 +138,7 @@ angular.module('myApp', [
          })
         })
         .catch(function(error) {
+
           if (error.error) {
             // Popup error - invalid redirect_uri, pressed cancel button, etc.
             console.log(error);
