@@ -1,13 +1,12 @@
 angular.module('myApp', [
 	'ui.router',
-  // 'ngRoute',
 	'ui.ace',
 	'ui.bootstrap',
 	'myApp.codeshare',
    //for client side sockets
   'btford.socket-io',
-      //for the authentication.
-  'satellizer'
+    //for the authentication.
+   'satellizer'ch
    // 'Icecomm'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
@@ -24,28 +23,22 @@ angular.module('myApp', [
       template: null,
       controller: 'LogoutController'
     })
-    .state('map', {
-      url: '/map',
-      templateUrl: 'map/map.html'
-    })
+		.state('map', {
+			url: '/map',
+			templateUrl: 'map/map.html'
+		})
 
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController' 
+      controller: 'ProfileController'
     })
 
-    .state('codeshare', {
-      url: '/codeshare',
-      templateUrl: 'codeshare/codeshare.html',
-      controller: 'CodeShareController'
-    })
-
-    .state('messages', {
-      url: '/messages',
-      templateUrl: 'messages/messages.html',
-      controller: 'ExampleController'
-    })
+		.state('codeshare', {
+			url: '/codeshare',
+			templateUrl: 'codeshare/codeshare.html',
+			controller: 'CodeShareController'
+		})
 
     .state('chat', {
       url: '/chat',
@@ -56,7 +49,7 @@ angular.module('myApp', [
 	$urlRouterProvider.otherwise('/');
 
 	$authProvider.github({
-    clientId: "3c30b4028da7c634cb9a",
+    clientId: "6ffd349ee17a258a13ff",
     url: '/auth/github',
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     redirectUri: window.location.origin,
@@ -81,10 +74,9 @@ angular.module('myApp', [
 	      var deferred = $q.defer();
 	      if ($auth.isAuthenticated()) {
 	        deferred.resolve();
-          console.log('User has been authenticated');
+          console.log('hi, i am in');
 	      } else {
 	        $location.path('/login');
-          console.log('User is not yet authenticated.');
 	      }
 	      return deferred.promise;
 	    }
@@ -92,8 +84,6 @@ angular.module('myApp', [
 })
 
 .controller('LoginController', function($scope, $auth, $location, $http) {
-  
-
    // $scope.login = function() {
    //    $auth.login($scope.user)
    //      .then(function() {
@@ -105,7 +95,6 @@ angular.module('myApp', [
    //        // toastr.error(error.data.message, error.status);
    //      });
    //  };
-
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider)
       .then(function(response) {
@@ -136,7 +125,9 @@ angular.module('myApp', [
 })
 
 /*
+
   Nav Bar Controller
+
 */
 
 .controller('NavbarController', function($scope, $auth) {
@@ -180,11 +171,11 @@ angular.module('myApp', [
 
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
-  var socket = io.connect("https://paired-up.herokuapp.com");// for localhost use the alternative: || "http://localhost:8080"); 
+  var socket = io.connect("http://localhost:8080");
   return {
     //listen to events.
-    on: function(eventName, callback) {
-      socket.on(eventName, callback); 
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
     },
     //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
@@ -217,3 +208,4 @@ angular.module('myApp', [
         }
     };
 }]);
+
