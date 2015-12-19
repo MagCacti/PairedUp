@@ -6,8 +6,9 @@ angular.module('myApp', [
    //for client side sockets
   'btford.socket-io',
     //for the authentication.
-   'satellizer'ch
+   'satellizer',
    // 'Icecomm'
+   'xeditable'
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
