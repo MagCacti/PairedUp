@@ -12,7 +12,7 @@ var request = require('request');
 // var jwt = require('jwt-simple');
 // var moment = require('moment');
 var path = require('path');
-// var config = require('./config.js'); // removed for deployment 10/10
+var config = require('./config.js');
 var mongoose = require('mongoose');
 var app = express();
 var http = require('http');
@@ -20,8 +20,8 @@ var server = http.Server(app);
 var passport = require('passport');
 var flash    = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy;
-var GITHUB_CLIENT_ID = "3c30b4028da7c634cb9a"
-var GITHUB_CLIENT_SECRET = process.env.GITHUB_SECRET;
+var GITHUB_CLIENT_ID = "6ffd349ee17a258a13ff"
+var GITHUB_CLIENT_SECRET = "881163697cad6c7cc246638d4b98819dd5cf679e";
 var session = require('express-session');
 var morgan = require('morgan');
 var logger = require('morgan');
@@ -34,16 +34,13 @@ var upload = multer({ dest: 'uploads/' });
 //The docs are not clear on the next two lines. Both lines are necessary for sockets.
 var socketio = require('socket.io');
 var io = socketio(server);
+server.listen(8080);
+console.log("App listening on port 8080");
 
-// Added for deployment:                      
-var port = process.env.PORT || '8080'; 
-
-//listening to server
-server.listen(port);
-console.log("App listening on port || 8080");
 
 var db = require('./database/UserModel');
 var User = db.user
+
 
 app.set('port', process.env.PORT || 8080);
 app.use(upload.single('string'));
@@ -52,9 +49,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(logger('dev'));
-
-
-// Need body parser so that req.body will not be undefined and will actually hold the data that is sent from the frontEnd. 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/client'));                 
@@ -133,14 +127,18 @@ app.get('/auth/github/callback',
   function(req, res) {
     console.log("This is the request handler that will be called when they click the log in to github");
     //res.redirect('/');
-    res.redirect('https://paired-up.herokuapp.com/#/profile');
+    res.redirect('http://localhost:8080/#/profile');
   });
+
+//Necessary for sockets.
+var http = require('http');
 
 
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
+
 
 
 // This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
@@ -156,6 +154,10 @@ app.get('/login', function(req, res){
   res.json({profile: globalProfile});
 });
 
+
+
+
+
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
 //   the request is authenticated (typically via a persistent login session),
@@ -167,10 +169,12 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
+
+
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "https://paired-up.herokuapp.com/auth/github/callback"
+    callbackURL: "http://127.0.0.1:8080/auth/github/callback"
   },
   //Step 5
   function(accessToken, refreshToken, profile, done) {
@@ -207,7 +211,6 @@ passport.use(new GitHubStrategy({
     });
   }
 ));
-
 
 /*
 
@@ -257,11 +260,15 @@ passport.use(new GitHubStrategy({
 
 
 
-var usersRoom;
-//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
-io.on('connection', function (socket) {
-  console.log('new connection');
 
+
+
+var usersRoom;
+
+
+//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
+io.on('connection', function(socket) {
+  console.log('new connection');
 
   //some room will be a variable. 
   // io.to(usersRoom).emit(usersRoom);
