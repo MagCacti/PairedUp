@@ -128,17 +128,40 @@ app.get('/skills', function(req, res, next){
   })
 })
 
-// app.param('user', function(req, res, next, id) {
-//   var query = User.findById();
-//   console.log('this is the id', query)
-//   query.exec(function (err, user){
-//     if (err) { return next(err); }
-//     if (!user) { return next(new Error('can\'t find user')); }
+app.param('user', function(req, res, next, id) {
+  var query = User.findById(id);
+  console.log('this is the id', query)
+  query.exec(function (err, user){
+    if (err) { return next(err); }
+    if (!user) { return next(new Error('can\'t find user')); }
 
-//     req.user = user;
-//     return next();
-//   });
-// });
+    req.user = user;
+    return next();
+  });
+});
+
+app.get('/skills/:user', function(req, res) {
+  console.log('this is a single /skills/:user', req.user)
+  res.json(req.user);
+});
+
+app.post('/skills/:user', function(req, res, next) {
+  var skills = new Skills(req.body);
+  skills.user = req.user
+  console.log('this is skills:user post', skills)
+  // comment.post = req.post;
+
+  // comment.save(function(err, comment){
+  //   if(err){ return next(err); }
+
+  //   req.post.comments.push(comment);
+  //   req.post.save(function(err, post) {
+  //     if(err){ return next(err); }
+
+  //     res.json(comment);
+  //   });
+  // });
+});
 
 // app.get('/profile/user', function(req, res){
 //   console.log('we are in profile:user,', req.user)
@@ -149,7 +172,7 @@ app.get('/skills', function(req, res, next){
 //and a ref tothe userSchema on the skillSchema
 
 
-app.post('/skills', function(req, res, next){
+// app.post('/skills:user', function(req, res, next){
         // User.findById(globalProfile, function(err, user){
 
         //   var skills = new Skills({userid:user.github})
@@ -181,7 +204,7 @@ app.post('/skills', function(req, res, next){
         //       res.json(skills);
         //     });
         //   });
-});
+// });
 
 // GET /auth/github/callback
 //   Use passport.authenticate() as route middleware to authenticate the

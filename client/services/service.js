@@ -11,7 +11,7 @@ angular.module('myApp.services', [])
 	  	};
 
 	  	obj.addSkills = function(id, skill){
-	  		return $http.post('/skills'+id, skill);
+	  		return $http.post('/skills/'+id, skill);
 	  	}
 
 	  	// obj.create = function(skills) {

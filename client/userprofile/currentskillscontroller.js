@@ -4,8 +4,8 @@ angular.module('myApp.current', [])
 
   	$scope.profile;
   	Account.getProfile().success(function(data){
-  		console.log('this is the account response', data.profile)
-  		$scope.profile = data.profile
+  		$scope.profile = data.profile._id
+  		console.log('this is the data.profile:', data.profile._id)
   	})
 
  
@@ -16,7 +16,7 @@ angular.module('myApp.current', [])
   	$scope.add = function(){
   			
   	console.log('this is the Account data', $scope.profile);
-  		profiledata.addSkills($scope.profile.github, {node:$scope.node, angular:$scope.angular, 
+  		profiledata.addSkills($scope.profile, {node:$scope.node, angular:$scope.angular, 
   			html:$scope.html, css:$scope.css, jquery:$scope.jquery}).success(function(skill){
   		console.log('this is currentskills', $scope.currentskills)
   			
