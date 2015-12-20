@@ -1,4 +1,4 @@
-angular.module('myApp.codeshare', ['Icecomm'])
+angular.module('myApp.codeshare', [/*'Icecomm'*/])
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
@@ -138,25 +138,7 @@ angular.module('myApp.codeshare', ['Icecomm'])
       }
     }
   };
-  var comm = new Icecomm('xavqKe7oRPZ9Kl0JeYOQVYoTB8XJv4sYLslJoMPGfWlt7aO', {debug: true});
-
-        comm.connect('test');
-
-        comm.on('local', function(peer) {
-          localVideo.src = peer.stream;
-        });
-
-        comm.on('remote', function(peer){
-          remoteVideo.src = peer.stream;
-        });
-
-        comm.on('connected', function(peer) {
-          remoteVideo.src = peer.stream;
-          remoteVideo.id = peer.ID;
-        });
-        comm.on('disconnect', function(peer) {
-          document.getElementById(peer.ID).remove();
-        });
+  
 
 }]);
 

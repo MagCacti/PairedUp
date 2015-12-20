@@ -5,12 +5,12 @@ angular.module('myApp', [
 	'ui.bootstrap',
 	'myApp.codeshare',
    //for client side sockets
-  'btford.socket-io',
+  'btford.socket-io'
     //for the authentication.
-   'satellizer',
-   'Icecomm'
+   // 'satellizer',
+   // 'Icecomm'
 ])
-.config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
+.config(function($stateProvider, $urlRouterProvider, $locationProvider){
 
 	$stateProvider
 	
@@ -40,7 +40,16 @@ angular.module('myApp', [
 			templateUrl: 'codeshare/codeshare.html',
 			controller: 'CodeShareController'
 		})
-
+    .state('codeshare.room2', {
+      url: '/room/:roomId',
+      templateUrl: 'codeshare/room.html',
+      controller: 'RoomCtrl'
+    })
+    .state('codeshare.room', {
+      url: '/room',
+      templateUrl: 'codeshare/room.html',
+      controller: 'RoomCtrl'
+    })
     .state('chat', {
       url: '/chat',
       templateUrl: 'chat/chat.html',
@@ -49,42 +58,42 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-	$authProvider.github({
-    clientId: "6ffd349ee17a258a13ff",
-    url: '/auth/github',
-    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-    redirectUri: window.location.origin,
-    optionalUrlParams: ['scope'],
-    scope: ['user'],
-    scopeDelimiter: ' ',
-    type: '2.0',
-    popupOptions: { width: 1020, height: 618 }
-	});
+	// $authProvider.github({
+ //    clientId: "6ffd349ee17a258a13ff",
+ //    url: '/auth/github',
+ //    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+ //    redirectUri: window.location.origin,
+ //    optionalUrlParams: ['scope'],
+ //    scope: ['user'],
+ //    scopeDelimiter: ' ',
+ //    type: '2.0',
+ //    popupOptions: { width: 1020, height: 618 }
+	// });
 
-	function skipIfLoggedIn($q, $auth) {
-	      var deferred = $q.defer();
-	      if ($auth.isAuthenticated()) {
-	        deferred.reject();
-	      } else {
-	        deferred.resolve();
-	      }
-	      return deferred.promise;
-	    }
+	// function skipIfLoggedIn($q, $auth) {
+	//       var deferred = $q.defer();
+	//       if ($auth.isAuthenticated()) {
+	//         deferred.reject();
+	//       } else {
+	//         deferred.resolve();
+	//       }
+	//       return deferred.promise;
+	//     }
 
-  function loginRequired($q, $location, $auth) {
-	      var deferred = $q.defer();
-	      if ($auth.isAuthenticated()) {
-	        deferred.resolve();
-          console.log('hi, i am in');
-	      } else {
-	        $location.path('/login');
-	      }
-	      return deferred.promise;
-	    }
+ //  function loginRequired($q, $location, $auth) {
+	//       var deferred = $q.defer();
+	//       if ($auth.isAuthenticated()) {
+	//         deferred.resolve();
+ //          console.log('hi, i am in');
+	//       } else {
+	//         $location.path('/login');
+	//       }
+	//       return deferred.promise;
+	//     }
 
 })
 
-.controller('LoginController', function($scope, $auth, $location, $http) {
+.controller('LoginController', function($scope,$location, $http) {
 
 
 
@@ -96,19 +105,19 @@ angular.module('myApp', [
 
 */
 
-.controller('NavbarController', function($scope, $auth) {
-  $scope.isAuthenticated = function() {
-    return $auth.isAuthenticated();
-  };
+.controller('NavbarController', function($scope /*$auth*/) {
+  // $scope.isAuthenticated = function() {
+  //   return $auth.isAuthenticated();
+  // };
 })
 
-.controller('LogoutController', function($location, $auth) {
-    if (!$auth.isAuthenticated()) { return; }
-    $auth.logout()
-      .then(function() {
-        // toastr.info('You have been logged out');
-        $location.path('/');
-      });
+.controller('LogoutController', function($location /*$auth*/) {
+    // if (!$auth.isAuthenticated()) { return; }
+    // $auth.logout()
+    //   .then(function() {
+    //     // toastr.info('You have been logged out');
+    //     $location.path('/');
+    //   });
   })
 
 
@@ -175,3 +184,7 @@ angular.module('myApp', [
     };
 }]);
 
+Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+};
