@@ -10,6 +10,12 @@ angular.module('myApp', [
    // 'Icecomm'
    'xeditable'
 ])
+
+// Enable xeditable profile code
+.run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // b3 = bootstrap3 implementation
+  });
+
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider){
 
 	$stateProvider
