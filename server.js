@@ -148,19 +148,20 @@ app.get('/skills/:user', function(req, res) {
 app.post('/skills/:user', function(req, res, next) {
   var skills = new Skills(req.body);
   skills.user = req.user
-  console.log('this is skills:user post', skills)
+  // console.log('this is skills/:user post:', req.user)
+  console.log('this is skills/:user req.user:', req.user)
   // comment.post = req.post;
 
-  // comment.save(function(err, comment){
-  //   if(err){ return next(err); }
+  skills.save(function(err, skill){
+    if(err){ return next(err); }
 
-  //   req.post.comments.push(comment);
-  //   req.post.save(function(err, post) {
-  //     if(err){ return next(err); }
+    req.user.skills.push(skill);
+    req.user.save(function(err, user) {
+      if(err){ return next(err); }
 
-  //     res.json(comment);
-  //   });
-  // });
+      res.json(skill);
+    });
+  });
 });
 
 // app.get('/profile/user', function(req, res){
