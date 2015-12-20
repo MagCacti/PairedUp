@@ -5,12 +5,11 @@ angular.module('myApp')
     $scope.getProfile = function() { //this method gets invoked at the end of the controller.
       Account.getProfile()
         .then(function(response) {
-          console.log('inside profile controller------')
-          console.log('this is the response', response);
+          //console.log('getProfile method is executing')
+          //console.log('this is the response', response);
           $scope.user = response.data.profile;
         })
         .catch(function(response) {
-          // toastr.error(response.data.message, response.status);
         });
     };
 
