@@ -18,6 +18,7 @@ angular.module('myApp.current', [])
   	console.log('this is the Account data', $scope.profile);
   		profiledata.addSkills($scope.profile, {node:$scope.node, angular:$scope.angular, 
   			html:$scope.html, css:$scope.css, jquery:$scope.jquery}).success(function(skill){
+  			$scope.currentskills.push(skill)
   		console.log('this is currentskills', $scope.currentskills)
   			
   			})
