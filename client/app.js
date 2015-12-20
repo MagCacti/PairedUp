@@ -11,7 +11,7 @@ angular.module('myApp', [
    'xeditable'
 ])
 
-// Enable xeditable profile code
+// Enable xeditable
 .run(function(editableOptions) {
   editableOptions.theme = 'bs3'; // b3 = bootstrap3 implementation
   });
