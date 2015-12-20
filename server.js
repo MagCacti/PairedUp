@@ -145,19 +145,26 @@ app.get('/skills', function(req, res, next){
 //   res.json(req.user)
 // })
 
+//on the backend there is ref to the skillsSchema on the UserSchema 
+//and a ref tothe userSchema on the skillSchema
+
+
 app.post('/skills', function(req, res, next){
-    // var skills = new Skills(req.body)
-    console.log("this is the req body", req.body)
-        User.findById(globalProfile, function(err, user){
-          user.skills.push(req.body)
-          // skills user.skills[0]
-          user.save(function(err){
-            if(err){return err;}
-            console.log('this was a successful save')
-              res.json(user);
-          })
-          console.log("this is the user in skills", user)
-        })
+        // User.findById(globalProfile, function(err, user){
+
+        //   var skills = new Skills({userid:user.github})
+        //   user.skills = skills._id
+        //   console.log("this is the incoming skills:", skills)
+        //   user.skills.push(req.body)
+        //   console.log('this is the user inside out user.find:', user )
+          // // skills user.skills[0]
+          // user.save(function(err){
+          //   if(err){return err;}
+          //   console.log('this was a successful save')
+          //     res.json(user);
+          // })
+          // console.log("this is the user in skills", user)
+        // })
         // var query = User.findById(req.body._id)
         // var skills = new Skills(req.body)
        

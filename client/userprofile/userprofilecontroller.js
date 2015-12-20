@@ -4,7 +4,6 @@ angular.module('myApp')
 
       Account.getProfile()
         .then(function(response) {
-          console.log('inside profile profiledata------', profiledata.skills)
           console.log('this is the response', response);
           $scope.user = response.data.profile;
         })
