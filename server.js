@@ -39,7 +39,9 @@ console.log("App listening on port 8080");
 
 
 var db = require('./database/UserModel');
-var User = db.user
+var User = db.user;
+var Messages = db.messages;
+var Skills = db.skills;
 
 
 app.set('port', process.env.PORT || 8080);
@@ -126,17 +128,53 @@ app.get('/skills', function(req, res, next){
   })
 })
 
-// app.post('/skills', function(req, res, next){
-//         var user = new User()
-//         console.log('this is user.skils', user.skills)
-//         user.skills = req.body
-//         user.save(function(){
-//           res.send('you saved the skills')
-//         })
-//       })
-//       console.log("Hey you are posting to the profile skills", req);
+// app.param('user', function(req, res, next, id) {
+//   var query = User.findById();
+//   console.log('this is the id', query)
+//   query.exec(function (err, user){
+//     if (err) { return next(err); }
+//     if (!user) { return next(new Error('can\'t find user')); }
 
+//     req.user = user;
+//     return next();
+//   });
 // });
+
+// app.get('/profile/user', function(req, res){
+//   console.log('we are in profile:user,', req.user)
+//   res.json(req.user)
+// })
+
+app.post('/skills', function(req, res, next){
+    // var skills = new Skills(req.body)
+    console.log("this is the req body", req.body)
+        User.findById(globalProfile, function(err, user){
+          user.skills.push(req.body)
+          // skills user.skills[0]
+          user.save(function(err){
+            if(err){return err;}
+            console.log('this was a successful save')
+              res.json(user);
+          })
+          console.log("this is the user in skills", user)
+        })
+        // var query = User.findById(req.body._id)
+        // var skills = new Skills(req.body)
+       
+
+        // skills._id = req._id;
+
+        //   skills.save(function(err, skills){
+        //     if(err){ return next(err); }
+
+        //     req._id.skills.push(skills);
+        //     req._id.save(function(err, id) {
+        //       if(err){ return next(err); }
+
+        //       res.json(skills);
+        //     });
+        //   });
+});
 
 // GET /auth/github/callback
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -318,7 +356,7 @@ io.on('connection', function(socket) {
       //general algorithim for storing messages shall go here. 
 
       //hard coded message document to test persisting chat data
-      var JosephMessages = new User.messages({
+      var JosephMessages = new Messages({
         nameOfChat: "Joseph", 
         messageContent: "This is a message"
       });
@@ -331,7 +369,7 @@ io.on('connection', function(socket) {
           console.log("Saved into MONGODB Success")
         }
         //search for messages that have Joseph as the name of their chat
-        User.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
+        Messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
           console.log("ALL THE JOSEPH MESSAGES", results);
         });
       })

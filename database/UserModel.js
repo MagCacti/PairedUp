@@ -27,14 +27,19 @@ var userSchema = new Schema({
  // name: String,
  picture: String,
  github: String,
- skills: {
- 	angular: Number,
- 	node: Number,
- 	jquery: Number,
- 	css: Number,
- 	html: Number
- }
+ skills:[
+
+ ]
 });
+
+// var skillsSchema = new mongoose.Schema({
+//   node: Number,
+//   angular: Number,
+//   html: Number,
+//   css: Number, 
+//   jquery: Number,
+//   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+// });
 
 // var skillsSchema = new mongoose.Schema({
 //   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
@@ -54,6 +59,7 @@ var messageSchema = new Schema({
 
 var Message = mongoose.model('Messages', messageSchema);
 var User = mongoose.model("User", userSchema);
+// var Skills = mongoose.model("Skills", skillsSchema);
 
 // var Joseph = new User({
 //  username: "JosephSun",
@@ -79,5 +85,6 @@ var User = mongoose.model("User", userSchema);
 module.exports = {
     user: User,
     messages: Message,
+    // skills: Skills
    
 };
