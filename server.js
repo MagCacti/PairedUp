@@ -52,7 +52,8 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/client')); 
+app.use(express.static(__dirname + '/client'));
+
 //serve up static files. For webRtc
 
 // expressApp.use(express.static(__dirname + '/../public/dist'));   
@@ -212,56 +213,6 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-/*
-
- |--------------------------------------------------------------------------
- | PUT /api/me
- |--------------------------------------------------------------------------
- */
-
-// app.put('/api/me', function(req, res) {
-//   User.user.findById(req.user, function(err, user) {
-//     if (!user) {
-//       return res.status(400).send({ message: 'User not found' });
-//     }
-//     user.displayName = req.body.displayName || user.displayName;
-//     user.email = req.body.email || user.email;
-//     user.save(function(err) {
-//       res.status(200).end();
-//     });
-//   });
-// });
-
-
-/*
- |--------------------------------------------------------------------------
- | Unlink Provider
- |--------------------------------------------------------------------------
- */
-// app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
-//   var provider = req.body.provider;
-//   var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
-//     'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
-
-//   if (providers.indexOf(provider) === -1) {
-//     return res.status(400).send({ message: 'Unknown OAuth Provider' });
-//   }
-
-//   User.user.findById(req.user, function(err, user) {
-//     if (!user) {
-//       return res.status(400).send({ message: 'User Not Found' });
-//     }
-//     user[provider] = undefined;
-//     user.save(function() {
-//       res.status(200).end();
-//     });
-//   });
-// });
-
-
-
-
-
 
 var usersRoom;
 
@@ -408,9 +359,3 @@ app.post('/fileUpload', function(req, res, next) {
       }
   });
 });
-
-
-
-  
-
-
