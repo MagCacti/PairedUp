@@ -42,10 +42,10 @@
         <ul class="nav navbar-nav">
           <li><a href="/auth/github" ng-click='clickedLogin()' ng-if="!isAuthenicated">Login</a></li>
           <!-- <div ng-if="isAuthenticated()"> -->
-            <li><a ui-sref="profile" ng-if="!!isAuthenicated">Profile</a></li>
+            <li><a ui-sref="profile" ng-if="!isAuthenicated">Profile</a></li>
             <li><a ui-sref="logout" ng-if="!isAuthenicated" ng-click= 'goingToLogOut()'>Logout</a></li>
-            <li><a ui-sref="codeshare" ng-if="isAuthenicated">Codeshare</a></li>
-            <li><a ui-sref="chat" ng-if="isAuthenicated">Chat</a></li>
+            <li><a ui-sref="codeshare" ng-if="!isAuthenicated">Codeshare</a></li>
+            <li><a ui-sref="chat" ng-if="!isAuthenicated">Chat</a></li>
           <!-- </div> -->
         </ul>
       </div><!--/.nav-collapse -->
