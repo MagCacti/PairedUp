@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="30DaysofJavascriptTemplate">
-    <meta name="Carine Todmia" content="">
+    <meta name="description" content="PairedUP!">
+    <meta name="MagCacti" content="">
     
     <title>MagiCati</title>
     <!-- Latest compiled and minified CSS -->
@@ -40,14 +40,17 @@
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li><a ng-if='!user.github' ui-sref="login">Login</a></li>
-          <li><a ng-if='user.github'ui-sref="profile">Profile</a></li>
-          <li><a ng-if='user.github' ui-sref="logout">Logout</a></li>
-          <li><a ng-if='user.github' ui-sref="codeshare">Codeshare</a></li>
-          <li><a ng-if='user.github' ui-sref="chat">Chat</a></li>
+          <li><a ui-sref="login" >Login</a></li>
+          <!-- <div ng-if="isAuthenticated()"> -->
+            <li><a ui-sref="profile">Profile</a></li>
+            <li><a ui-sref="logout" ng-click= 'goingToLogOut()'>Logout</a></li>
+            <li><a ui-sref="codeshare">Codeshare</a></li>
+            <li><a ui-sref="chat">Chat</a></li>
+          <!-- </div> -->
         </ul>
       </div><!--/.nav-collapse -->
     </div>
+  <a href="/auth/github" ng-click= 'clickedLogin()'>login with Passport Github</a>
   </nav>
 
   <a href="/auth/github">login with Passport Github</a>

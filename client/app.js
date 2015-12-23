@@ -27,6 +27,34 @@ angular.module('myApp', [
       controller: 'ProfileController'
     })
 
+    .state('profile.start', {
+      url: '/start',
+      templateUrl: 'userprofile/start.html',
+      controller: 'ProfileController'
+    })
+
+      .state('profile.currentskills', {
+        url: '/currentskills',
+        templateUrl: 'userprofile/currentskills.html',
+        controller: 'CurrentSkillsController',
+        // resolve: {
+        //     profilePromise: ['profiledata', function(profile){
+        //       return profiledata.getAll();
+        //     }]
+        //   }
+      })
+      .state('profile.futureskills', {
+        url: '/futureskills',
+        templateUrl: 'userprofile/futureskills.html',
+        controller: 'ProfileController'
+      })
+
+       .state('profile.summary', {
+        url: '/summary',
+        templateUrl: 'userprofile/summary.html',
+        controller: 'ProfileController'
+      })
+
 		.state('codeshare', {
 			url: '/codeshare',
 			templateUrl: 'codeshare/codeshare.html',
@@ -57,19 +85,42 @@ angular.module('myApp', [
 
 })
 
+
+.controller('LogoutController', ['$scope', '$http', '$state','$window','Account', function($scope, $http, $state, $window, Account){
+      delete $window.localStorage.UserDisplayName;
+      // $window.localStorage.loggedIn = 0;
+
+      // $window.localStorage.loggedOut = true;
+      // $Acount.setLoggedOutData(true);
+      // console.log("day");
+      $state.go('login');
+}])
 /*
 
   Nav Bar Controller
 
 */
 
-.controller('NavbarController', function($scope) {
-  
+.controller('NavbarController', function($scope, $http, $window, Account) {
+  console.log("This is the document cookie", document.cookie);
+  $scope.clickedLogin = function() {
+    Account.setLoggedOutData(false);
+    Account.setData(true);
+    Account.setCheckingIfLogInData(2);
+  };
+  $scope.goingToLogOut = function() {
+    Account.setLoggedOutData(true);
+  };
+  $scope.isAuthenticated = function() {
+    return $http.get('/checkIfLoggedIn').then(function(response){
+      return response.data.loggedIn;
+  });
+  };  
 })
 
 
 
-.factory('Account', function($http) {
+.factory('Account', function($http, $window) {
 
     return {
       getProfile: function() {
@@ -86,6 +137,39 @@ angular.module('myApp', [
         // })
       
       },
+
+      setData: function(val) {
+            $window.localStorage && $window.localStorage.setItem('notLoggedIn', val);
+            return this;
+          },
+          //sets the value, of whether the user is logged our, into the localStorage. 
+          setLoggedOutData: function(val) {
+            $window.localStorage && $window.localStorage.setItem('Loggedout', val);
+            return this;
+          },
+          //sets the value, of the display name, into the localStorage. 
+
+      setLogInData: function(val) {
+            $window.localStorage && $window.localStorage.setItem('UserDisplayName', val);
+            return this;
+          },
+          getLogInData: function() {
+            return $window.localStorage && $window.localStorage.getItem('UserDisplayName');
+          },
+          //another check to login, used to make separate decisions on whether the user is already logged in or logged out.
+          setCheckingIfLogInData: function(val) {
+            $window.localStorage && $window.localStorage.setItem('loggedIn', val || 1);
+            return this;
+          },
+          getCheckingIfLogInData: function() {
+            return $window.localStorage && $window.localStorage.getItem('loggedIn');
+          },
+          getLoggedOutData: function() {
+            return $window.localStorage && $window.localStorage.getItem('Loggedout');
+          },
+          getData: function() {
+            return $window.localStorage && $window.localStorage.getItem('notLoggedIn');
+          },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);
       }
@@ -121,6 +205,18 @@ angular.module('myApp', [
         
         });
     });
+
+    $scope.sendMessage = function (fromUser, toUser) {
+      ///TODO: grab current user's name and the other user's name
+
+      //store that name in a object
+        var roomName = {
+            userWhoClicked: fromUser,
+            userWhoWasClicked: toUser
+        };
+      //socket emit chatRoom with this users name and the other users name
+        socket.emit("chatBox", roomName);
+    };
 
     //When someone clicks the submit button for the template chat.
     $scope.submit = function() {

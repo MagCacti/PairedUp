@@ -64,7 +64,14 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
   // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true }));
+app.use(session({ 
+  name: "UserFromPearedUp",
+  secret: "keyboard cat", 
+  // cookie: {maxAge: 3600000},
+  resave: true, 
+  saveUninitialized: true, 
+  cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+   }));
 
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -146,17 +153,91 @@ app.get('/logout', function(req, res){
 // This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
 //Step 3
 app.get('/account', ensureAuthenticated, function(req, res){
-  console.log('this is the req.user in the account route', req.user);
+  console.log('this is the req.user in the account route');
   res.json(req.user);
 });
 
 app.get('/login', function(req, res){
     console.log('this is the req.user in the login route', req);
 
-  res.json({profile: globalProfile});
+  res.json({profile: globalProfile, sessions: req.session});
+});
+
+app.get('/userprofile', function(req, res, next) {
+  User.find(function(err, users){
+    if(err){ return next(err); }
+
+    res.json(users);
+  });
+});
+
+app.get('/skills', function(req, res, next){
+  User.find(function(err, user){
+    if(err){next(err);}
+    res.json(user);
+  })
+})
+
+app.param('user', function(req, res, next, id) {
+  var query = User.findById(id);
+  console.log('this is the id', query)
+  query.exec(function (err, user){
+    if (err) { return next(err); }
+    if (!user) { return next(new Error('can\'t find user')); }
+
+    req.user = user;
+    return next();
+  });
+});
+
+app.get('/skills/:user', function(req, res, next) {
+  console.log('this is a single /skills/:user', req.user)
+  req.user.populate('skills', function(err, user){
+  
+  if (err){return next(err)}
+  res.json(req.user);
+  })
+});
+
+app.post('/skills/:user', function(req, res, next) {
+  var skills = new Skills(req.body);
+  skills.user = req.user
+  // console.log('this is skills/:user post:', req.user)
+  console.log('this is skills/:user req.user:', req.user)
+  // comment.post = req.post;
+
+  skills.save(function(err, skill){
+    if(err){ return next(err); }
+
+    req.user.skills.push(skill);
+    req.user.save(function(err, user) {
+      if(err){ return next(err); }
+
+      res.json(skill);
+    });
+  });
 });
 
 
+//if the person is signed in and goes back to the profile page
+app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
+  // console.log("req.body in checkIfLoggedIn", req.body);
+  var currentUser;
+
+  //find the user with the display name
+  User.findOne({displayName: req.body.displayName}, function (err, user) {
+        if (user) {
+          // console.log("User in database", user)
+          //send that user to the clientSide.
+          res.json({user:user});
+        }else if (err) {
+          return "This is error message: " + err; 
+        }
+
+      });
+    // console.log("This is currentUser", currentUser);
+  // res.send({response: currentUser});
+});
 
 
 // Simple route middleware to ensure user is authenticated.
