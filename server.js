@@ -41,6 +41,7 @@ console.log("App listening on port 8080");
 
 var db = require('./database/UserModel');
 var User = db.user
+var userDocument = db.userDocument;
 
 
 app.set('port', process.env.PORT || 8080);
@@ -158,7 +159,7 @@ app.get('/account', ensureAuthenticated, function(req, res){
 });
 
 app.get('/login', function(req, res){
-    console.log('this is the req.user in the login route', req);
+    // console.log('this is the req.user in the login route', req);
 
   res.json({profile: globalProfile, sessions: req.session});
 });
@@ -218,6 +219,14 @@ app.post('/skills/:user', function(req, res, next) {
   });
 });
 
+app.get('/checkIfLoggedIn', function(req, res, next) {
+  if(req.user) {
+    console.log(req.user)
+    next();
+  } else {
+    res.redirect('/login');
+  }
+})
 
 //if the person is signed in and goes back to the profile page
 app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
@@ -247,7 +256,9 @@ app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
 //   login page.
 //Step 4:
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) { 
+    console.log('this is ensureAuthenticated', isAuthenticated )
+    return next(); }
   res.redirect('/login')
 }
 
@@ -264,8 +275,8 @@ passport.use(new GitHubStrategy({
     process.nextTick(function () {
       // console.log("accessToken", accessToken);
       // console.log("refreshToken",refreshToken );
-      console.log("profile", profile);
-      console.log("This is the avatar_url:::::::", profile._json.avatar_url)
+      // console.log("profile", profile);
+      // console.log("This is the avatar_url:::::::", profile._json.avatar_url)
       // User.findOrCreate
       // var user;
       User.findOne({github: profile.id}, function (err, user) {
@@ -417,13 +428,53 @@ io.on('connection', function(socket) {
 
 });
 
+app.post('/savingDocumentsToDatabase', function(req,res) {
+    var doc = new userDocument({id: req.body.id, title: req.body.title, mode: req.body.mode, displayName: req.body.displayName, code: req.body.code}); 
+    doc.save(function() {});
+});
+
+
+app.post('/retrievingDocumentsForUser', function(req,res) {
+  userDocument.find({displayName: req.body.displayName}, function(err, results){
+    res.json(results);
+  });
+});
+
+//delete works but now I need to update every single document's id to --1. 
+app.post('/deleteDocumentsForUser', function(req,res) {
+  var idOfDeletedDoc = req.body.id;
+
+
+  userDocument.find({displayName: req.body.displayName, title: req.body.title}, function(err, result){
+    return result;
+  }).remove(function(result) {});
+
+
+//find all the documents the user has made
+  userDocument.find({displayName: req.body.displayName}, function(err, results) {
+    //iterate through the documents
+    for (var i =0; i < results.length; i++) {
+      //if the user's document is greater than the id of the document we destroyed.
+      if (results[i].id > idOfDeletedDoc) {
+        //create a new id which is the id of the document we are currently iterating thorugh - 1.
+        var newId = results[i].id - 1;
+        //set that document to the  
+        userDocument.update({id: results[i].id}, {id: newId}, {}, function (err, numAffected) {
+        });
+      }
+    }
+    //sending this so we can utilize the promise structure from angular $http.post
+    res.send({});
+  });
+
+});
 //content will hold the data from the uploaded file
 var content;
 //Need to build this function to get around asynchronous behavior.
 var sendFileDataToClient = function(data) {
   //send the data from the file to the client. 
   io.emit('fileData', content);
-}
+};
 
 //Initiating the file upload. Immediately happens after someone clickes the upload file button
 app.post('/fileUpload', function(req, res, next) {
@@ -435,7 +486,7 @@ app.post('/fileUpload', function(req, res, next) {
         //content is being asynchronously set to the data in the file
         content = data;
         //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
-        sendFileDataToClient(content)
+        sendFileDataToClient(content);
 
       }
   });

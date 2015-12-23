@@ -4,7 +4,9 @@ angular.module('myApp', [
 	'ui.bootstrap',
 	'myApp.codeshare',
    //for client side sockets
-  'btford.socket-io'
+  'btford.socket-io',
+  'myApp.services',
+  'myApp.current'
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
@@ -107,15 +109,18 @@ angular.module('myApp', [
     Account.setLoggedOutData(false);
     Account.setData(true);
     Account.setCheckingIfLogInData(2);
+    // $scope.isAuthenticated();
   };
   $scope.goingToLogOut = function() {
     Account.setLoggedOutData(true);
   };
   $scope.isAuthenticated = function() {
     return $http.get('/checkIfLoggedIn').then(function(response){
+      console.log('this is isAuthenticated', response, 'response.data', response.data.loggedIn)
       return response.data.loggedIn;
   });
   };  
+  // $scope.isAuthenticated();
 })
 
 
@@ -126,17 +131,23 @@ angular.module('myApp', [
       getProfile: function() {
         console.log('inside the factory-------------');
           return $http.get('/account')
-        // .then(function(req, res){
-        //   console.log('this is a successful callback of /account', res);
-        //   console.log('this is a successful callback of /account for req', req);
-        //   console.log(typeof req);
-        //   // var test = JSON.parse(req);
-        //   // console.log(test);
-        //   console.log('this is req.data.whatever', req.data.profile.username)
-        //   // $scope.username = req.data.profile.username;
-        // })
+        .success(function(req, res){
+          console.log('this is a successful callback of /account', res);
+          console.log('this is a successful callback of /account for req', req);
+         
+          // console.log(test);
+          console.log('this is req.data.whatever', req.profile.username)
+          // $scope.username = req.data.profile.username;
+        })
       
       },
+
+      isAuthenticated: function() {
+          return $http.get('/checkIfLoggedIn').then(function(response){
+            console.log('this is isAuthenticated', response, 'response.data', response.data.loggedIn)
+            return response.data.loggedIn;
+        });
+        },
 
       setData: function(val) {
             $window.localStorage && $window.localStorage.setItem('notLoggedIn', val);
