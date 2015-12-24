@@ -4,9 +4,13 @@ angular.module('myApp', [
 	'ui.bootstrap',
 	'myApp.codeshare',
    //for client side sockets
+<<<<<<< HEAD
   'btford.socket-io',
   // 'myApp.services',
   // 'myApp.current'
+=======
+  'btford.socket-io'
+>>>>>>> aa1aac033867590cdc98122be95f89af9193c16f
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
@@ -104,7 +108,6 @@ angular.module('myApp', [
   Nav Bar Controller
 
 */
-
 // .controller('NavbarController', function($scope, $http, $window, Account) {
 //   console.log("This is the document cookie", document.cookie);
 //   $scope.clickedLogin = function() {
@@ -240,6 +243,7 @@ angular.module('myApp', [
 //         }
 //     };
 // }]);
+
 
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;

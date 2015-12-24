@@ -40,6 +40,7 @@
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
+
           <li><a href="/auth/github" ng-click='clickedLogin()' ng-if="!isAuthenicated">Login</a></li>
           <!-- <div ng-if="isAuthenticated()"> -->
             <li><a ui-sref="profile" ng-if="!isAuthenicated">Profile</a></li>
@@ -47,6 +48,7 @@
             <li><a ui-sref="codeshare" ng-if="!isAuthenicated">Codeshare</a></li>
             <li><a ui-sref="chat" ng-if="!isAuthenicated">Chat</a></li>
           <!-- </div> -->
+
         </ul>
       </div><!--/.nav-collapse -->
     </div>
@@ -54,6 +56,7 @@
   </nav>
 
   <!-- <a href="/auth/github">login with Passport Github</a> -->
+
 
     <!-- NG-VIEW BEGIN-->
     <div ui-view></div>
@@ -82,7 +85,6 @@
     <script src="app.js"></script>
     <script src="/adapter.js"></script>
    <script src="bower_components/eventEmitter/EventEmitter.js"></script>
-     <!-- // <script src="assets/lib/build/angular-ice.js"></script> -->
     <script src="services/profileservice.js"></script>
     <script src="services/accountservice.js"></script> 
      <script src="services/chatservice.js"></script> 

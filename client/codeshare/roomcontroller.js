@@ -45,10 +45,19 @@ angular.module('myApp')
     Room.on('peer.stream', function (peer) {
       console.log('Client connected, adding new stream');
        //Once we receive a new peer stream we add it to the array $scope.peers, which is visualized on the page. The markup on the page maps each stream to a video element.
+<<<<<<< HEAD
       $scope.peers.push({
         id: peer.id,
         stream: URL.createObjectURL(peer.stream)
       });
+=======
+      $scope.$apply(function(){
+        $scope.peers.push({
+          id: peer.id,
+          stream: URL.createObjectURL(peer.stream)
+        })  
+      })
+>>>>>>> aa1aac033867590cdc98122be95f89af9193c16f
     });
     //peer.disconnected - once a peer disconnects the peer.disconnected event is being fired
     Room.on('peer.disconnected', function (peer) {

@@ -20,7 +20,7 @@ A WorldWide Pair Programming WebApp.
 
 ## Usage
 
-> Some usage instructions
+> To launch our production app, just log on at PairedUp.com
 
 ## Reimplementation Requirements
 

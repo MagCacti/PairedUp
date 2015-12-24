@@ -1,6 +1,7 @@
 angular.module('myApp')
   .controller('ProfileController', function($scope, $http, Account) {
     var loggedInInformation; 
+
     $scope.getProfile = function() {
       Account.setData(false); 
       //set promise variable to equal return of Account.getProfile so we can chain promise and fix the check for the req.sessions once someone immediately logs in. 
@@ -71,4 +72,15 @@ angular.module('myApp')
     }
   });
 
-
+    $scope.updateProfile = function() {
+      Account.updateProfile($scope.user)
+        .then(function() {
+          
+        })
+        .catch(function(response) {
+          
+        });
+    };
+    
+    $scope.getProfile();
+  });

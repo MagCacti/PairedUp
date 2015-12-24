@@ -58,10 +58,6 @@ var documentSchema = new Schema ({
     displayName: String, 
     code: String
 });
-// userSchema.methods.speak = function () {
-//  var greeting = this.username? "Meow name is " + this.username: "I don't have a name";
-//  console.log(greeting);
-// }
 
 var Document = mongoose.model('Document', documentSchema);
 var Message = mongoose.model('Messages', messageSchema);
