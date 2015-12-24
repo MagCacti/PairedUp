@@ -44,10 +44,11 @@ var skillsSchema = new mongoose.Schema({
 });
 
 var messageSchema = new Schema({
-    created: Date,
-    content: String,
-    // displayName: {type: String, ref: 'User'},
-    room: String
+    created: String,
+    text: String,
+    displayName: String,
+    room: String,
+    userid: { type: Number, ref: 'User' }
 });
 
 var documentSchema = new Schema ({

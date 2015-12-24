@@ -1,4 +1,4 @@
-angular.module('myApp.services', [])
+angular.module('myApp')
 	.factory('profiledata', ['$http', function($http){
 	  	var obj = {
 	    	skills: ['hello']

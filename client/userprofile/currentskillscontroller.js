@@ -1,4 +1,4 @@
-angular.module('myApp.current', [])
+angular.module('myApp')
   .controller('CurrentSkillsController', ['$scope','profiledata', 'Account', function($scope, profiledata, Account){
     $scope.currentskills = profiledata.skills
 
