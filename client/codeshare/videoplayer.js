@@ -1,7 +1,7 @@
 angular.module('myApp')
   .directive('videoPlayer', function ($sce) {
     return {
-      template: '<div><video ng-src="" autoplay></video></div>',
+      template: '<div><video ng-src="{{trustSrc()}}" autoplay></video></div>',
       restrict: 'E',
       replace: true,
       scope: {
@@ -9,9 +9,10 @@ angular.module('myApp')
       },
       link: function postLink(scope) {
         console.log('Initializing video-player');
+        console.log(scope.vidSrc)
         scope.trustSrc = function(){
           if(!scope.vidSrc){
-            return undefined;
+            console.log('hyyyyyy');
           }
           return $sce.trustAsResourceUrl(scope.vidSrc);
         };
