@@ -6,13 +6,13 @@ angular.module('myApp')
 			}
 
 			obj.getChat = function() {
-			  return $http.get('/chat').success(function(data){
+			  return $http.get('/chat').then(function(data){
 			  	console.log('this is from the get request', data);
 			    angular.copy(data, obj.messages);
-			    // return data;
+			    return data;
 			  });
 			};
-			
+
 
 			obj.addMessage = function(msg){
 				console.log('this is the messages', msg)

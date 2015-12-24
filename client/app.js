@@ -75,12 +75,9 @@ angular.module('myApp', [
       url: '/chat',
       templateUrl: 'chat/chat.html',
       controller: 'ChatController',
-      resolve: {
-         chatPromise: ['chats', function(Chat){
-          console.log('this is from the resolve')
-           return Chat.messages;
-         }]
-       }
+      // resolve: {
+      //    return 
+      //  }
     })
 
 	$urlRouterProvider.otherwise('/');
