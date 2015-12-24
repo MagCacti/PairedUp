@@ -13,9 +13,13 @@
 <div class="msg-container">
 	{{list}}
 
-  {{showChat}}
+  <div ng-repeat="key in chat">
+    <p>{{key.displayName}}</p>
+    <p>{{key.text}}</p>
+    <p>{{key.created}}</p>
+  </div>
+{{chat}}
 
-  {{chat}}
 
 </div>
 

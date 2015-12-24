@@ -32,7 +32,7 @@ angular.module('myApp')
 	    	}
 	    	return data;
 	    })
-	    $scope.chat = Chat
+	    $scope.chat = Chat.messages
 
 	    // console.log('this is the showChat', showChat)
 
