@@ -20,11 +20,12 @@ var server = http.Server(app);
 var passport = require('passport');
 var flash    = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy;
-var GITHUB_CLIENT_ID = "6ffd349ee17a258a13ff"
-var GITHUB_CLIENT_SECRET = "881163697cad6c7cc246638d4b98819dd5cf679e";
 var session = require('express-session');
 var morgan = require('morgan');
 var logger = require('morgan');
+var uuid = require('node-uuid');
+var rooms = {};
+var userIds = {};
 // var router = express.Router();
 
 //I believe we need if we want to check req.file
@@ -51,7 +52,12 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/client'));                 
+app.use(express.static(__dirname + '/client'));
+
+//serve up static files. For webRtc
+
+// expressApp.use(express.static(__dirname + '/../public/dist'));   
+
 //serves up static files, otherwise we would not be able to load angular (and all the other bower components) in the index.html file
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 // Initialize Passport!  Also use passport.session() middleware, to support
@@ -172,8 +178,8 @@ function ensureAuthenticated(req, res, next) {
 
 
 passport.use(new GitHubStrategy({
-    clientID: GITHUB_CLIENT_ID,
-    clientSecret: GITHUB_CLIENT_SECRET,
+    clientID: config.GITHUB_CLIENT_ID,
+    clientSecret: config.GITHUB_SECRET,
     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
   },
   //Step 5
@@ -211,56 +217,6 @@ passport.use(new GitHubStrategy({
     });
   }
 ));
-
-/*
-
- |--------------------------------------------------------------------------
- | PUT /api/me
- |--------------------------------------------------------------------------
- */
-
-// app.put('/api/me', function(req, res) {
-//   User.user.findById(req.user, function(err, user) {
-//     if (!user) {
-//       return res.status(400).send({ message: 'User not found' });
-//     }
-//     user.displayName = req.body.displayName || user.displayName;
-//     user.email = req.body.email || user.email;
-//     user.save(function(err) {
-//       res.status(200).end();
-//     });
-//   });
-// });
-
-
-/*
- |--------------------------------------------------------------------------
- | Unlink Provider
- |--------------------------------------------------------------------------
- */
-// app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
-//   var provider = req.body.provider;
-//   var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
-//     'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
-
-//   if (providers.indexOf(provider) === -1) {
-//     return res.status(400).send({ message: 'Unknown OAuth Provider' });
-//   }
-
-//   User.user.findById(req.user, function(err, user) {
-//     if (!user) {
-//       return res.status(400).send({ message: 'User Not Found' });
-//     }
-//     user[provider] = undefined;
-//     user.save(function() {
-//       res.status(200).end();
-//     });
-//   });
-// });
-
-
-
-
 
 
 var usersRoom;
@@ -316,6 +272,73 @@ io.on('connection', function(socket) {
       //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
       io.emit('publish message', message);
       });
+
+    /* 
+
+    Stuff for WebRtc
+
+    */
+        var currentRoom, id;
+    //The init event is used for initialization of given room. 
+
+        socket.on('init', function (data, fn) {
+          //If the room is not created we create the room and add the current client to it. 
+        //We generate room randomly using node-uuid module
+          currentRoom = (data || {}).room || uuid.v4();
+          var room = rooms[currentRoom];
+          if (!data) {
+            rooms[currentRoom] = [socket];
+            id = userIds[currentRoom] = 0;
+            fn(currentRoom, id);
+            console.log('Room created, with #', currentRoom);
+          } else {
+            if (!room) {
+              return;
+            }
+    //If the room is already created we join the current client to the room by adding its socket to the collection of sockets associated to the given room (rooms[room_id] is an array of sockets).
+            userIds[currentRoom] += 1;
+            id = userIds[currentRoom];
+
+      //when a client connects to given room we notify all other peers associated to the room about the newly connected peer.
+
+    //We also have a callback (fn), which we invoke with the client's ID and the room's id, once the client has successfully connected.
+            fn(currentRoom, id);
+            room.forEach(function (s) {
+              s.emit('peer.connected', { id: id });
+            });
+            room[id] = socket;
+            console.log('Peer connected to room', currentRoom, 'with #', id);
+          }
+        });
+
+    //The msg event is an SDP message or ICE candidate, which should be redirected from specific peer to another peer:
+        socket.on('msg', function (data) {
+    //The id of given peer is always an integer so that's why we parse it as first line of the event handler. 
+          var to = parseInt(data.to, 10);
+          if (rooms[currentRoom] && rooms[currentRoom][to]) {
+            console.log('Redirecting message to', to, 'by', data.by);
+    //After that we emit the message to the specified peer in the _to property of the event data object.
+            rooms[currentRoom][to].emit('msg', data);
+          } else {
+            console.warn('Invalid user');
+          }
+        });
+        
+        //the disconnect handler
+        socket.on('disconnect', function () {
+          if (!currentRoom || !rooms[currentRoom]) {
+            return;
+          }
+          //Once given peer disconnects from the server (for example the user close his or her browser or refresh the page), we remove its socket from the collection of sockets associated with the given room (the delete operator usage).
+          delete rooms[currentRoom][rooms[currentRoom].indexOf(socket)];
+          rooms[currentRoom].forEach(function (socket) {
+            if (socket) {
+              // After that we emit peer.disconnected event to all other peers in the room, with the id of the disconnected peer. This way all peers connected to the disconnected peer will be able to remove the video element associated with the disconnected client.
+              socket.emit('peer.disconnected', { id: id });
+            }
+          });
+        });
+
 });
 
 //content will hold the data from the uploaded file
@@ -341,9 +364,3 @@ app.post('/fileUpload', function(req, res, next) {
       }
   });
 });
-
-
-
-  
-
-
