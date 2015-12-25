@@ -2,15 +2,11 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
-	'myApp.codeshare',
+	// 'myApp.codeshare',
    //for client side sockets
-<<<<<<< HEAD
   'btford.socket-io',
   // 'myApp.services',
   // 'myApp.current'
-=======
-  'btford.socket-io'
->>>>>>> aa1aac033867590cdc98122be95f89af9193c16f
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
@@ -79,9 +75,11 @@ angular.module('myApp', [
       url: '/chat',
       templateUrl: 'chat/chat.html',
       controller: 'ChatController',
-      // resolve: {
-      //    return 
-      //  }
+     resolve: {
+        msg: function(Chat) {
+          return Chat.getChat()
+        }
+      }
     })
 
 	$urlRouterProvider.otherwise('/');

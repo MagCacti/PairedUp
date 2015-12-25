@@ -1,13 +1,11 @@
 /*
   RoomCtrl accepts as dependencies the following components:
-
 $sce - used for setting the source of the video elements
 VideoStream - used for getting the video stream from the user's camera
 $location - used for redirecting the user to the room's URL
 $routeParams - used for getting the room id
 $scope - used for attaching data to it in order to achieve data-binding with the view
 Room - service which we are going to define next. It is used for managing the peer connections.
-
 */
 angular.module('myApp')
   .controller('RoomCtrl', function ($sce, VideoStream, $location, $stateParams, $scope, Room) {
@@ -45,19 +43,12 @@ angular.module('myApp')
     Room.on('peer.stream', function (peer) {
       console.log('Client connected, adding new stream');
        //Once we receive a new peer stream we add it to the array $scope.peers, which is visualized on the page. The markup on the page maps each stream to a video element.
-<<<<<<< HEAD
-      $scope.peers.push({
-        id: peer.id,
-        stream: URL.createObjectURL(peer.stream)
-      });
-=======
       $scope.$apply(function(){
         $scope.peers.push({
           id: peer.id,
           stream: URL.createObjectURL(peer.stream)
         })  
       })
->>>>>>> aa1aac033867590cdc98122be95f89af9193c16f
     });
     //peer.disconnected - once a peer disconnects the peer.disconnected event is being fired
     Room.on('peer.disconnected', function (peer) {

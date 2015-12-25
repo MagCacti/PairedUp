@@ -323,6 +323,35 @@ io.on('connection', function(socket) {
   //   io.emit('notification', textFromEditor);
 
   // });
+
+  //working on chat feature with sockets
+    socket.on('new message', function(message) {
+      //general algorithim for storing messages shall go here. 
+
+      //hard coded message document to test persisting chat data
+      console.log('this is the incoming message', message)
+      var messages = new Messages(message);
+      messages.created = message.date 
+      messages.text = message.text
+      messages.displayName = message.username
+      messages.save(function(err, results){
+        if(err){
+          console.log('you have an error', err)
+        }
+        console.log('you save the chat. check mongo.', results)
+      })
+
+   
+        ///Collect all the messages now in database 
+
+        var foundMessages;
+        Messages.find(function(err, msg){
+          if(err){return console.log('you have an err get chats from the DB', err)}
+          // console.log('MESSAGES from get request', req)
+          foundMessages = msg
+          io.emit('publish message', foundMessages);
+        })
+      });
 //general code
   socket.on('/create', function(data) {
     usersRoom = data.title
@@ -334,32 +363,8 @@ io.on('connection', function(socket) {
       socket.broadcast.emit('notification', data);
       });
     });
-  //working on chat feature with sockets
-    socket.on('new message', function(message) {
-      //general algorithim for storing messages shall go here. 
-
-      //hard coded message document to test persisting chat data
-      console.log('this is the incoming message', message)
-      // var messages = new Messages(message);
-
-      // messages.text = message.text;
-      // //save josephMessages document into the database
-      // messages.save(function(err, results){
-      //   if (err) {
-      //     console.log("err", err);
-      //   }
-      //   else {
-      //     console.log("Saved into MONGODB Success")
-      //   }
-      //   //search for messages that have Joseph as the name of their chat
-      //   // Messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
-      //   //   console.log("ALL THE JOSEPH MESSAGES", results);
-      //   // });
-      // })
-
+  
       //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
-      io.emit('publish message', message);
-      });
 
     /* 
 
@@ -430,30 +435,30 @@ io.on('connection', function(socket) {
 });
 
 
-app.get('/chat', function(req, res){
-  console.log('this is from the chat get req.', req)
-  Messages.find(function(err, msg){
-    if(err){return console.log('you have an err get chats from the DB', err)}
-    console.log('MESSAGES from get request', req)
-    res.json('this is response json', msg)
-  })
-})
+// app.get('/chat', function(req, res){
+//   // console.log('this is from the chat get req.', req)
+//   Messages.find(function(err, msg){
+//     if(err){return console.log('you have an err get chats from the DB', err)}
+//     // console.log('MESSAGES from get request', req)
+//     res.json('this is response json', msg)
+//   })
+// })
 
-app.post('/chat', function(req, res){
-  console.log('this is the chat req', req.body)
-  var messages = new Messages(req.body)
-  messages.created = req.body.date 
-  messages.text = req.body.text
-  messages.displayName = req.body.username
-  messages.save(function(err, results){
-    if(err){
-      console.log('you have an error', err)
-    }
-    console.log('you save the chat. check mongo.', results)
-  })
+// app.post('/chat', function(req, res){
+//   console.log('this is the chat req', req.body)
+//   var messages = new Messages(req.body)
+//   messages.created = req.body.date 
+//   messages.text = req.body.text
+//   messages.displayName = req.body.username
+//   messages.save(function(err, results){
+//     if(err){
+//       console.log('you have an error', err)
+//     }
+//     console.log('you save the chat. check mongo.', results)
+//   })
 
-  // res.json(req.body)
-})
+//   // res.json(req.body)
+// })
 
 app.post('/savingDocumentsToDatabase', function(req,res) {
     var doc = new userDocument({id: req.body.id, title: req.body.title, mode: req.body.mode, displayName: req.body.displayName, code: req.body.code}); 

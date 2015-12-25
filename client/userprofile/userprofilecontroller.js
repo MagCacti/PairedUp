@@ -68,19 +68,6 @@ angular.module('myApp')
             //databind to show the information (picture, display name)
               $scope.user = data.user;
           });
-      }
     }
-  });
-
-    $scope.updateProfile = function() {
-      Account.updateProfile($scope.user)
-        .then(function() {
-          
-        })
-        .catch(function(response) {
-          
-        });
-    };
-    
-    $scope.getProfile();
+    }
   });
