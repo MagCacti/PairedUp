@@ -13,7 +13,8 @@
     </div>
   </div> 
     <div class="col-md-4">
-        <form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+
+        <form ng-submit="getFileInfo()" action="/fileUpload" enctype="multipart/form-data" method="post">
             <input type="file" name="string">
             <input type="submit" value="Upload File">
         </form>

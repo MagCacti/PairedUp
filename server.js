@@ -41,6 +41,9 @@ console.log("App listening on port 8080");
 
 var db = require('./database/UserModel');
 var User = db.user
+var userDocument = db.userDocument;
+var Messages = db.messages;
+var Skills = db.skills;
 
 
 app.set('port', process.env.PORT || 8080);
@@ -64,7 +67,14 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
   // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true }));
+app.use(session({ 
+  name: "UserFromPearedUp",
+  secret: "keyboard cat", 
+  // cookie: {maxAge: 3600000},
+  resave: true, 
+  saveUninitialized: true, 
+  cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+   }));
 
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -146,17 +156,102 @@ app.get('/logout', function(req, res){
 // This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
 //Step 3
 app.get('/account', ensureAuthenticated, function(req, res){
-  console.log('this is the req.user in the account route', req.user);
+  console.log('this is the req.user in the account route');
   res.json(req.user);
 });
 
 app.get('/login', function(req, res){
-    console.log('this is the req.user in the login route', req);
+    // console.log('this is the req.user in the login route', req);
 
-  res.json({profile: globalProfile});
+  res.json({profile: globalProfile, sessions: req.session});
 });
 
+app.get('/userprofile', function(req, res, next) {
+  User.find(function(err, users){
+    if(err){ return next(err); }
 
+    res.json(users);
+  });
+});
+
+app.get('/skills', function(req, res, next){
+  User.find(function(err, user){
+    if(err){next(err);}
+    res.json(user);
+  })
+})
+
+
+app.param('user', function(req, res, next, id) {
+  var query = User.findById(id);
+  console.log('this is the id', query)
+  query.exec(function (err, user){
+    if (err) { return next(err); }
+    if (!user) { return next(new Error('can\'t find user')); }
+
+    req.user = user;
+    return next();
+  });
+});
+
+//this is not being integrated yet DONT DELETE
+// app.get('/skills/:user', function(req, res, next) {
+//   console.log('this is a single /skills/:user', req.user)
+//   req.user.populate('skills', function(err, user){
+  
+//   if (err){return next(err)}
+//   res.json(req.user);
+//   })
+// });
+
+//this post to the database. The :user params dont necessarily work yet though
+app.post('/skills/:user', function(req, res, next) {
+  var skills = new Skills(req.body);
+  skills.user = req.user
+  // console.log('this is skills/:user post:', req.user)
+  console.log('this is skills/:user req.user:', req.user)
+  // comment.post = req.post;
+
+  skills.save(function(err, skill){
+    if(err){ return next(err); }
+
+    req.user.skills.push(skill);
+    req.user.save(function(err, user) {
+      if(err){ return next(err); }
+
+      res.json(skill);
+    });
+  });
+});
+
+app.get('/checkIfLoggedIn', function(req, res, next) {
+  if(req.user) {
+    console.log(req.user)
+    next();
+  } else {
+    res.redirect('/login');
+  }
+})
+
+//if the person is signed in and goes back to the profile page
+app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
+  // console.log("req.body in checkIfLoggedIn", req.body);
+  var currentUser;
+
+  //find the user with the display name
+  User.findOne({displayName: req.body.displayName}, function (err, user) {
+        if (user) {
+          // console.log("User in database", user)
+          //send that user to the clientSide.
+          res.json({user:user});
+        }else if (err) {
+          return "This is error message: " + err; 
+        }
+
+      });
+    // console.log("This is currentUser", currentUser);
+  // res.send({response: currentUser});
+});
 
 
 // Simple route middleware to ensure user is authenticated.
@@ -166,7 +261,9 @@ app.get('/login', function(req, res){
 //   login page.
 //Step 4:
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) { 
+    console.log('this is ensureAuthenticated', isAuthenticated )
+    return next(); }
   res.redirect('/login')
 }
 
@@ -183,8 +280,8 @@ passport.use(new GitHubStrategy({
     process.nextTick(function () {
       // console.log("accessToken", accessToken);
       // console.log("refreshToken",refreshToken );
-      console.log("profile", profile);
-      console.log("This is the avatar_url:::::::", profile._json.avatar_url)
+      // console.log("profile", profile);
+      // console.log("This is the avatar_url:::::::", profile._json.avatar_url)
       // User.findOrCreate
       // var user;
       User.findOne({github: profile.id}, function (err, user) {
@@ -230,6 +327,37 @@ io.on('connection', function(socket) {
   //   io.emit('notification', textFromEditor);
 
   // });
+
+  //this corresponds to the socket.emit('new message') on the client
+    socket.on('new message', function(message) {
+    
+
+      //message - data from the cliet side 
+      console.log('this is the incoming message', message)
+      var messages = new Messages(message);
+      //messages.create etc were all defined in the messages model
+      messages.created = message.date 
+      messages.text = message.text
+      messages.displayName = message.username
+      messages.save(function(err, results){
+        if(err){
+          console.log('you have an error', err)
+        }
+        console.log('you save the chat. check mongo.', results)
+      })
+
+   
+        ///Collect all the messages now in database 
+
+        var foundMessages;
+        Messages.find(function(err, msg){
+          if(err){return console.log('you have an err get chats from the DB', err)}
+          // console.log('MESSAGES from get request', req)
+          foundMessages = msg
+          //this will post all the messages from the database
+          io.emit('publish message', foundMessages);
+        })
+      });
 //general code
   socket.on('/create', function(data) {
     usersRoom = data.title
@@ -241,32 +369,8 @@ io.on('connection', function(socket) {
       socket.broadcast.emit('notification', data);
       });
     });
-  //working on chat feature with sockets
-    socket.on('new message', function(message) {
-      //general algorithim for storing messages shall go here. 
-
-      //hard coded message document to test persisting chat data
-      var JosephMessages = new User.messages({
-        nameOfChat: "Joseph", 
-        messageContent: "This is a message"
-      });
-      //save josephMessages document into the database
-      JosephMessages.save(function(err, results){
-        if (err) {
-          console.log("err", err);
-        }
-        else {
-          console.log("Saved into MONGODB Success")
-        }
-        //search for messages that have Joseph as the name of their chat
-        User.messages.find({ nameOfChat: 'Joseph' }, function(err, results) {
-          console.log("ALL THE JOSEPH MESSAGES", results);
-        });
-      })
-
+  
       //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
-      io.emit('publish message', message);
-      });
 
     /* 
 
@@ -336,13 +440,80 @@ io.on('connection', function(socket) {
 
 });
 
+
+// this is good for future reference when creating get and post request. 
+// app.get('/chat', function(req, res){
+//   // console.log('this is from the chat get req.', req)
+//   Messages.find(function(err, msg){
+//     if(err){return console.log('you have an err get chats from the DB', err)}
+//     // console.log('MESSAGES from get request', req)
+//     res.json('this is response json', msg)
+//   })
+// })
+
+// app.post('/chat', function(req, res){
+//   console.log('this is the chat req', req.body)
+//   var messages = new Messages(req.body)
+//   messages.created = req.body.date 
+//   messages.text = req.body.text
+//   messages.displayName = req.body.username
+//   messages.save(function(err, results){
+//     if(err){
+//       console.log('you have an error', err)
+//     }
+//     console.log('you save the chat. check mongo.', results)
+//   })
+
+//   // res.json(req.body)
+// })
+
+app.post('/savingDocumentsToDatabase', function(req,res) {
+    var doc = new userDocument({id: req.body.id, title: req.body.title, mode: req.body.mode, displayName: req.body.displayName, code: req.body.code}); 
+    doc.save(function() {});
+});
+
+
+app.post('/retrievingDocumentsForUser', function(req,res) {
+  userDocument.find({displayName: req.body.displayName}, function(err, results){
+    res.json(results);
+  });
+});
+
+//delete works but now I need to update every single document's id to --1. 
+app.post('/deleteDocumentsForUser', function(req,res) {
+  var idOfDeletedDoc = req.body.id;
+
+
+  userDocument.find({displayName: req.body.displayName, title: req.body.title}, function(err, result){
+    return result;
+  }).remove(function(result) {});
+
+
+//find all the documents the user has made
+  userDocument.find({displayName: req.body.displayName}, function(err, results) {
+    //iterate through the documents
+    for (var i =0; i < results.length; i++) {
+      //if the user's document is greater than the id of the document we destroyed.
+      if (results[i].id > idOfDeletedDoc) {
+        //create a new id which is the id of the document we are currently iterating thorugh - 1.
+        var newId = results[i].id - 1;
+        //set that document to the  
+        userDocument.update({id: results[i].id}, {id: newId}, {}, function (err, numAffected) {
+        });
+      }
+    }
+    //sending this so we can utilize the promise structure from angular $http.post
+    res.send({});
+  });
+
+});
 //content will hold the data from the uploaded file
 var content;
 //Need to build this function to get around asynchronous behavior.
 var sendFileDataToClient = function(data) {
   //send the data from the file to the client. 
   io.emit('fileData', content);
-}
+};
 
 //Initiating the file upload. Immediately happens after someone clickes the upload file button
 app.post('/fileUpload', function(req, res, next) {
@@ -354,7 +525,7 @@ app.post('/fileUpload', function(req, res, next) {
         //content is being asynchronously set to the data in the file
         content = data;
         //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
-        sendFileDataToClient(content)
+        sendFileDataToClient(content);
 
       }
   });

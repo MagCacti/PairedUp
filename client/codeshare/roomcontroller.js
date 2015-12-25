@@ -1,13 +1,11 @@
 /*
   RoomCtrl accepts as dependencies the following components:
-
 $sce - used for setting the source of the video elements
 VideoStream - used for getting the video stream from the user's camera
 $location - used for redirecting the user to the room's URL
 $routeParams - used for getting the room id
 $scope - used for attaching data to it in order to achieve data-binding with the view
 Room - service which we are going to define next. It is used for managing the peer connections.
-
 */
 angular.module('myApp')
   .controller('RoomCtrl', function ($sce, VideoStream, $location, $stateParams, $scope, Room) {
