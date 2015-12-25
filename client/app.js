@@ -37,12 +37,7 @@ angular.module('myApp', [
       .state('profile.currentskills', {
         url: '/currentskills',
         templateUrl: 'userprofile/currentskills.html',
-        controller: 'CurrentSkillsController',
-        // resolve: {
-        //     profilePromise: ['profiledata', function(profile){
-        //       return profiledata.getAll();
-        //     }]
-        //   }
+        controller: 'CurrentSkillsController'
       })
       .state('profile.futureskills', {
         url: '/futureskills',
@@ -74,12 +69,7 @@ angular.module('myApp', [
     .state('chat', {
       url: '/chat',
       templateUrl: 'chat/chat.html',
-      controller: 'ChatController',
-     resolve: {
-        msg: function(Chat) {
-          return Chat.getChat()
-        }
-      }
+      controller: 'ChatController'
     })
 
 	$urlRouterProvider.otherwise('/');

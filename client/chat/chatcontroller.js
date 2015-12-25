@@ -1,5 +1,5 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', 'Chat', function($scope, $http, socket, $filter, Account, Chat){
+	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
 
         $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
  
@@ -8,10 +8,10 @@ angular.module('myApp')
 	        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
 	        $scope.$apply(function(){
 	            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
-	        	console.log('this is data', data)
+	        	// console.log('this is data', data)
+	        	//data comes from mongo and returns an array of objects
 	        	$scope.chat = data
-	            // $scope.list.push($scope.text, $scope.date); 
-	        
+					        
 	        });
 	    });
 

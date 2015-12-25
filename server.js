@@ -43,6 +43,7 @@ var db = require('./database/UserModel');
 var User = db.user
 var userDocument = db.userDocument;
 var Messages = db.messages;
+var Skills = db.skills;
 
 
 app.set('port', process.env.PORT || 8080);
@@ -180,6 +181,7 @@ app.get('/skills', function(req, res, next){
   })
 })
 
+
 app.param('user', function(req, res, next, id) {
   var query = User.findById(id);
   console.log('this is the id', query)
@@ -192,15 +194,17 @@ app.param('user', function(req, res, next, id) {
   });
 });
 
-app.get('/skills/:user', function(req, res, next) {
-  console.log('this is a single /skills/:user', req.user)
-  req.user.populate('skills', function(err, user){
+//this is not being integrated yet DONT DELETE
+// app.get('/skills/:user', function(req, res, next) {
+//   console.log('this is a single /skills/:user', req.user)
+//   req.user.populate('skills', function(err, user){
   
-  if (err){return next(err)}
-  res.json(req.user);
-  })
-});
+//   if (err){return next(err)}
+//   res.json(req.user);
+//   })
+// });
 
+//this post to the database. The :user params dont necessarily work yet though
 app.post('/skills/:user', function(req, res, next) {
   var skills = new Skills(req.body);
   skills.user = req.user
@@ -324,13 +328,14 @@ io.on('connection', function(socket) {
 
   // });
 
-  //working on chat feature with sockets
+  //this corresponds to the socket.emit('new message') on the client
     socket.on('new message', function(message) {
-      //general algorithim for storing messages shall go here. 
+    
 
-      //hard coded message document to test persisting chat data
+      //message - data from the cliet side 
       console.log('this is the incoming message', message)
       var messages = new Messages(message);
+      //messages.create etc were all defined in the messages model
       messages.created = message.date 
       messages.text = message.text
       messages.displayName = message.username
@@ -349,6 +354,7 @@ io.on('connection', function(socket) {
           if(err){return console.log('you have an err get chats from the DB', err)}
           // console.log('MESSAGES from get request', req)
           foundMessages = msg
+          //this will post all the messages from the database
           io.emit('publish message', foundMessages);
         })
       });
@@ -435,6 +441,7 @@ io.on('connection', function(socket) {
 });
 
 
+// this is good for future reference when creating get and post request. 
 // app.get('/chat', function(req, res){
 //   // console.log('this is from the chat get req.', req)
 //   Messages.find(function(err, msg){
