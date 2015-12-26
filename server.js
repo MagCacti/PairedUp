@@ -314,19 +314,20 @@ passport.use(new GitHubStrategy({
 var usersRoom;
 
 
-//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
+//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client  
+  var people = {};  
+  var rooms = {}; 
 io.on('connection', function(socket) {
   console.log('new connection');
 
-  //some room will be a variable. 
-  // io.to(usersRoom).emit(usersRoom);
-  //listen for a signal called add-customer. General code
-  // socket.on('add-customer', function(textFromEditor) {
-  //   console.log("Just heard a add-customer from Joseph");
-  //   //send a signal to frontEnd called notification
-  //   io.emit('notification', textFromEditor);
+  socket.join('room1');
+  io.to('room1').emit('joinedroom')
 
-  // });
+
+
+
+
+
 
   //this corresponds to the socket.emit('new message') on the client
     socket.on('new message', function(message) {
@@ -358,6 +359,17 @@ io.on('connection', function(socket) {
           io.emit('publish message', foundMessages);
         })
       });
+
+socket.on('/createroom', function(data){
+  rooms['chatroom'] = data.roomname
+  people['creator'] = data.creator
+  socket.join(data.roomname)
+  socket.on(data.roomname, function(data){
+    socket.broadcast.emit('/roomcreated', 'created a room here')
+  })
+  console.log('this is what we got back from the emit', rooms, people)
+})
+
 //general code
   socket.on('/create', function(data) {
     usersRoom = data.title
@@ -369,6 +381,15 @@ io.on('connection', function(socket) {
       socket.broadcast.emit('notification', data);
       });
     });
+          //some room will be a variable. 
+        // io.to(usersRoom).emit(usersRoom);
+        //listen for a signal called add-customer. General code
+        // socket.on('add-customer', function(textFromEditor) {
+        //   console.log("Just heard a add-customer from Joseph");
+        //   //send a signal to frontEnd called notification
+        //   io.emit('notification', textFromEditor);
+
+        // });
   
       //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
 
@@ -437,6 +458,7 @@ io.on('connection', function(socket) {
             }
           });
         });
+
 
 });
 

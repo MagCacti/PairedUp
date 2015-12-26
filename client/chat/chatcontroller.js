@@ -1,7 +1,7 @@
 angular.module('myApp')
 	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
 
-        $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
+        // $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
  
         $scope.username = Account.getLogInData()
 	    socket.on("publish message", function(data, other) {
@@ -21,7 +21,7 @@ angular.module('myApp')
 	        //check if there is text in the box.
 	        if ($scope.text) {
 	            //emit a new message with the text data. Will store this in the database. 
-	             socket.emit('new message', {text: $scope.text, date: $scope.date, username: $scope.username});
+	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), username: $scope.username});
 	             // this is be sent to the socket.on('new messsages') on the server side.
 	        }
 	    };
