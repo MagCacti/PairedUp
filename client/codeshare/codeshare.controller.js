@@ -25,10 +25,7 @@ angular.module('myApp')
   if (Account.getCheckIfLoggedOut()){
 
   }
-  //I believe the line below to be unnecessary now but not sure. 
-  // $http.get('/checkIfLoggedIn').then(function(response){
-  //   console.log("response from checkIfLoggedIn", response);
-  // });
+
   // var comm = new Icecomm('');
 
   //       comm.connect('test');
@@ -62,7 +59,6 @@ angular.module('myApp')
     onChange: function(_ace) {
       //store the document of the session to a variable. 
       var sessionDoc = _ace[1].getSession().getDocument();
-      //Was erroring without this if statement. Not sure why. 
       if ($scope.textInEditor !== sessionDoc.getValue() ) {
         //setting $scope.textInEditor equal to the text in the document
         $scope.textInEditor = sessionDoc.getValue();
@@ -107,7 +103,6 @@ angular.module('myApp')
     'function foo(msg) {\n\tvar r = Math.random();\n\treturn "" + r + " : " + msg;\n}';
  
   
-//add a document
 
  //file types to add to the document name. 
   $scope.fileTypes = {'Scheme': '.sch', 'XML' : '.xml', 'Javascript': '.js', 'HTML': '.html' , 'Ruby': '.rb' , 'CSS': '.css' , 'Curly': '.curly' , 'CSharp': '.csharp' , 'Python': '.py' , 'MySQL': '.sql' };

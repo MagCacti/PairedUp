@@ -38,22 +38,15 @@ angular.module('myApp')
     }else if (Account.getCheckingIfLogInData() == 1 ){
       //if they are not logged in, then redirect them to the login page.
       if (Account.getCheckIfLoggedOut() == 'true') {
-        // console.log('getLoggedOutData in if ',Account.getLoggedOutData());
-        // console.log("Logged out is true");
-        // // Account.setCheckingIfLogInData(0);
         $state.go('login');
 
         //else if they are already logged in. 
       } else {
-        //   console.log("LoggedOUt is false");
-       
-        // console.log("In the if in userProfile");
         // bit of a glitch, after every so many log ins, the profile page will not display the users information. Not sure how this is happening (Dec 20th)
         //send the display name to the backend, where will we will search for the user in the database. 
         $http.post('/getFromDatabaseBecausePersonSignedIn', 
                    {displayName: Account.getUserDisplayName()})
           .success(function(data, status) {
-            // console.log("data from server", data);
             //databind to show the information (picture, display name)
               $scope.user = data.user;
           });
