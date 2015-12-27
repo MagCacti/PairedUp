@@ -2,11 +2,7 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
-	// 'myApp.codeshare',
-   //for client side sockets
-  'btford.socket-io',
-  // 'myApp.services',
-  // 'myApp.current'
+      'btford.socket-io',
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
