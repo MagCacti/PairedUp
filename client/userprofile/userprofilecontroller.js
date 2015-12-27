@@ -24,7 +24,7 @@ angular.module('myApp')
       Account.setCheckIfLoggedOut(true);
     }
     //if the person is not logged 
-     if (Account.getChekIfActivelyLoggedIn() && Account.getCheckingIfLogInData() !== 1) {
+     if (Account.getChekIfActivelyLoggedIn() && Account.getCheckingIfLogInData() !== '1') {
       //setting a check to tell the code that the user is logged in
       Account.setCheckingIfLogInData(1);
       //accessing the github passport. 
@@ -35,7 +35,7 @@ angular.module('myApp')
        console.log("This is a err", err);
      });
       //A outer chekc to see if the user is logged in or not
-    }else if (Account.getCheckingIfLogInData() == 1 ){
+    }else if (Account.getCheckingIfLogInData() === '1' ){
       //if they are not logged in, then redirect them to the login page.
       if (Account.getCheckIfLoggedOut() == 'true') {
         $state.go('login');
