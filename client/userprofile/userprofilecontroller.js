@@ -1,5 +1,5 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $http, Account) {
+  .controller('ProfileController', function($scope, $http, $state,  Account) {
     var loggedInInformation; 
 
     $scope.getProfile = function() {
