@@ -22,7 +22,7 @@ angular.module('myApp')
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[0];
-  if (Account.getLoggedOutData()){
+  if (Account.getCheckIfLoggedOut()){
 
   }
   //I believe the line below to be unnecessary now but not sure. 
@@ -112,8 +112,8 @@ angular.module('myApp')
  //file types to add to the document name. 
   $scope.fileTypes = {'Scheme': '.sch', 'XML' : '.xml', 'Javascript': '.js', 'HTML': '.html' , 'Ruby': '.rb' , 'CSS': '.css' , 'Curly': '.curly' , 'CSharp': '.csharp' , 'Python': '.py' , 'MySQL': '.sql' };
 //retrieving all the files if the user is logged in. 
-  if (Account.getLoggedOutData() === 'false') {
-      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
+  if (Account.getCheckIfLoggedOut() === 'false') {
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getUserDisplayName(), code: $scope.aceModel})
       .then(function(result) {
         for (var i = 0; i < result.data.length; i++) {
           $scope.id++;
@@ -131,7 +131,7 @@ angular.module('myApp')
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
     $scope.filesList[total - 1].title += $scope.fileTypes[$scope.mode];
-    $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getLogInData(), code: $scope.aceModel});  
+    $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getUserDisplayName(), code: $scope.aceModel});  
     
     $scope.title = '';
     $scope.aceModel = '';
@@ -164,11 +164,11 @@ angular.module('myApp')
     var index = selectId(id);
     var item = $scope.filesList[index];
     var store = $scope.filesList[$scope.removeid];
-    $http.post('/deleteDocumentsForUser', {displayName: Account.getLogInData(), title: item.title, id:item.id}).then(function(result) {
+    $http.post('/deleteDocumentsForUser', {displayName: Account.getUserDisplayName(), title: item.title, id:item.id}).then(function(result) {
     }).then(function() {
       $scope.id = 0; 
       $scope.filesList = [];
-      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getUserDisplayName(), code: $scope.aceModel})
       .then(function(result) {
         for (var i = 0; i < result.data.length; i++) {
           $scope.id++;

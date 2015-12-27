@@ -3,39 +3,28 @@ angular.module('myApp')
     var loggedInInformation; 
 
     $scope.getProfile = function() {
-      Account.setData(false); 
+      Account.setChekIfActivelyLoggedIn(false); 
       //set promise variable to equal return of Account.getProfile so we can chain promise and fix the check for the req.sessions once someone immediately logs in. 
       var promise = Account.getProfile()
         .then(function(response) {
           //data binding to show on the html page
           $scope.user = response.data.profile;
           //sets the displayName in the local Storage of the browser. 
-          Account.setLogInData(response.data.profile.displayName);
+          Account.storeUserDisplayName(response.data.profile.displayName);
           return {};
         })
         .catch(function(response) {
         });
         return promise;
     };
-  //   $scope.updateProfile = function() {
-  //     Account.updateProfile($scope.user)
-  //       .then(function() {
-          
-  //       })
-  //       .catch(function(response) {
-          
-  //       });
-  //   };
-    
-  //   $scope.getProfile();
-  // });
+
 //the first time a user comes to the profile page without signing in. 
     if (Account.getCheckingIfLogInData() === null) {
       Account.setCheckingIfLogInData(1);
-      Account.setLoggedOutData(true);
+      Account.setCheckIfLoggedOut(true);
     }
     //if the person is not logged 
-     if (Account.getData() && Account.getCheckingIfLogInData() != 1) {
+     if (Account.getChekIfActivelyLoggedIn() && Account.getCheckingIfLogInData() !== 1) {
       //setting a check to tell the code that the user is logged in
       Account.setCheckingIfLogInData(1);
       //accessing the github passport. 
@@ -48,7 +37,7 @@ angular.module('myApp')
       //A outer chekc to see if the user is logged in or not
     }else if (Account.getCheckingIfLogInData() == 1 ){
       //if they are not logged in, then redirect them to the login page.
-      if (Account.getLoggedOutData() == 'true') {
+      if (Account.getCheckIfLoggedOut() == 'true') {
         // console.log('getLoggedOutData in if ',Account.getLoggedOutData());
         // console.log("Logged out is true");
         // // Account.setCheckingIfLogInData(0);
@@ -62,7 +51,7 @@ angular.module('myApp')
         // bit of a glitch, after every so many log ins, the profile page will not display the users information. Not sure how this is happening (Dec 20th)
         //send the display name to the backend, where will we will search for the user in the database. 
         $http.post('/getFromDatabaseBecausePersonSignedIn', 
-                   {displayName: Account.getLogInData()})
+                   {displayName: Account.getUserDisplayName()})
           .success(function(data, status) {
             // console.log("data from server", data);
             //databind to show the information (picture, display name)
