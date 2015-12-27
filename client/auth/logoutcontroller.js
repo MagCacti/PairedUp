@@ -6,5 +6,5 @@ angular.module('myApp')
 	      // $window.localStorage.loggedOut = true;
 	      // $Acount.setLoggedOutData(true);
 	      // console.log("day");
-	      $state.go('/');
+	      $state.go('login');
 	}])

@@ -28,7 +28,20 @@ var userSchema = new Schema({
  github: String,
  //this needs to be refactored. it stores a new object of skills everytime you enter a 
  //a new skills
- skills:[{type: mongoose.Schema.Types.ObjectId, ref: 'Skills'}],
+futureskills: {
+  python: Boolean,
+  swift: Boolean,
+  java: Boolean,
+  android: Boolean,
+  ruby: Boolean,
+},
+skills:{ 
+  node: Number,
+  angular: Number,
+  html: Number,
+  css: Number, 
+  jquery: Number
+},
  messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Messages'}]
 });
 
@@ -41,6 +54,13 @@ var skillsSchema = new mongoose.Schema({
   html: Number,
   css: Number, 
   jquery: Number,
+  futureskills: {
+    python: Boolean,
+    swift: Boolean,
+    java: Boolean,
+    android: Boolean,
+    ruby: Boolean,
+  },
   userid: { type: Number, ref: 'User' }
 });
 

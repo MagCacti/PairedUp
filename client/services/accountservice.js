@@ -6,12 +6,12 @@ angular.module('myApp')
         console.log('inside the factory-------------');
           return $http.get('/account')
         .success(function(req, res){
-          console.log('this is a successful callback of /account', res);
-          console.log('this is a successful callback of /account for req', req);
+          // console.log('this is a successful callback of /account', res);
+          // console.log('this is a successful callback of /account for req', req);
          
           // console.log(test);
           var username = req.profile.displayName;
-          console.log('this is req.data.whatever', username)
+          // console.log('this is req.data.whatever', username)
           return username;
         })
       
@@ -19,7 +19,7 @@ angular.module('myApp')
 
       isAuthenticated: function() {
           return $http.get('/checkIfLoggedIn').then(function(response){
-            console.log('this is isAuthenticated', response, 'response.data', response.data.loggedIn)
+            // console.log('this is isAuthenticated', response, 'response.data', response.data.loggedIn)
             return response.data.loggedIn;
         });
         },
