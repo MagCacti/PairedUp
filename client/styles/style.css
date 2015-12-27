@@ -1,13 +1,12 @@
 body {
   padding-top: 50px;
-  margin: 0px 10px 0px 10px;
 }
 
 /* Styles for signin.html */
 .btn-default {
-	padding: 20px;
-	margin: 15px;
-	/*font-size: 14px;*/	
+  padding: 20px;
+  margin: 15px;
+  /*font-size: 14px;*/  
 }
 
 /* Styles for login.html */
@@ -19,8 +18,24 @@ body {
 /* Styles for codeshare.html */
 .ace_editor { height: 200px; } 
 
+.chat-container {
+  width: 400px;
+  height: 600px;
+  margin: auto;
+}
+.msg-container {
+  height: 400px;
+  border: 2px;
+  overflow: scroll;
+}
 
 video {
-    height: 200px;
-    width: 200px;
+  width: 500%;
+  border-radius: 10px;
+}
+
+.video-wrapper:after {
+  content: ' ';
+  clear: both;
+  display: block;
 }

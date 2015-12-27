@@ -1,4 +1,4 @@
-angular.module('myApp.codeshare', [ ])
+angular.module('myApp')
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
@@ -15,13 +15,20 @@ angular.module('myApp.codeshare', [ ])
   };
 }])
 
-.controller('CodeShareController', ['$scope','$http','socket', function($scope, $http, socket){
+.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', function($scope, $http, $state, socket, Account){
+  //where the documents that are added are being saved. 
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
-  $scope.modes = ['C', 'C++', 'Clojure', 'CoffeeScript', 'CSharp', 'CSS', 'Curly', 'HTML','Java', 'Javascript', 'MySQL', 'Python', 'Ruby', 'Scheme', 'XML'];
-  $scope.mode = $scope.modes[9];
+  $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
+  $scope.mode = $scope.modes[0];
+  if (Account.getLoggedOutData()){
 
+  }
+  //I believe the line below to be unnecessary now but not sure. 
+  // $http.get('/checkIfLoggedIn').then(function(response){
+  //   console.log("response from checkIfLoggedIn", response);
+  // });
   // var comm = new Icecomm('');
 
   //       comm.connect('test');
@@ -100,17 +107,36 @@ angular.module('myApp.codeshare', [ ])
     'function foo(msg) {\n\tvar r = Math.random();\n\treturn "" + r + " : " + msg;\n}';
  
   
+//add a document
+
+ //file types to add to the document name. 
+  $scope.fileTypes = {'Scheme': '.sch', 'XML' : '.xml', 'Javascript': '.js', 'HTML': '.html' , 'Ruby': '.rb' , 'CSS': '.css' , 'Curly': '.curly' , 'CSharp': '.csharp' , 'Python': '.py' , 'MySQL': '.sql' };
+//retrieving all the files if the user is logged in. 
+  if (Account.getLoggedOutData() === 'false') {
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
+      .then(function(result) {
+        for (var i = 0; i < result.data.length; i++) {
+          $scope.id++;
+          $scope.filesList.push(result.data[i]);
+        }
+      }, function(err) {
+        console.log("there was an error");
+      });
+    }
+
+
 
   $scope.add = function(){
-    $scope.id++
+    $scope.id++;
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
-    console.log("This is from the add button signifying that this document is in the text in the editor",$scope.filesList[0].code);
+    $scope.filesList[total - 1].title += $scope.fileTypes[$scope.mode];
+    $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getLogInData(), code: $scope.aceModel});  
+    
     $scope.title = '';
     $scope.aceModel = '';
-
   };
-
+//update a document
   $scope.update = function(id){
     var index = selectId(id);
     $scope.filesList[index].title = $scope.title;
@@ -123,8 +149,8 @@ angular.module('myApp.codeshare', [ ])
 //After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
    //emiting a message to server called /create which will have the users join a room
-    socket.emit('/create', {title:$scope.title})
-    }
+    socket.emit('/create', {title:$scope.title});
+    };
 
   $scope.edit = function(id){
     var index = selectId(id);
@@ -136,12 +162,29 @@ angular.module('myApp.codeshare', [ ])
 
   $scope.delete = function(id){
     var index = selectId(id);
+    var item = $scope.filesList[index];
     var store = $scope.filesList[$scope.removeid];
-    $scope.filesList.splice(index, 1);
-    $scope.removeid++;
-    $scope.id--
+    $http.post('/deleteDocumentsForUser', {displayName: Account.getLogInData(), title: item.title, id:item.id}).then(function(result) {
+    }).then(function() {
+      $scope.id = 0; 
+      $scope.filesList = [];
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
+      .then(function(result) {
+        for (var i = 0; i < result.data.length; i++) {
+          $scope.id++;
+          $scope.filesList.push(result.data[i]);
+        }
+      }, function(err) {
+        console.log("there was an error");
+      });
+
+
+    });
+    $scope.removeid = 0;
+    $scope.id--;
     $scope.title = '';
     $scope.aceModel = '';
+    
 
   };
 
@@ -155,4 +198,3 @@ angular.module('myApp.codeshare', [ ])
 
 
 }]);
-
