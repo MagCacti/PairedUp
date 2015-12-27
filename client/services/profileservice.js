@@ -2,7 +2,7 @@ angular.module('myApp')
 	.factory('profiledata', ['$http', function($http){
 	  	var obj = {
 	    	skills: ['hello']
-	  	}
+	  	};
 
 	  	obj.getAll = function() {
 	  	  return $http.get('/profile').success(function(data){
@@ -12,7 +12,7 @@ angular.module('myApp')
 
 	  	obj.addSkills = function(id, skill){
 	  		return $http.post('/skills/'+id, skill);
-	  	}
+	  	};
 
 	  	// obj.create = function(skills) {
 	  	//     console.log('this these are the skills', skills)
@@ -22,4 +22,4 @@ angular.module('myApp')
 	  	//   });
 	  	// };
 	  	return obj;
-}])
+}]);

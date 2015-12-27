@@ -47,3 +47,8 @@ View the project roadmap [here](https://waffle.io/MagCacti/PairedUp)
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+
+How to use: 
+
+
