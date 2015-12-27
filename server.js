@@ -26,7 +26,7 @@ var logger = require('morgan');
 var uuid = require('node-uuid');
 var rooms = {};
 var userIds = {};
-
+var UserAuthUtil = require('./UserSignIn.js');
 //I believe we need if we want to check req.file
 var upload = multer({ dest: 'uploads/' });
 
@@ -95,13 +95,15 @@ app.all('/*', function(req, res, next) {
 //   the user by ID when deserializing.  However, since this example does not
 //   have a database of user records, the complete GitHub profile is serialized
 //   and deserialized.
+
+/*
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
-
+*/
 //look into deleting the line under this one.
 app.get('/', function(req, res){});
 
@@ -132,9 +134,7 @@ app.get('/auth/github',
 app.get('/auth/github/callback', 
   passport.authenticate('github', { failureRedirect: '/login' }),
   //This is the request handler that will be called when they click the log in to get hub. 
-  function(req, res) {
-    res.redirect('http://localhost:8080/#/profile');
-  });
+  UserAuthUtil.directToProfile);
 
 //The next four lines do not appear to do anything. I will double check, then delete if proven true.
 app.get('/logout', function(req, res){
@@ -149,18 +149,15 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.json(req.user);
 });
 
-app.get('/login', function(req, res){
+app.get('/login', UserAuthUtil.sendingUserToClient);
 
-  res.json({profile: globalProfile, sessions: req.session});
-});
+// app.get('/userprofile', function(req, res, next) {
+//   User.find(function(err, users){
+//     if(err){ return next(err); }
 
-app.get('/userprofile', function(req, res, next) {
-  User.find(function(err, users){
-    if(err){ return next(err); }
-
-    res.json(users);
-  });
-});
+//     res.json(users);
+//   });
+// });
 
 app.get('/skills', function(req, res, next){
   User.find(function(err, user){
@@ -211,18 +208,10 @@ app.post('/skills/:user', function(req, res, next) {
   });
 });
 
-app.get('/checkIfLoggedIn', function(req, res, next) {
-  if(req.user) {
-    console.log(req.user);
-    next();
-  } else {
-    res.redirect('/login');
-  }
-});
+
 
 //if the person is signed in and goes back to the profile page
 app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
-  var currentUser;
 
   //find the user with the display name
   User.findOne({displayName: req.body.displayName}, function (err, user) {
@@ -251,30 +240,12 @@ function ensureAuthenticated(req, res, next) {
 
 
 
+  //Step 5
 passport.use(new GitHubStrategy({
     clientID: config.GITHUB_CLIENT_ID,
     clientSecret: config.GITHUB_SECRET,
     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
-  },
-  //Step 5
-  function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      User.findOne({github: profile.id}, function (err, user) {
-        if (user) {
-        globalProfile = user;
-        }else {
-          var user = new User();
-          user.github = profile.id;
-          user.picture = profile._json.avatar_url;
-          user.displayName = profile.displayName;
-          user.save(function() {});
-          globalProfile = user;
-        }
-      });
-      return done(null, profile);
-    });
-  }
-));
+  }, UserAuthUtil.setingUserToGlobalProfile));
 
 
 var usersRoom;
