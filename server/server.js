@@ -12,9 +12,10 @@ var request = require('request');
 // var jwt = require('jwt-simple');
 // var moment = require('moment');
 var utils = require('./utils.js');
-var userAuthUtil = require('./UserSignIn.js');
-var socketUtils = require('./socketUtils.js');
-
+var documentUtils = require('./documents/documentUtils');
+var userAuthUtil = require('./userProfile/UserSignIn');
+var socketUtils = require('./socketUtils');
+var userUtils = require('./userProfile/userUtils');
 var path = require('path');
 var config = require('../config.js');
 
@@ -39,7 +40,7 @@ var upload = multer({ dest: 'uploads/' });
 
 var socketio = require('socket.io');
 var io = socketio(server);
-server.listen(8080);
+server.listen(8080); 
 console.log("App listening on port 8080");
 
 
@@ -199,7 +200,7 @@ app.post('/skills/:user', function(req, res, next) {
 
 
 //if the person is signed in and goes back to the profile page
-app.post('/getFromDatabaseBecausePersonSignedIn', utils.getFromDatabaseBecausePersonSignedIn);
+app.post('/getFromDatabaseBecausePersonSignedIn', userUtils.getFromDatabaseBecausePersonSignedIn);
 
 
 // Simple route middleware to ensure user is authenticated.
@@ -281,13 +282,13 @@ io.on('connection', function(socket) {
 
 
 
-app.post('/savingDocumentsToDatabase', utils.savingDocumentsToDatabase);
+app.post('/savingDocumentsToDatabase', documentUtils.savingDocumentsToDatabase);
 
 
-app.post('/retrievingDocumentsForUser', utils.retrievingDocumentsForUser);
+app.post('/retrievingDocumentsForUser', documentUtils.retrievingDocumentsForUser);
 
 //delete works but now I need to update every single document's id to --1. 
-app.post('/deleteDocumentsForUser', utils.deleteDocumentsForUser);
+app.post('/deleteDocumentsForUser', documentUtils.deleteDocumentsForUser);
 //content will hold the data from the uploaded file
 var content;
 //Need to build this function to get around asynchronous behavior.

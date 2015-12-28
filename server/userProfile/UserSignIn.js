@@ -1,8 +1,8 @@
-var config = require('../config.js');
+var config = require('../../config.js');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 var session = require('express-session');
-var db = require('./database/UserModel');
+var db = require('./UserModel');
 var User = db.user;
 
 // Passport session setup.
