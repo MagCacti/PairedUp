@@ -45,6 +45,7 @@ console.log("App listening on port 8080");
 
 var User = require('./userProfile/UserModel').user;
 var Skills = require('./database/SkillsModel').skills;
+var Messages = require('./database/MessageModel').messages;
 
 
 app.set('port', process.env.PORT || 8080);
@@ -227,7 +228,32 @@ var usersRoom;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   //this corresponds to the socket.emit('new message') on the client
-  socket.on('new message', socketUtils.newMessage);
+  socket.on('new message', /*socketUtils.newMessage*/ function(message) {
+    //message - data from the cliet side 
+    console.log('this is the incoming message', message);
+    var messages = new Messages(message);
+    //messages.create etc were all defined in the messages model
+    messages.created = message.date ;
+    messages.text = message.text;
+    messages.displayName = message.username;
+    messages.save(function(err, results){
+      if(err){
+        console.log('you have an error', err);
+      }
+      console.log('you save the chat. check mongo.', results);
+    });
+      ///Collect all the messages now in database 
+      var foundMessages;
+      Messages.find(function(err, msg){
+        if(err){
+          return console.log('you have an err get chats from the DB', err);
+        }
+        // console.log('MESSAGES from get request', req)
+        foundMessages = msg;
+        //this will post all the messages from the database
+        io.emit('publish message', foundMessages);
+      });
+    });
 //general code
   //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
   socket.on('/create', function(data) {
@@ -251,7 +277,35 @@ io.on('connection', function(socket) {
   var currentRoom, id;
     //The init event is used for initialization of given room. 
 
-  socket.on('init', socketUtils.init);
+  socket.on('init', /*socketUtils.init*/ function (data, fn) {
+    //If the room is not created we create the room and add the current client to it. 
+    //We generate room randomly using node-uuid module
+      currentRoom = (data || {}).room || uuid.v4();
+      var room = rooms[currentRoom];
+      if (!data) {
+        rooms[currentRoom] = [socket];
+        id = userIds[currentRoom] = 0;
+        fn(currentRoom, id);
+        console.log('Room created, with #', currentRoom);
+      } else {
+        if (!room) {
+          return;
+        }
+//If the room is already created we join the current client to the room by adding its socket to the collection of sockets associated to the given room (rooms[room_id] is an array of sockets).
+        userIds[currentRoom] += 1;
+        id = userIds[currentRoom];
+
+  //when a client connects to given room we notify all other peers associated to the room about the newly connected peer.
+
+//We also have a callback (fn), which we invoke with the client's ID and the room's id, once the client has successfully connected.
+        fn(currentRoom, id);
+        room.forEach(function (s) {
+          s.emit('peer.connected', { id: id });
+        });
+        room[id] = socket;
+        console.log('Peer connected to room', currentRoom, 'with #', id);
+      }
+    });
 
     //The msg event is an SDP message or ICE candidate, which should be redirected from specific peer to another peer:
   socket.on('msg', socketUtils.msg);
@@ -306,4 +360,3 @@ app.post('/fileUpload', function(req, res, next) {
       }
     });
   });
-

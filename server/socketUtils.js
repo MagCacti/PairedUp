@@ -4,6 +4,7 @@ var userDocument = db.userDocument;
 var Messages = require('./database/MessageModel').messages;
 var rooms = {};
 var userIds = {};
+var uuid = require('node-uuid');
 
 //the code errors here because it does not know what socket is. 
 module.exports ={
