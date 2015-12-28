@@ -4,8 +4,6 @@ var Schema = mongoose.Schema;
 
 
 
-// var uri = config.MONGO_URI; 
-// mongoose.connect(uri);
 
 var db = mongoose.connection;
 db.on('error', function(err){
