@@ -8,9 +8,5 @@ angular.module('myApp')
 	  $scope.goingToLogOut = function() {
 	    Account.setCheckIfLoggedOut(true);
 	  };
-	  $scope.isAuthenticated = function() {
-	    return $http.get('/checkIfLoggedIn').then(function(response){
-	      return response.data.loggedIn;
-	  });
-	  };  
+
 	});

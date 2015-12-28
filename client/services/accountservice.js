@@ -12,11 +12,7 @@ angular.module('myApp')
       
       },
 
-      isAuthenticated: function() {
-          return $http.get('/checkIfLoggedIn').then(function(response){
-            return response.data.loggedIn;
-        });
-        },
+
       setChekIfActivelyLoggedIn: function(val) {
             $window.localStorage && $window.localStorage.setItem('notLoggedIn', val);
             return this;
