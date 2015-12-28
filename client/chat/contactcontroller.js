@@ -1,5 +1,6 @@
 angular.module('myApp')
-	.controller('SummaryController', ['$scope', 'Account', 'profiledata', function($scope, Account, profiledata) {
+	.controller('ContactController', ['$scope', 'profiledata', 'Account', function($scope, profiledata, Account) {
+		console.log('we in this bitch')
 
 		$scope.profile;
 		$scope.userSkills=[];
@@ -32,7 +33,5 @@ angular.module('myApp')
 		  // 	$scope.allFutureSkills = []
 		  // }
 		  console.log("this is all users", $scope.allUsers)
-
-
 
 	}])

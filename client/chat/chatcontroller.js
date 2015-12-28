@@ -26,6 +26,8 @@ angular.module('myApp')
 	        }
 	    };
 	}]);
+
+//
 	    //So this is currently function is still not working so we will leave it out for now
 	    // $scope.sendMessage = function (fromUser, toUser) {
 	    //   ///TODO: grab current user's name and the other user's name

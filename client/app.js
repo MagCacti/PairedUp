@@ -62,10 +62,15 @@ angular.module('myApp', [
       templateUrl: 'chat/chat.html',
       controller: 'ChatController'
     })
-    .state('chat.room', {
-      url: '/chatroom',
-      templateUrl: 'chat/chatroom.html',
+    .state('chat.rooms', {
+      url: '/chatrooms',
+      templateUrl: 'chat/chatrooms.html',
       controller: 'ChatRoomController'
+    })
+    .state('chat.contacts', {
+      url: '/contacts',
+      templateUrl: 'chat/contacts.html',
+      controller: 'ContactController'
     })
 
 	$urlRouterProvider.otherwise('/');

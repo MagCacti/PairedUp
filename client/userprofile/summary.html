@@ -21,18 +21,16 @@
 
 <div ng-repeat="info in allUsers">
 	{{info.displayName}}, knows
-		<div ng-repeat="eachskill in allUsers.skills">
-			angular: {{eachskill.angular}}
-			node: {{eachskill.node}}
-			jquery: {{eachskill.jquery}}
-			html: {{eachskill.html}}
-			css: {{eachskill.css}}
-		</div>
+		
+			angular: {{info.skills.angular}}
+			node: {{info.skills.node}}
+			jquery: {{info.skills.jquery}}
+			html: {{info.skills.html}}
+			css: {{info.skills.css}}
 	and wants to know; 
-	<div ng-repeat="moreskills in allUsers.futureSkills">
-		{{moreskills}}
-	</div>
-	<button>Send Message</button>
+		{{info.futureskills}}
+
+	<button ng-click="initChat(info.displayName)">Send Message</button>
 
 </div>
 
