@@ -16,6 +16,7 @@ var documentUtils = require('./documents/documentUtils');
 var userAuthUtil = require('./userProfile/userOAuthUtils');
 var socketUtils = require('./socketUtils');
 var userUtils = require('./userProfile/userUtils');
+
 var path = require('path');
 var config = require('../config.js');
 
@@ -44,7 +45,6 @@ server.listen(8080);
 console.log("App listening on port 8080");
 
 var User = require('./userProfile/UserModel').user;
-// var db = require('./database/UserModel');
 var Skills = require('./database/SkillsModel').skills;
 
 
