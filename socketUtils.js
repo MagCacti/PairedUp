@@ -2,7 +2,7 @@ var db = require('./database/UserModel');
 var socket = require('./server.js').socket;
 var User = db.user;
 var userDocument = db.userDocument;
-var Messages = db.messages;
+var Messages = require('./database/MessageModel').messages;
 var rooms = {};
 var userIds = {};
 

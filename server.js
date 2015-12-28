@@ -17,7 +17,11 @@ var socketUtils = require('./socketUtils.js');
 
 var path = require('path');
 var config = require('./config.js');
+
 var mongoose = require('mongoose');
+var uri = config.MONGO_URI; 
+mongoose.connect(uri);
+
 var app = express();
 var http = require('http');
 var server = http.Server(app);
@@ -43,7 +47,7 @@ var db = require('./database/UserModel');
 var User = db.user;
 var userDocument = db.userDocument;
 var Messages = db.messages;
-var Skills = db.skills;
+var Skills = require('./database/SkillsModel').skills;
 
 
 app.set('port', process.env.PORT || 8080);

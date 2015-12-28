@@ -1,6 +1,7 @@
-var db = require('./database/UserModel');
-var User = db.user;
-var userDocument = db.userDocument;
+var dbUser = require('./database/UserModel');
+var dbDocument = require('./database/DocumentModel');
+var User = dbUser.user;
+var userDocument = dbDocument.userDocument;
 
 module.exports = {
   forceHTTPS: function(req, res, next) {
