@@ -47,8 +47,8 @@ angular.module('myApp')
         $scope.peers.push({
           id: peer.id,
           stream: URL.createObjectURL(peer.stream)
-        })  
-      })
+        });  
+      });
     });
     //peer.disconnected - once a peer disconnects the peer.disconnected event is being fired
     Room.on('peer.disconnected', function (peer) {
