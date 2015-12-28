@@ -1,4 +1,4 @@
-
+var fs = require("fs");
 module.exports = {
   forceHTTPS: function(req, res, next) {
     var protocol = req.get('x-forwarded-proto');

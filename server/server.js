@@ -292,5 +292,18 @@ var sendFileDataToClient = function(data) {
   io.emit('fileData', content);
 };
 
-//Initiating the file upload. Immediately happens after someone clickes the upload file button
-app.post('/fileUpload', utils.fileUpload);
+//Initiating the file upload. Immediately happens after someone clickes the upload file button. Cannot export this because of sendFileDataToClient. That function has io defined and that would be difficult to replicate for another file.
+app.post('/fileUpload', function(req, res, next) {
+    //collect the data from the file in a human readable form. 
+    fs.readFile(req.file.path, 'ascii', function ( error, data ) {
+      if ( error ) {
+        console.error( error );
+      } else {
+        //content is being asynchronously set to the data in the file
+        content = data;
+        //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
+        sendFileDataToClient(content);
+      }
+    });
+  });
+
