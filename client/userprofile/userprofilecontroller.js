@@ -12,8 +12,7 @@ angular.module('myApp')
           Account.storeUserDisplayName(response.data.profile.displayName);
           return {};
         })
-        .catch(function(response) {
-        });
+        .catch(function(response) {});
         return promise;
     };
 
@@ -27,11 +26,8 @@ angular.module('myApp')
       //setting a check to tell the code that the user is logged in
       Account.setCheckingIfLogInData(1);
       //accessing the github passport. 
-      $scope.getProfile().then(function() {
-
-
-      }, function(err) {
-       console.log("This is a err", err);
+      $scope.getProfile().then(function() {}, function(err) {
+        console.log("This is a err", err);
       });
     //A outer chekc to see if the user is logged in or not
     }else if (Account.getCheckingIfLogInData() === '1' ){
@@ -42,10 +38,9 @@ angular.module('myApp')
         //else if they are already logged in. 
       } else {
         //Use displayName to search for the user in the database. 
-        $http.post('/getFromDatabaseBecausePersonSignedIn', 
-                   {displayName: Account.getUserDisplayName()})
+        $http.post('/getFromDatabaseBecausePersonSignedIn', {displayName: Account.getUserDisplayName()})
           .success(function(data, status) {
-              $scope.user = data.user;
+            $scope.user = data.user;
           });
       }
     }
