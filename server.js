@@ -13,7 +13,7 @@ var request = require('request');
 // var moment = require('moment');
 var utils = require('./utils.js');
 var userAuthUtil = require('./UserSignIn.js');
-var socketUtils = require('./socketUtils.js')
+var socketUtils = require('./socketUtils.js');
 
 var path = require('path');
 var config = require('./config.js');
@@ -146,13 +146,6 @@ app.get('/account', ensureAuthenticated, function(req, res){
 
 app.get('/login', userAuthUtil.sendingUserToClient);
 
-// app.get('/userprofile', function(req, res, next) {
-//   User.find(function(err, users){
-//     if(err){ return next(err); }
-
-//     res.json(users);
-//   });
-// });
 
 app.get('/skills', function(req, res, next){
   User.find(function(err, user){
