@@ -43,11 +43,8 @@ var io = socketio(server);
 server.listen(8080); 
 console.log("App listening on port 8080");
 
-
-var db = require('./database/UserModel');
-var User = db.user;
-var userDocument = db.userDocument;
-var Messages = db.messages;
+var User = require('./userProfile/UserModel').user;
+// var db = require('./database/UserModel');
 var Skills = require('./database/SkillsModel').skills;
 
 

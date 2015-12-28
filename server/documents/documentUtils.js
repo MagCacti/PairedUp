@@ -1,4 +1,4 @@
-var dbUser = require('../database/UserModel');
+var dbUser = require('../userProfile/UserModel');
 var dbDocument = require('./DocumentModel');
 var User = dbUser.user;
 var userDocument = dbDocument.userDocument;

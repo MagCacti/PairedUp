@@ -1,4 +1,4 @@
-var db = require('./database/UserModel');
+var db = require('./userProfile/UserModel');
 var User = db.user;
 var userDocument = db.userDocument;
 var Messages = require('./database/MessageModel').messages;
