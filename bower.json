@@ -1,3 +1,4 @@
+//Make sure the bower components appear in the client folder on install. I don't know how to do this and need to ask one of the other group members. 
 {
   "name": "PairedUp",
   "description": "WorldWide pair programming webApp.",

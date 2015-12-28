@@ -12,7 +12,9 @@ angular.module('myApp')
           Account.storeUserDisplayName(response.data.profile.displayName);
           return {};
         })
-        .catch(function(response) {});
+        .catch(function(response) {
+          console.log("We have caught a response:", response);
+        });
         return promise;
     };
 

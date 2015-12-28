@@ -68,14 +68,10 @@ angular.module('myApp', [
       controller: 'ChatController'
     });
 
-	$urlRouterProvider.otherwise('/');
-
-})
-
-.controller('LoginController', function($scope,$location, $http) {
-
+	// $urlRouterProvider.otherwise('/');
 
 });
+
 
 
 
