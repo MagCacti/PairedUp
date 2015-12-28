@@ -11,6 +11,10 @@ var cookieParser = require('cookie-parser');
 var request = require('request');
 // var jwt = require('jwt-simple');
 // var moment = require('moment');
+var utils = require('./utils.js');
+var userAuthUtil = require('./UserSignIn.js');
+var socketUtils = require('./socketUtils.js')
+
 var path = require('path');
 var config = require('./config.js');
 var mongoose = require('mongoose');
@@ -26,7 +30,6 @@ var logger = require('morgan');
 var uuid = require('node-uuid');
 var rooms = {};
 var userIds = {};
-var UserAuthUtil = require('./UserSignIn.js');
 //I believe we need if we want to check req.file
 var upload = multer({ dest: 'uploads/' });
 
@@ -74,19 +77,11 @@ app.use(session({
 
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
-  app.use(function(req, res, next) {
-    var protocol = req.get('x-forwarded-proto');
-    protocol == 'https' ? next() : res.redirect('https://' + req.hostname + req.url);
-  });
+  app.use(utils.forceHTTPS);
 }
 
 //to allow cross origin (need to add more to this comment.)
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-  next();
-});
+app.all('/*', utils.allowCrossOrigin);
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -134,7 +129,7 @@ app.get('/auth/github',
 app.get('/auth/github/callback', 
   passport.authenticate('github', { failureRedirect: '/login' }),
   //This is the request handler that will be called when they click the log in to get hub. 
-  UserAuthUtil.directToProfile);
+  userAuthUtil.directToProfile);
 
 //The next four lines do not appear to do anything. I will double check, then delete if proven true.
 app.get('/logout', function(req, res){
@@ -149,7 +144,7 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.json(req.user);
 });
 
-app.get('/login', UserAuthUtil.sendingUserToClient);
+app.get('/login', userAuthUtil.sendingUserToClient);
 
 // app.get('/userprofile', function(req, res, next) {
 //   User.find(function(err, users){
@@ -211,18 +206,7 @@ app.post('/skills/:user', function(req, res, next) {
 
 
 //if the person is signed in and goes back to the profile page
-app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
-
-  //find the user with the display name
-  User.findOne({displayName: req.body.displayName}, function (err, user) {
-        if (user) {
-          res.json({user:user});
-        }else if (err) {
-          return "This is error message: " + err; 
-        }
-
-      });
-});
+app.post('/getFromDatabaseBecausePersonSignedIn', utils.getFromDatabaseBecausePersonSignedIn);
 
 
 // Simple route middleware to ensure user is authenticated.
@@ -245,7 +229,7 @@ passport.use(new GitHubStrategy({
     clientID: config.GITHUB_CLIENT_ID,
     clientSecret: config.GITHUB_SECRET,
     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
-  }, UserAuthUtil.setingUserToGlobalProfile));
+  }, userAuthUtil.setingUserToGlobalProfile));
 
 
 var usersRoom;
@@ -254,36 +238,9 @@ var usersRoom;
 //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
 io.on('connection', function(socket) {
   //this corresponds to the socket.emit('new message') on the client
-  socket.on('new message', function(message) {
-    //message - data from the cliet side 
-    console.log('this is the incoming message', message);
-    var messages = new Messages(message);
-    //messages.create etc were all defined in the messages model
-    messages.created = message.date ;
-    messages.text = message.text;
-    messages.displayName = message.username;
-    messages.save(function(err, results){
-      if(err){
-        console.log('you have an error', err);
-      }
-      console.log('you save the chat. check mongo.', results);
-    });
-
-
-      ///Collect all the messages now in database 
-
-      var foundMessages;
-      Messages.find(function(err, msg){
-        if(err){
-          return console.log('you have an err get chats from the DB', err);
-        }
-        // console.log('MESSAGES from get request', req)
-        foundMessages = msg;
-        //this will post all the messages from the database
-        io.emit('publish message', foundMessages);
-      });
-    });
+  socket.on('new message', socketUtils.newMessage);
 //general code
+  //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
   socket.on('/create', function(data) {
     usersRoom = data.title;
     //Have the socket join a rooom that is named after the title of their document
@@ -302,111 +259,42 @@ io.on('connection', function(socket) {
     Stuff for WebRtc
 
     */
-        var currentRoom, id;
+  var currentRoom, id;
     //The init event is used for initialization of given room. 
 
-        socket.on('init', function (data, fn) {
-          //If the room is not created we create the room and add the current client to it. 
-        //We generate room randomly using node-uuid module
-          currentRoom = (data || {}).room || uuid.v4();
-          var room = rooms[currentRoom];
-          if (!data) {
-            rooms[currentRoom] = [socket];
-            id = userIds[currentRoom] = 0;
-            fn(currentRoom, id);
-            console.log('Room created, with #', currentRoom);
-          } else {
-            if (!room) {
-              return;
-            }
-    //If the room is already created we join the current client to the room by adding its socket to the collection of sockets associated to the given room (rooms[room_id] is an array of sockets).
-            userIds[currentRoom] += 1;
-            id = userIds[currentRoom];
-
-      //when a client connects to given room we notify all other peers associated to the room about the newly connected peer.
-
-    //We also have a callback (fn), which we invoke with the client's ID and the room's id, once the client has successfully connected.
-            fn(currentRoom, id);
-            room.forEach(function (s) {
-              s.emit('peer.connected', { id: id });
-            });
-            room[id] = socket;
-            console.log('Peer connected to room', currentRoom, 'with #', id);
-          }
-        });
+  socket.on('init', socketUtils.init);
 
     //The msg event is an SDP message or ICE candidate, which should be redirected from specific peer to another peer:
-        socket.on('msg', function (data) {
-    //The id of given peer is always an integer so that's why we parse it as first line of the event handler. 
-          var to = parseInt(data.to, 10);
-          if (rooms[currentRoom] && rooms[currentRoom][to]) {
-            console.log('Redirecting message to', to, 'by', data.by);
-    //After that we emit the message to the specified peer in the _to property of the event data object.
-            rooms[currentRoom][to].emit('msg', data);
-          } else {
-            console.warn('Invalid user');
-          }
-        });
+  socket.on('msg', socketUtils.msg);
         
         //the disconnect handler
-        socket.on('disconnect', function () {
-          if (!currentRoom || !rooms[currentRoom]) {
-            return;
-          }
-          //Once given peer disconnects from the server (for example the user close his or her browser or refresh the page), we remove its socket from the collection of sockets associated with the given room (the delete operator usage).
-          delete rooms[currentRoom][rooms[currentRoom].indexOf(socket)];
-          rooms[currentRoom].forEach(function (socket) {
-            if (socket) {
-              // After that we emit peer.disconnected event to all other peers in the room, with the id of the disconnected peer. This way all peers connected to the disconnected peer will be able to remove the video element associated with the disconnected client.
-              socket.emit('peer.disconnected', { id: id });
-            }
-          });
-        });
-
-});
-
-
-
-
-app.post('/savingDocumentsToDatabase', function(req,res) {
-    var doc = new userDocument({id: req.body.id, title: req.body.title, mode: req.body.mode, displayName: req.body.displayName, code: req.body.code}); 
-    doc.save(function() {});
-});
-
-
-app.post('/retrievingDocumentsForUser', function(req,res) {
-  userDocument.find({displayName: req.body.displayName}, function(err, results){
-    res.json(results);
+  //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
+  socket.on('disconnect', function () {
+    if (!currentRoom || !rooms[currentRoom]) {
+      return;
+    }
+    //Once given peer disconnects from the server (for example the user close his or her browser or refresh the page), we remove its socket from the collection of sockets associated with the given room (the delete operator usage).
+    delete rooms[currentRoom][rooms[currentRoom].indexOf(socket)];
+    rooms[currentRoom].forEach(function (socket) {
+      if (socket) {
+        // After that we emit peer.disconnected event to all other peers in the room, with the id of the disconnected peer. This way all peers connected to the disconnected peer will be able to remove the video element associated with the disconnected client.
+        socket.emit('peer.disconnected', { id: id });
+      }
+    });
   });
+
 });
+
+
+
+
+app.post('/savingDocumentsToDatabase', utils.savingDocumentsToDatabase);
+
+
+app.post('/retrievingDocumentsForUser', utils.retrievingDocumentsForUser);
 
 //delete works but now I need to update every single document's id to --1. 
-app.post('/deleteDocumentsForUser', function(req,res) {
-  var idOfDeletedDoc = req.body.id;
-
-
-  userDocument.find({displayName: req.body.displayName, title: req.body.title}, function(err, result){
-    return result;
-  }).remove(function(result) {});
-
-
-//find all the documents the user has made
-  userDocument.find({displayName: req.body.displayName}, function(err, results) {
-    //iterate through the documents
-    for (var i =0; i < results.length; i++) {
-      //if the user's document is greater than the id of the document we destroyed.
-      if (results[i].id > idOfDeletedDoc) {
-        //create a new id which is the id of the document we are currently iterating thorugh - 1.
-        var newId = results[i].id - 1;
-        //set that document to the  
-        userDocument.update({id: results[i].id}, {id: newId}, {}, function (err, numAffected) {});
-      }
-    }
-    //sending this so we can utilize the promise structure from angular $http.post
-    res.send({});
-  });
-
-});
+app.post('/deleteDocumentsForUser', utils.deleteDocumentsForUser);
 //content will hold the data from the uploaded file
 var content;
 //Need to build this function to get around asynchronous behavior.
@@ -416,17 +304,4 @@ var sendFileDataToClient = function(data) {
 };
 
 //Initiating the file upload. Immediately happens after someone clickes the upload file button
-app.post('/fileUpload', function(req, res, next) {
-  //collect the data from the file in a human readable form. 
-     fs.readFile(req.file.path, 'ascii', function ( error, data ) {
-      if ( error ) {
-        console.error( error );
-      } else {
-        //content is being asynchronously set to the data in the file
-        content = data;
-        //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
-        sendFileDataToClient(content);
-
-      }
-  });
-});
+app.post('/fileUpload', utils.fileUpload);
