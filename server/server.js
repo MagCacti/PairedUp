@@ -32,7 +32,6 @@ var flash    = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy;
 var session = require('express-session');
 var morgan = require('morgan');
-var logger = require('morgan');
 var uuid = require('node-uuid');
 var rooms = {};
 var userIds = {};
@@ -54,7 +53,6 @@ app.use(favicon("../favicon.ico"));
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
