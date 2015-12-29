@@ -187,6 +187,16 @@ app.get('/oneuserskill', function(req, res, next){
   })
 })
 
+app.get('/countuserdocs', function(req, res, next){
+  console.log('result of app.get/userdocs is:', req.body)
+  //find all the documents the user has made
+  userDocument.find({displayName: req.body.displayName}, function(err, results) {
+  if(err){next(err);}
+  console.log('the length of the results for userDocument.find is:', results.length)
+    //provide the client with the number of documents there.
+    res.json(results.length);
+  })
+});
 
 app.post('/skills', function(req, res, next) {
   // console.log('this is from skills', req.body)
@@ -247,8 +257,6 @@ app.post('/getFromDatabaseBecausePersonSignedIn', function(req, res) {
     // console.log("This is currentUser", currentUser);
   // res.send({response: currentUser});
 });
-
-
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
