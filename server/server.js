@@ -215,11 +215,11 @@ passport.deserializeUser(function(obj, done) {
 // }
 
   //Step 5
-passport.use(new GitHubStrategy({
-    clientID: config.GITHUB_CLIENT_ID,
-    clientSecret: config.GITHUB_SECRET,
-    callbackURL: "http://127.0.0.1:8080/auth/github/callback"
-  }, userAuthUtil.setingUserToGlobalProfile));
+// passport.use(new GitHubStrategy({
+//     clientID: config.GITHUB_CLIENT_ID,
+//     clientSecret: config.GITHUB_SECRET,
+//     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
+//   }, userAuthUtil.setingUserToGlobalProfile));
 
 
 // var usersRoom; Unnecessary piece of code. 
