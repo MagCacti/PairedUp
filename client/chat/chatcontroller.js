@@ -4,7 +4,7 @@ angular.module('myApp')
         // $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
  
         $scope.username = Account.getLogInData()
-	    socket.on("publish message", function(data, other) {
+	    	socket.on("publish message", function(data, other) {
 	        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
 	        $scope.$apply(function(){
 	            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
