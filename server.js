@@ -192,9 +192,10 @@ app.get('/countuserdocs', function(req, res, next){
   //find all the documents the user has made
   userDocument.find({displayName: req.body.displayName}, function(err, results) {
   if(err){next(err);}
-  console.log('the length of the results for userDocument.find is:', results.length)
-    //provide the client with the number of documents there.
-    res.json(results.length);
+  console.log('this is the document within:', results)
+    //iterate through the documents
+    for (var i =0; i < results.length; i++) {
+    res.json({array: results});
   })
 });
 
