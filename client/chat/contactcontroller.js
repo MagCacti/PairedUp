@@ -1,12 +1,12 @@
 angular.module('myApp')
-	.controller('ContactController', ['$scope', 'profiledata', 'Account', function($scope, profiledata, Account) {
+	.controller('ContactController', ['$scope', 'profiledata', 'Account', 'Chat', 'socket', '$state', function($scope, profiledata, Account, Chat, socket, $state) {
 		console.log('we in this bitch')
 
 		$scope.profile;
 		$scope.userSkills=[];
 		$scope.futureSkills = []
 		  Account.getProfile().success(function(data){
-		    $scope.profile = data.profile.github
+		    $scope.profile = data.profile.displayName
 			$scope.userSkills.push(data.profile.skills)
 			for(var keys in data.profile.futureskills){
 				console.log
@@ -24,14 +24,16 @@ angular.module('myApp')
 		  })
 
 		  $scope.initChat = function (user){
+		  	//send a signal to the server that you want to make a room with the following 
+		  	//two people.
+		  	socket.emit('makeroom', {fromUser: $scope.profile, toUser: user})
+		  	socket.emit(user, 'we created the chat on the server')
 		  	console.log('this is from initchat', user)
+			socket.on('update', function(data){
+				console.log('this is the updat socket', data )
+			})
+			$state.go('chat.rooms')
 		  }
-		  // $scope.allSkills=[];
-		  // $scope.allFutureSkills = []
-		  // for(var i=0; i< $scope.allUsers.length; i++){
-		  // 	$scope.allSkills.push;
-		  // 	$scope.allFutureSkills = []
-		  // }
 		  console.log("this is all users", $scope.allUsers)
 
 	}])

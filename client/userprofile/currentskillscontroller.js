@@ -1,6 +1,6 @@
 angular.module('myApp')
   .controller('CurrentSkillsController', ['$scope','profiledata', 'Account', function($scope, profiledata, Account){
-    $scope.currentskills = profiledata.skills
+    $scope.currentskills = profiledata.skills;
 
   $scope.profile;
     Account.getProfile().success(function(data){
@@ -8,14 +8,10 @@ angular.module('myApp')
       // console.log('this is the data.profile:', data.profile.github)
     })
 
-
- 
-
     // $scope.currentskills = profiledata.skills
     // $scope.currentskills = userdata.skills;
 
     $scope.add = function(){
-        
     // console.log('this is the Account data', $scope.profile);
       profiledata.addSkills({github: $scope.profile, node:$scope.node, angular:$scope.angular, 
         html:$scope.html, css:$scope.css, jquery:$scope.jquery})
@@ -26,4 +22,4 @@ angular.module('myApp')
         // })
     }
 
-  }])
+  }]);

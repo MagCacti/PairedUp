@@ -2,15 +2,8 @@ var mongoose = require('mongoose');
 var config = require('../config.js');
 var Schema = mongoose.Schema;
 
-//Line 5 or line 10. Not both. 
-/*mongodb:// username:password@ hostname:port/ database
-*/
-
-// Since you're connecting to a local instance, you can skip the username and password and use the following URI:
 
 
-var uri = config.MONGO_URI; 
-mongoose.connect(uri);
 
 var db = mongoose.connection;
 db.on('error', function(err){
@@ -44,9 +37,6 @@ skills:{
 },
  messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Messages'}]
 });
-
- //this method would probably be best suited for our messages where skills would be messages
- //and the 
 
 var skillsSchema = new mongoose.Schema({
   node: Number,
@@ -87,10 +77,10 @@ var User = mongoose.model("User", userSchema);
 
 
 module.exports = {
-    user: User,
-    messages: Message,
-    userDocument: Document,
-    skills: Skills
+  user: User
+  // messages: Message
+    // userDocument: Document,
+    // skills: Skills
 };
 
 

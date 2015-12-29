@@ -61,6 +61,7 @@ angular.module('myApp', [
       url: '/chat',
       templateUrl: 'chat/chat.html',
       controller: 'ChatController'
+
     })
     .state('chat.rooms', {
       url: '/chatrooms',
@@ -80,7 +81,7 @@ angular.module('myApp', [
 .controller('LoginController', function($scope,$location, $http) {
 
 
-})
+});
 
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;

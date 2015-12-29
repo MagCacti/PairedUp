@@ -5,7 +5,7 @@ angular.module('myApp')
 		}
 		//grabs the username of the person that wants to chat. 
 		obj.initChat = function(user){
-			return $http.post('/initChat', user)
+			return $http.get('/initChat', user)
 		}
 
 		return obj;
