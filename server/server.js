@@ -11,10 +11,10 @@ var cookieParser = require('cookie-parser');
 var request = require('request');
 // var jwt = require('jwt-simple');
 // var moment = require('moment');
-var utils = require('./utils.js');
-var documentUtils = require('./documents/documentUtils');
-var userAuthUtil = require('./userProfile/userOAuthUtils');
-var userUtils = require('./userProfile/userUtils');
+// var utils = require('./utils.js');
+// var documentUtils = require('./documents/documentUtils');
+// var userAuthUtil = require('./userProfile/userOAuthUtils');
+// var userUtils = require('./userProfile/userUtils');
 
 var path = require('path');
 var config = require('../config.js');
@@ -22,6 +22,17 @@ var config = require('../config.js');
 var mongoose = require('mongoose');
 var uri = config.MONGO_URI; 
 mongoose.connect(uri);
+
+
+var db = mongoose.connection;
+db.on('error', function(err){
+  console.log('connection error', err);
+
+});
+
+db.once('open', function(){
+  console.log('connect');
+});
 
 var app = express();
 var http = require('http');
