@@ -8,13 +8,13 @@ angular.module('myApp', [
   // 'myApp.current'
 ])
 
-.config(function($stateProvider, $urlRouterProvider, $locationProvider){
+.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider){
 
 	$stateProvider
 	
 		.state('login', {
 			url: '/login',
-      template: 'you need to log back in'
+      template: 'Please Log In'
 			// controller: 'NavbarController'
 		})
     .state('logout', {
@@ -73,12 +73,12 @@ angular.module('myApp', [
 
 	$urlRouterProvider.otherwise('/');
 
-})
+}])
 
-.controller('LoginController', function($scope,$location, $http) {
+.controller('LoginController', ['$scope','$location', '$http', function($scope,$location, $http) {
 
 
-})
+}])
 
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;
