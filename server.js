@@ -179,24 +179,31 @@ app.get('/userprofile', function(req, res, next) {
 });
 
 app.get('/oneuserskill', function(req, res, next){
-  console.log('this is the oneuserskill', req.body)
+  
+  console.log('this is the oneuserskill', req.body);
   User.find(function(err, user){
-    if(err){next(err);}
-    console.log('this is the user within', user)
+    if(err){
+      next(err);
+    }
+    console.log('this is the user within', user);
     res.json(user);
-  })
-})
+  });
+});
 
-app.get('/countuserdocs', function(req, res, next){
-  console.log('result of app.get/userdocs is:', req.body)
-  //find all the documents the user has made
-  userDocument.find({displayName: req.body.displayName}, function(err, results) {
-  if(err){next(err);}
-  console.log('this is the document within:', results)
-    //iterate through the documents
-    for (var i =0; i < results.length; i++) {
-    res.json({array: results});
-  })
+app.get('/getuserdocs', function(req, res, next){
+
+  console.log('result of getuserdocs is', req.body);
+  // //find all the documents the user has made
+  // userDocument.find({displayName: req.body.displayName}, function(err, results) {
+  //   if(err){
+  //     next(err);
+  //   }
+  //   console.log('these are the the documents within:', results);
+  //   //iterate through the documents
+  //   // for (var i =0; i < results.length; i++) {
+  // // };
+  //   res.json({array: results})
+  // });
 });
 
 app.post('/skills', function(req, res, next) {

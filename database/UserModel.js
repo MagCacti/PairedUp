@@ -29,20 +29,31 @@ var userSchema = new Schema({
  //this needs to be refactored. it stores a new object of skills everytime you enter a 
  //a new skills
 futureskills: {
-  python: Boolean,
-  swift: Boolean,
+  node: Boolean,
+  angular: Boolean,
+  html: Boolean,
+  css: Boolean, 
+  jquery: Boolean,
   java: Boolean,
-  android: Boolean,
+  swift: Boolean,
+  python: Boolean,
   ruby: Boolean,
+  go: Boolean,
 },
 skills:{ 
   node: Number,
   angular: Number,
   html: Number,
   css: Number, 
-  jquery: Number
+  jquery: Number,
+  java: Number,
+  swift: Number,
+  python: Number,
+  ruby: Number,
+  go: Number,
 },
- messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Messages'}]
+  codedocsadded: Number,
+  messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Messages'}]
 });
 
  //this method would probably be best suited for our messages where skills would be messages

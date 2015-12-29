@@ -1,5 +1,6 @@
 body {
   padding-top: 50px;
+
 }
 
 /* Styles for signin.html */
@@ -17,6 +18,28 @@ body {
 .starter-template {
   padding: 40px 15px;
   text-align: center;
+}
+
+
+/* Styles for profile.html */
+
+#padded {
+  padding-top: 30px;
+  /*padding: 20px;*/
+  margin: 3px;
+}
+
+#cool {
+  background-color: #272B37;
+}
+
+#sweet {
+  background-color: #EEEEEE;
+}
+
+#whiteText {
+  color: white;
+  font-style: Helvetica;
 }
 
 /* Styles for codeshare.html */

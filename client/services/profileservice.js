@@ -1,17 +1,11 @@
 angular.module('myApp')
-	.factory('profiledata', ['$http', function($http){
+	.factory('profileData', ['$http', function($http){
 	  	var obj = {
 	    	skills: ['hello'],
 	    	allUsers: []
 	  	}
 
-	  	obj.getAll = function() {
-	  	  return $http.get('/profile').success(function(data){
-	  	    angular.copy(data, obj.skills);
-	  	  });
-	  	};
-
-	  	obj.getAllUsers = function (){
+	  	obj.getAllUsers = function () {
 	  		return $http.get('/oneuserskill').success(function(data){
 	  			console.log('data from getOneUser', data)
 	  			for (var i=0; i<data.length; i++){
@@ -20,11 +14,11 @@ angular.module('myApp')
 	  		})
 	  	}
 
-	  	obj.addSkills = function(skill){
+	  	obj.addSkills = function (skill) {
 	  		return $http.post('/skills', skill);
 	  	}
 
-	  	obj.futureSkills = function (skill){
+	  	obj.futureSkills = function (skill) {
 	  		return $http.post('/futureskills', skill)
 	  	}
 	  	// obj.create = function(skills) {
@@ -36,3 +30,15 @@ angular.module('myApp')
 	  	// };
 	  	return obj;
 }])
+
+
+// Note: This results in an exportable factory object that looks like this:
+
+// var obj = {
+// 	skills : ['hello'], 
+// 	allUsers : [ ],
+// 	getAll : function, NOT USED
+// 	getAllUsers : function, USED BUT NOT CLEAR HOW
+// 	addSkills : function,
+// 	futureSkills : function,
+// }
