@@ -9,10 +9,10 @@ angular.module('myApp', [
 
 	$stateProvider
 	
-		.state('login', {
-			url: '/login',
-			// controller: 'NavbarController'
-		})
+	.state('login', {
+		url: '/login',
+		// controller: 'NavbarController'
+	})
     .state('logout', {
       url: '/logout',
       template: null,
@@ -47,11 +47,11 @@ angular.module('myApp', [
         controller: 'ProfileController'
       })
 
-		.state('codeshare', {
-			url: '/codeshare',
-			templateUrl: 'codeshare/codeshare.html',
-			controller: 'CodeShareController'
-		})
+	.state('codeshare', {
+		url: '/codeshare',
+		templateUrl: 'codeshare/codeshare.html',
+		controller: 'CodeShareController'
+	})
     .state('codeshare.room2', {
       url: '/room/:roomId',
       templateUrl: 'codeshare/room.html',
@@ -68,7 +68,7 @@ angular.module('myApp', [
       controller: 'ChatController'
     });
 
-	// $urlRouterProvider.otherwise('/');
+	$urlRouterProvider.otherwise('/');
 
 });
 

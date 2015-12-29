@@ -29,7 +29,7 @@ angular.module('myApp')
         //otherwise we create a new room. Once the room is created we redirect the user to the room's URL.
         Room.createRoom()
         .then(function (roomId) {
-          $location.path('/room/' + roomId);
+          $location.path('/codeshare/room/' + roomId);
         });
       } else {
         //If it is provided we simply join the room with the associated roomId: Room.joinRoom($routeParams.roomId);

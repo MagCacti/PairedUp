@@ -21,7 +21,10 @@
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
     </div>
    <div>
-    <div class='col-md-4' ui-view></div>
+    <div class='col-md-4'>
+      <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button>
+           <div ui-view></div>
+    </div>
   </div>
 </div>
 
