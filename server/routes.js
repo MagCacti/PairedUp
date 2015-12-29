@@ -12,9 +12,7 @@ var documentUtils = require('./documents/documentUtils');
 var GitHubStrategy = require('passport-github').Strategy;
 var config = require('../config.js');
 
-
 module.exports = function(app) {
-
 
   if (app.get('env') === 'production') {
     app.use(utils.forceHTTPS);
@@ -53,8 +51,6 @@ module.exports = function(app) {
       clientSecret: config.GITHUB_SECRET,
       callbackURL: "http://127.0.0.1:8080/auth/github/callback"
     }, userAuthUtil.setingUserToGlobalProfile));
-
-
 
   app.get('/skills', function(req, res, next){
     User.find(function(err, user){
@@ -108,6 +104,4 @@ module.exports = function(app) {
 
   //delete works but now I need to update every single document's id to --1. 
   app.post('/deleteDocumentsForUser', documentUtils.deleteDocumentsForUser);
-
-
 };

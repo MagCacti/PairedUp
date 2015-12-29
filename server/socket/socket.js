@@ -2,12 +2,11 @@ var Messages = require('../database/MessageModel').messages;
 var rooms = {};
 var userIds = {};
 var uuid = require('node-uuid');
-var io;
 var socketio = require('socket.io');
 
 function initiation(server) {
 
-  io = socketio(server);
+  var io = socketio(server);
   //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
   io.on('connection', function(socket) {
     //this corresponds to the socket.emit('new message') on the client

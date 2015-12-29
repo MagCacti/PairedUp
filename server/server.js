@@ -49,6 +49,7 @@ var userIds = {};
 var upload = multer({ dest: 'uploads/' });
 
 var socketio = require('socket.io');
+//export this?
 var io = require('./socket/socket')(server);
 
 server.listen(8080); 

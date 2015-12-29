@@ -19,7 +19,6 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-
 module.exports = {
     passportAuthenticate: passport.authenticate('github'), 
     directToProfile : function (req, res) {
