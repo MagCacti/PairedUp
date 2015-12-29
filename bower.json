@@ -1,12 +1,16 @@
+
 {
-  "name": "testapp",
-  "description": "",
+  "name": "PairedUp",
+  "description": "WorldWide pair programming webApp",
   "main": "app.js",
   "authors": [
-    "MagCacti"
+    "Aheri Stanford-Asiyo", 
+    "Kristina McElveen", 
+    "Joseph Sun", 
+    "Carine Todmia"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/MagCacti/testapp",
+  "homepage": "https://github.com/MagCacti/PairedUp",
   "moduleType": [],
   "ignore": [
     "**/.*",
