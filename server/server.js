@@ -38,10 +38,8 @@ var userIds = {};
 var upload = multer({ dest: 'uploads/' });
 
 var socketio = require('socket.io');
-var io = require('./socket')(server);
+var io = require('./socket/socket')(server);
 
-// var io = socketio(server);
-// var io = require('./socket').io;
 server.listen(8080); 
 console.log("App listening on port 8080");
 
@@ -49,6 +47,7 @@ var User = require('./userProfile/UserModel').user;
 var Skills = require('./database/SkillsModel').skills;
 var Messages = require('./database/MessageModel').messages;
 
+var routesActivation = require('./routes');
 
 app.set('port', process.env.PORT || 8080);
 app.use(upload.single('string'));
@@ -75,12 +74,12 @@ app.use(session({
    }));
 
 // Force HTTPS on Heroku
-if (app.get('env') === 'production') {
-  app.use(utils.forceHTTPS);
-}
+// if (app.get('env') === 'production') {
+//   app.use(utils.forceHTTPS);
+// }
 
 //to allow cross origin (need to add more to this comment.)
-app.all('/*', utils.allowCrossOrigin);
+// app.all('/*', utils.allowCrossOrigin);
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -99,25 +98,26 @@ passport.deserializeUser(function(obj, done) {
 });
 */
 //look into deleting the line under this one.
-app.get('/', function(req, res){});
+// app.get('/', function(req, res){});
 
 // Use the GitHubStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and GitHub
 //   profile), and invoke a callback with a user object.
-var globalProfile;
+
+
 // GET /auth/github
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in GitHub authentication will involve redirecting
 //   the user to github.com.  After authorization, GitHubwill redirect the user
 //   back to this application at /auth/github/callback
 //Step 1
-app.get('/auth/github',
-  passport.authenticate('github'),
-  function(req, res){
-    // The request will be redirected to GitHub for authentication, so this
-    // function will not be called.
-  });
+// app.get('/auth/github',
+//   passport.authenticate('github'),
+//   function(req, res){
+//     // The request will be redirected to GitHub for authentication, so this
+//     // function will not be called.
+//   });
 
 // GET /auth/github/callback
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -125,45 +125,45 @@ app.get('/auth/github',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 //Step 2
-app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' }),
-  //This is the request handler that will be called when they click the log in to get hub. 
-  userAuthUtil.directToProfile);
+// app.get('/auth/github/callback', 
+//   passport.authenticate('github', { failureRedirect: '/login' }),
+//   //This is the request handler that will be called when they click the log in to get hub. 
+//   userAuthUtil.directToProfile);
 
 //The next four lines do not appear to do anything. I will double check, then delete if proven true.
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
+// app.get('/logout', function(req, res){
+//   req.logout();
+//   res.redirect('/');
+// });
 
 
 // This will be the route to call when my page gets redirected to the profile. So my profile page should do a http.get to this route automatically once the user is logged in. 
 //Step 3
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.json(req.user);
-});
+// app.get('/account', ensureAuthenticated, function(req, res){
+//   res.json(req.user);
+// });
 
-app.get('/login', userAuthUtil.sendingUserToClient);
-
-
-app.get('/skills', function(req, res, next){
-  User.find(function(err, user){
-    if(err){next(err);}
-    res.json(user);
-  });
-});
+// app.get('/login', userAuthUtil.sendingUserToClient);
 
 
-app.param('user', function(req, res, next, id) {
-  var query = User.findById(id);
-  query.exec(function (err, user){
-    if (err) { return next(err); }
-    if (!user) { return next(new Error('can\'t find user')); }
+// app.get('/skills', function(req, res, next){
+//   User.find(function(err, user){
+//     if(err){next(err);}
+//     res.json(user);
+//   });
+// });
 
-    req.user = user;
-    return next();
-  });
-});
+
+// app.param('user', function(req, res, next, id) {
+//   var query = User.findById(id);
+//   query.exec(function (err, user){
+//     if (err) { return next(err); }
+//     if (!user) { return next(new Error('can\'t find user')); }
+
+//     req.user = user;
+//     return next();
+//   });
+// });
 
 //this is not being integrated yet DONT DELETE
 // app.get('/skills/:user', function(req, res, next) {
@@ -176,29 +176,29 @@ app.param('user', function(req, res, next, id) {
 // });
 
 //this post to the database. The :user params dont necessarily work yet though
-app.post('/skills/:user', function(req, res, next) {
-  var skills = new Skills(req.body);
-  skills.user = req.user;
-  // console.log('this is skills/:user post:', req.user)
-  console.log('this is skills/:user req.user:', req.user);
-    // comment.post = req.post;
+// app.post('/skills/:user', function(req, res, next) {
+//   var skills = new Skills(req.body);
+//   skills.user = req.user;
+//   // console.log('this is skills/:user post:', req.user)
+//   console.log('this is skills/:user req.user:', req.user);
+//     // comment.post = req.post;
 
-  skills.save(function(err, skill){
-    if(err){ return next(err); }
+//   skills.save(function(err, skill){
+//     if(err){ return next(err); }
 
-    req.user.skills.push(skill);
-    req.user.save(function(err, user) {
-      if(err){ return next(err); }
+//     req.user.skills.push(skill);
+//     req.user.save(function(err, user) {
+//       if(err){ return next(err); }
 
-      res.json(skill);
-    });
-  });
-});
+//       res.json(skill);
+//     });
+//   });
+// });
 
 
 
 //if the person is signed in and goes back to the profile page
-app.post('/getFromDatabaseBecausePersonSignedIn', userUtils.getFromDatabaseBecausePersonSignedIn);
+// app.post('/getFromDatabaseBecausePersonSignedIn', userUtils.getFromDatabaseBecausePersonSignedIn);
 
 
 // Simple route middleware to ensure user is authenticated.
@@ -207,12 +207,12 @@ app.post('/getFromDatabaseBecausePersonSignedIn', userUtils.getFromDatabaseBecau
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 //Step 4:
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { 
-    console.log('this is ensureAuthenticated', isAuthenticated);
-    return next(); }
-  res.redirect('/login');
-}
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) { 
+//     console.log('this is ensureAuthenticated', isAuthenticated);
+//     return next(); }
+//   res.redirect('/login');
+// }
 
   //Step 5
 passport.use(new GitHubStrategy({
@@ -224,12 +224,12 @@ passport.use(new GitHubStrategy({
 
 // var usersRoom; Unnecessary piece of code. 
 
-app.post('/savingDocumentsToDatabase', documentUtils.savingDocumentsToDatabase);
+// app.post('/savingDocumentsToDatabase', documentUtils.savingDocumentsToDatabase);
 
-app.post('/retrievingDocumentsForUser', documentUtils.retrievingDocumentsForUser);
+// app.post('/retrievingDocumentsForUser', documentUtils.retrievingDocumentsForUser);
 
 //delete works but now I need to update every single document's id to --1. 
-app.post('/deleteDocumentsForUser', documentUtils.deleteDocumentsForUser);
+// app.post('/deleteDocumentsForUser', documentUtils.deleteDocumentsForUser);
 //content will hold the data from the uploaded file
 var content;
 //Need to build this function to get around asynchronous behavior.
@@ -252,3 +252,5 @@ app.post('/fileUpload', function(req, res, next) {
       }
     });
   });
+
+routesActivation(app);

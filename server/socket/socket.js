@@ -1,4 +1,4 @@
-var Messages = require('./database/MessageModel').messages;
+var Messages = require('../database/MessageModel').messages;
 var rooms = {};
 var userIds = {};
 var uuid = require('node-uuid');
