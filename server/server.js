@@ -328,17 +328,21 @@ io.on('connection', function(socket) {
         chatroom.save(function(err, results){
           if(err){return console.log('you errored out in making a room', err)}
           console.log('this is the new room you just made & saved', results)
-          io.emit('publish message', results);
+        
         })
       } else if (activeroom.roomname === roomname) {
         console.log('the active room', activeroom)
-        activeroom.messages.push({created: message.date, text: message.text, displayName:message.fromName})
+        chatroom.toUser = message.toUser
+        chatroom.fromUser = message.fromUser
+        chatroom.roomName = roomname
+        chatroom.otherName = othername
+        chatroom.messages.push({created: message.date, text: message.text, displayName:message.fromName})
+        chatroom.save(function(err, results) {
+          if(err){return console.log('error saving to activeroom', err)}
+          console.log('cool you saved to the activeroom')
                   io.emit('publish message', results);
-        // activeroom.save(function(err, results) {
-        //   if(err){return console.log('error saving to activeroom', err)}
-        //   console.log('cool you saved to the activeroom')
 
-        // })
+        })
       }
     });
 

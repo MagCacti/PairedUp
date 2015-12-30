@@ -34,6 +34,7 @@ var userSchema = new Schema({
 });
 
 var privateroomsSchema = new Schema({
+	user:[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
 	fromUser: String,
 	toUser: String,
 	roomName: String,
