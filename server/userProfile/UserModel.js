@@ -38,7 +38,11 @@ var privateroomsSchema = new Schema({
 	toUser: String,
 	roomName: String,
 	otherName: String,
-	messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+	messages:[{ 
+		created: String,
+    	text: String,
+    	displayName: String,
+    }]
 })
 
 var messageSchema = new Schema({

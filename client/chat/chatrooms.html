@@ -3,5 +3,5 @@
 
 <!-- <p>{{roomname}}</p> -->
 <div ng-repeat="room in roomname">
-	<a ng-click="userjoin({{room.roomname}})">{{room.chatwith}}</a>
+	<a ui-sref="chat" ng-click="userjoin(room.roomname, room.chatwith)">{{room.chatwith}}</a>
 </div>

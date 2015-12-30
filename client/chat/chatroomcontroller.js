@@ -1,7 +1,8 @@
 angular.module('myApp')
 	.controller('ChatRoomController', ['$scope', 'Account', 'socket', 'profiledata', function($scope, Account, socket, profiledata){
 		
-		$scope.roomname
+	$scope.roomname
+	
 		 
 		// $scope.username = Account.getProfile()
 		// $scope.enter = function(name){
@@ -10,13 +11,7 @@ angular.module('myApp')
 		//     $scope.newName = " "
 		// };
 
-		var account = Account.getUserDisplayName()
-
-		// console.log('you are in her', account)
-
-		// profiledata.findUser({user:account}).then(function(results){
-		// 	console.log('these are teh resulst', results)
-		// })
+	var account = Account.getUserDisplayName()
 
 	socket.on('roomlist', function(data){
 			console.log('this is data in roomlist', data)
@@ -27,17 +22,10 @@ angular.module('myApp')
 			console.log('these are the results', $scope.roomname)
 			})
 	}
-
-$scope.findUser()
-		// setTimeout(function() {
-		// 	console.log('$scope.roomname', $scope.roomname)
-		// },5000 );
-
+	$scope.findUser()
 	
-		
-			socket.on('/roomcreated', function(data){
-				console.log('this the is the room created', data)
-			})
-
+	$scope.userjoin = function(roomname, chatwith){
+		socket.emit('userjoin', {joinedroom:roomname, chatwith:chatwith, chatter:account})
+	}
 
 	}])
