@@ -28,6 +28,7 @@ var userSchema = new Schema({
    css: Number, 
    jquery: Number
  },
+ chatroom: [{roomname:String, chatwith:String}],
  messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
  privaterooms:[{type: mongoose.Schema.Types.ObjectId, ref: 'PrivateRooms'}]
 });

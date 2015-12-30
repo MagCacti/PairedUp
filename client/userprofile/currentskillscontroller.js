@@ -3,9 +3,15 @@ angular.module('myApp')
     $scope.currentskills = profiledata.skills;
 
   $scope.profile;
-    Account.getProfile().success(function(data){
-      $scope.profile = data.profile.github
-      // console.log('this is the data.profile:', data.profile.github)
+    // Account.getProfile().success(function(data){
+    //   $scope.profile = data.profile.github
+    //   // console.log('this is the data.profile:', data.profile.github)
+    // })
+
+  var account = Account.getUserDisplayName()
+  profiledata.findUser({user:account}).then(function(results){
+    $scope.profile = results.data.github
+    console.log('these are the results', results.data.github)
     })
 
     // $scope.currentskills = profiledata.skills

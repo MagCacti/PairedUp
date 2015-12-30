@@ -1,3 +1,7 @@
 <h1>Hey!</h1>
 
-<p>{{roomname}}</p>
+
+<!-- <p>{{roomname}}</p> -->
+<div ng-repeat="room in roomname">
+	<a ng-click="userjoin({{room.roomname}})">{{room.chatwith}}</a>
+</div>

@@ -5,6 +5,13 @@ angular.module('myApp')
 	    	allUsers: []
 	  	}
 
+	  	obj.findUser = function(user){
+	  		return $http.post('/founduser', user).success(function(data){
+	  			return data;
+	  		})
+	  	}
+
+
 	  	obj.getAll = function() {
 	  	  return $http.get('/profile').success(function(data){
 	  	    angular.copy(data, obj.skills);

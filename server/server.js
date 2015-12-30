@@ -143,6 +143,15 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.json(req.user);
 });
 
+app.post('/founduser', function(req, res){
+  console.log('this is teh found user', req.body)
+  User.findOne({displayName: req.body.user}, function(err, user){
+    if(err){return console.log('no founduser', err)}
+    console.log(user)
+    res.json(user)
+  })
+})
+
 app.get('/login', userAuthUtil.sendingUserToClient);
 
 app.get('/oneuserskill', function(req, res, next){
@@ -219,105 +228,211 @@ passport.use(new GitHubStrategy({
   // var clients = [];
 io.on('connection', function(socket) {
   console.log('new connection');
-
-  // socket.on('join', function(name){
-  //   roomId = null;
-  //   people[socket.id] = {'name' : name, 'room' : roomId};
-  //   socket.emit('update', people[socket.id].name + " is online.");
-  //   socket.emit('update-people', people);
-  //   clients.push(socket);
-    socket.on('makeroom', function(data){
-      // var id = uuid.v4();
-      roomname = data.fromUser+data.toUser
-      othername = data.toUser+data.fromUser
-      var chatroom = new PrivateRooms();
-      chatroom.toUser = data.fromTo
-      chatroom.fromUser = data.fromUser
-      chatroom.roomName = roomname
-      chatroom.otherName = othername
-      chatroom.save(function(err, results){
-        if(err){return console.log('you errored out in making a room', err)}
-        console.log('you this is the new room you just made', results)
+  socket.on('writeToUser', function(data){
+    console.log('this the write to user data', data)
+    roomname = data.fromUser+data.toUser
+    socket.join(roomname)
+    User.findOne({displayName:data.toUser}, function(err, user){
+      if(err){return console.log('could not find the useryou wanted to write to',err )}
+        user.chatroom.push({roomname:roomname, chatwith:data.fromUser})
+      user.save(function(err, results){
+        if(err){return console.log('you didnt save a chatroom'), err}
+        console.log('you saved the chatroom', results)
       })
-
-
-      User.findOne({displayName:data.fromUser}, function(err, user){
-        if(err){return;}
-        user.privaterooms.push(chatroom)
-        user.save(function(err, results){
-          if(err){return console.log('you have an err saving to rooms to users', err)}
-          console.log('you successfully saved this room to the user', results)
-        })
-      })
-      User.findOne({displayName:data.toUser}, function(err, user){
-        if(err){return;}
-        user.privaterooms.push(chatroom)
-        user.save(function(err, results){
-          if(err){return console.log('you have an err saving to rooms to users', err)}
-          console.log('you successfully saved this room to the user', results)
-        })
-      })
-          // chatroom[id] = room;
-          socket.emit("roomList", {roomList: chatroom});
-      console.log('this is data recieved from client contacts controller', data)
-      // chatroom['privateChat'] = data.roomname;
-      // people['creator'] = data.creator;
-      socket.join(data.roomname)
-      // room.addPerson(data.creator)
-      // socket.on(data.roomname, function(data){
-      //   socket.broadcast.emit('/roomcreated', 'created a room here')
-      // })
     })
-    // socket.emit("roomList", {rooms: rooms});
+    User.findOne({displayName:data.fromUser}, function(err, user){
+      if(err){return console.log('could not find the useryou wanted to write to',err )}
+        user.chatroom.push({roomname:roomname, chatwith:data.toUser})
+      user.save(function(err, results){
+        if(err){return console.log('you didnt save a chatroom'), err}
+        console.log('you saved the chatroom', results)
+      })
+    })
+      socket.emit('roomlist', {roomname: roomname})
+  })
+    // socket.on('makeroom', function(data){
+    //   // var id = uuid.v4();
+    //   roomname = data.fromUser+data.toUser
+    //   othername = data.toUser+data.fromUser
+    //   var chatroom = new PrivateRooms();
+    //   chatroom.toUser = data.fromTo
+    //   chatroom.fromUser = data.fromUser
+    //   chatroom.roomName = roomname
+    //   chatroom.otherName = othername
+    //   chatroom.save(function(err, results){
+    //     if(err){return console.log('you errored out in making a room', err)}
+    //     console.log('you this is the new room you just made', results)
+    //   })
 
-  // });
-  // client.on("join", function(name) {
-  //   roomID = null;
-  //   people[client.id] = {"name" : name, "room" : roomID};
-  //   client.emit("update", "You have connected to the server.");
-  //   socket.sockets.emit("update", people[client.id].name + " is online.")
-  //   socket.sockets.emit("update-people", people);
-  //   client.emit("roomList", {rooms: rooms});
-  //   clients.push(client);
-  // socket.on('/createroom', function(data){
-  //   rooms['chatroom'] = data.roomname
-  //   people['creator'] = data.creator
-  //   socket.join(data.roomname)
-  //   socket.on(data.roomname, function(data){
-  //     socket.broadcast.emit('/roomcreated', 'created a room here')
-  //   })
-  //   console.log('this is what we got back from the emit', rooms, people)
-  // })
 
-  // io.to('room1').emit('joinedroom')
+    //   User.findOne({displayName:data.fromUser}, function(err, user){
+    //     if(err){return;}
+    //     user.privaterooms.push(chatroom)
+    //     user.save(function(err, results){
+    //       if(err){return console.log('you have an err saving to rooms to users', err)}
+    //       console.log('you successfully saved this room to the user', results)
+    //     })
+    //   })
+    //   User.findOne({displayName:data.toUser}, function(err, user){
+    //     if(err){return;}
+    //     user.privaterooms.push(chatroom)
+    //     user.save(function(err, results){
+    //       if(err){return console.log('you have an err saving to rooms to users', err)}
+    //       console.log('you successfully saved this room to the user', results)
+    //     })
+    //   })
+    //       // chatroom[id] = room;
+    //   // socket.emit("roomList", {fromUser: chatroom});
+    //   console.log('this is data recieved from client contacts controller', data)
+    //   // chatroom['privateChat'] = data.roomname;
+    //   // people['creator'] = data.creator;
+    //   socket.join(data.roomname)
+    //   // room.addPerson(data.creator)
+    //   // socket.on(data.roomname, function(data){
+    //   //   socket.broadcast.emit('/roomcreated', 'created a room here')
+    //   // })
+    // })
 
-  socket.on('new message', /*socketUtils.newMessage*/ function(message) {
+  socket.on('new message', function(message) {
       //message - data from the cliet side 
       console.log('this is the incoming message', message);
-      var messages = new Messages(message);
-      //messages.create etc were all defined in the messages model
-      messages.created = message.date ;
-      messages.text = message.text;
-      messages.displayName = message.username;
-      //messages.roomname 
-      messages.save(function(err, results){
-        if(err){
-          console.log('you have an error', err);
-        }
-        console.log('you save the chat. check mongo.', results);
-      });
-        ///Collect all the messages now in database 
-        var foundMessages;
-        Messages.find(function(err, msg){
-          if(err){
-            return console.log('you have an err get chats from the DB', err);
-          }
-          // console.log('MESSAGES from get request', req)
-          foundMessages = msg;
-          //this will post all the messages from the database
-          io.emit('publish message', foundMessages);
-        });
+
+    roomname = message.fromUser+message.toUser
+    othername = message.toUser+message.fromUser
+    socket.join(roomname)
+
+    // socket.on(roomname, function())
+    // PrivateRooms.find({roomName:roomname, otherName:othername}, function(err, activeroom){
+    //   console.log('this is the activeroom', activeroom)
+    //   if(activeroom = '[]'){
+    //     var chatroom = new PrivateRooms();
+    //     chatroom.toUser = message.fromTo
+    //     chatroom.fromUser = message.fromUser
+    //     chatroom.roomName = roomname
+    //     chatroom.otherName = othername
+    //     chatroom.save(function(err, results){
+    //       if(err){return console.log('you errored out in making a room', err)}
+    //       console.log('you this is the new room you just made', results)
+    //     })
+
+
+    //     var messages = new Messages(message);
+    //     //messages.create etc were all defined in the messages model
+    //     messages.created = message.date ;
+    //     messages.text = message.text;
+    //     messages.displayName = message.fromName;
+    //     //messages.roomname 
+    //     messages.save(function(err, results){
+    //       if(err){
+    //         console.log('you have an error', err);
+    //       }
+    //       console.log('you save the chat. check mongo.', results);
+    //       chatroom.messages.push(results)
+    //       io.emit('publish message', results);
+    //     });
+
+
+    //     // User.findOne({displayName:message.fromUser}, function(err, user){
+    //     //   if(err){return console.log('this is hte fromuser', user)}
+          
+    //     //   // user.privaterooms.push(chatroom)
+    //     //   user.save(function(err, results){
+    //     //     if(err){return console.log('you have an err saving to rooms to users', err)}
+    //     //     console.log('you successfully saved this room to the user', results)
+    //     //   })
+    //     // })
+    //     // User.findOne({displayName:messages.toUser}, function(err, user){
+    //     //   if(err){return console.log('cant find the toUser', user)}
+    //     //   // user.privaterooms.push(chatroom)
+    //     //   user.save(function(err, results){
+    //     //     if(err){return console.log('you have an err saving to rooms to users', err)}
+    //     //     console.log('you successfully saved this room to the user', results)
+    //     //   })
+    //     // })
+
+    //     // messages.find(function(err, msg){
+    //     //   if(err){
+    //     //     return console.log('you have an err get chats from the DB', err);
+    //     //   }
+    //     //   // console.log('MESSAGES from get request', req)
+    //     //   foundMessages = msg;
+    //     //   //this will post all the messages from the database
+    //     //   // io.emit('publish message', foundMessages);
+    //     // });
+  
+    //   }else{
+
+    //     console.log('we found the room', activeroom)
+
+    //     var messages = new Messages(message);
+    //     //messages.create etc were all defined in the messages model
+    //     messages.created = message.date ;
+    //     messages.text = message.text;
+    //     messages.displayName = message.fromName;
+    //     //messages.roomname 
+    //     messages.save(function(err, results){
+    //       if(err){
+    //         console.log('you have an error', err);
+    //       }
+    //       console.log('you save the chat. check mongo.', results);
+    //       chatroom.messages.push(results)
+    //        // io.emit('publish message', results);
+    //     });
+
+    //     // messages.find(function(err, msg){
+    //     //   if(err){
+    //     //     return console.log('you have an err get chats from the DB', err);
+    //     //   }
+    //     //   // console.log('MESSAGES from get request', req)
+    //     //   foundMessages = msg;
+    //     //   //this will post all the messages from the database
+    //     //   io.emit('publish message', foundMessages);
+    //     // });
+
+    //   }
+
+
+
+    //   PrivateRooms.find({roomName : roomname}, function(err, msg){
+    //     if(err){
+    //       return console.log('you have an err get chats from the DB', err);
+    //     }
+    //     console.log('MESSAGES from get request', msg)
+    //     foundMessages = msg;
+    //     //this will post all the messages from the database
+    //     io.emit('publish message', foundMessages);
+    //   });
+
+    // })
+ 
+      // var messages = new Messages(message);
+      // //messages.create etc were all defined in the messages model
+      // messages.created = message.date ;
+      // messages.text = message.text;
+      // messages.displayName = message.username;
+      // //messages.roomname 
+      // messages.save(function(err, results){
+      //   if(err){
+      //     console.log('you have an error', err);
+      //   }
+      //   console.log('you save the chat. check mongo.', results);
+      // });
+      //   ///Collect all the messages now in database 
+      //   var foundMessages;
+      //   Messages.find(function(err, msg){
+      //     if(err){
+      //       return console.log('you have an err get chats from the DB', err);
+      //     }
+      //     // console.log('MESSAGES from get request', req)
+      //     foundMessages = msg;
+      //     //this will post all the messages from the database
+      //     io.emit('publish message', foundMessages);
+      //   });
+
+
+///////end of newmessage socket//////     
     });
+///////end of newmessage socket//////  
 //general code
   //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
   socket.on('/create', function(data) {

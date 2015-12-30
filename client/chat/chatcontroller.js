@@ -1,8 +1,17 @@
 angular.module('myApp')
 	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+		$scope.toUsername;
+		$scope.toUser
 
         // $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
- 
+ 		socket.on('composeToUser', function(data){
+ 			console.log('this is from the composeToUser', data)
+ 			$scope.$apply(function(){
+ 				$scope.toUsername = data.toUser.displayName
+ 				$scope.toUser = data.toUser
+ 			})
+ 		})
+ 		console.log('this the toUsername', $scope.toUsername)
          $scope.username = Account.getUserDisplayName();
 	    socket.on("publish message", function(data, other) {
 	        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
@@ -21,7 +30,7 @@ angular.module('myApp')
 	        //check if there is text in the box.
 	        if ($scope.text) {
 	            //emit a new message with the text data. Will store this in the database. 
-	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), username: $scope.username});
+	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername});
 	             // this is be sent to the socket.on('new messsages') on the server side.
 	        }
 	    };
