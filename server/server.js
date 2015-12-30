@@ -305,14 +305,22 @@ io.on('connection', function(socket) {
   socket.on('new message', function(message) {
       //message - data from the cliet side 
       console.log('this is the incoming message', message);
-    if(joinedroom = undefined){
+    // if(joinedroom = undefined){
     roomname = message.fromUser+message.toUser
-    } else if(joinedroom) {
-      roomname = joinedroom
-    } 
+    // } else if(joinedroom) {
+    //   roomname = joinedroom
+    // } 
 
     othername = message.toUser+message.fromUser
 
+    User.findOne({displayName: message.fromUser}, function(user) {
+      console.log('this is user', user)
+      user.privaterooms.push(chatroom)
+      user.save(function(err, results) {
+        if(err){return console.log('private chat not saved to user', err)}
+        console.log('you save this to user', results)
+      })
+    })
     PrivateRooms.findOne({roomName:roomname, otherName:othername}, function(err, activeroom){
       console.log('this is the activeroom', activeroom)
       console.log('this is roomname', roomname)
@@ -332,10 +340,7 @@ io.on('connection', function(socket) {
         })
       } else if (activeroom.roomname === roomname) {
         console.log('the active room', activeroom)
-        chatroom.toUser = message.toUser
-        chatroom.fromUser = message.fromUser
-        chatroom.roomName = roomname
-        chatroom.otherName = othername
+
         chatroom.messages.push({created: message.date, text: message.text, displayName:message.fromName})
         chatroom.save(function(err, results) {
           if(err){return console.log('error saving to activeroom', err)}
@@ -345,7 +350,7 @@ io.on('connection', function(socket) {
         })
       }
     });
-
+  
 
     //     // User.findOne({displayName:message.fromUser}, function(err, user){
     //     //   if(err){return console.log('this is hte fromuser', user)}
