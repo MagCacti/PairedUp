@@ -2,7 +2,8 @@ angular.module('myApp')
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
     //A socket connection to our server.
-  var socket = io.connect("http://localhost:8080");
+
+  var socket = io.connect("https://paired-up.herokuapp.com");
   return {
     //listen to events.
     on: function(eventName, callback){
