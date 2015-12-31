@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-    "engines": {
-    "node": "5.0.0"
-  },
   "scripts": {
-    "test": "mocha",
-    "postinstall": "bower install"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -27,6 +23,8 @@
     "cookie-parser": "^1.4.0",
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
+    "event-emitter": "^0.3.4",
+    "eventemitter2": "^0.4.14",
     "express": "^4.13.3",
     "express-favicon": "^1.0.1",
     "express-session": "^1.12.1",
@@ -38,6 +36,7 @@
     "mongoose-find-one-or-create": "^0.2.0",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
+    "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-github": "^1.0.0",
     "querystring": "^0.2.0",
