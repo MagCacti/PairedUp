@@ -36,9 +36,24 @@ body {
   background-color: 'red';
 }
 
-
-video {
-    height: 200px;
-    width: 200px;
+.chat-container {
+  width: 400px;
+  height: 600px;
+  margin: auto;
+}
+.msg-container {
+  height: 400px;
+  border: 2px;
+  overflow: scroll;
 }
 
+video {
+  width: 500%;
+  border-radius: 10px;
+}
+
+.video-wrapper:after {
+  content: ' ';
+  clear: both;
+  display: block;
+}
