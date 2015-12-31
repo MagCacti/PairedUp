@@ -33,4 +33,3 @@ dist/
 node_modules/
 client/bower_components/
 githubsecret
-config.js
