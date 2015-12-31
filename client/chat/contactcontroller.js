@@ -1,11 +1,15 @@
 angular.module('myApp')
-	.controller('ContactController', ['$scope', 'profiledata', 'Account', 'Chat', 'socket', '$state', function($scope, profiledata, Account, Chat, socket, $state) {
+	.controller('ContactController', ['$scope', 'profiledata', 'Account', 'Chat', 'socket', '$state', '$stateParams', function($scope, profiledata, Account, Chat, socket, $state, $stateParams) {
 
 		$scope.profile;
+		$scope.fromUser
 		$scope.allUsers = []; 
+
+		// $scope.allUser.github = $stateParams.chatId
 		  var account = Account.getUserDisplayName()
 		  profiledata.findUser({user:account}).then(function(results){
 		  	$scope.profile = results.data.displayName
+		  	$scope.fromUser = results.data
 		  	console.log('these are the results', $scope.profile)
 		  })
 
@@ -16,7 +20,7 @@ angular.module('myApp')
 		  })
 
 		  $scope.initChat = function (user){
-		  	socket.emit('writeToUser', {toUser: user, fromUser:$scope.profile})
+		  	socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
 		  	//send a signal to the server that you want to make a room with the following 
 		  	//two people.
 		 //  	socket.emit('makeroom', {fromUser: $scope.profile, toUser: user})

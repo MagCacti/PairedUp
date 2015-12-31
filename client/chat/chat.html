@@ -1,4 +1,4 @@
-
+<h1>{{user}}</h1>
 <div class="chat-container">
   <div class="row">
 
@@ -28,7 +28,7 @@
           </thead>
         </table>
         <div class="msg-container">
-          <div ng-repeat="key in allChats">
+          <div ng-repeat="key in allMsg">
             <p>{{key.displayName}} : {{key.text}}</p>
             <p>{{key.created}}</p>
           </div>

@@ -1,14 +1,26 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', '$stateParams', function($scope, $http, socket, $filter, Account, $stateParams){
 		$scope.toUsername;
 		$scope.joinedRoom;
 		$scope.allChats;
+		$scope.toUser;
+		$scope.fromUser;
+		$scope.allMsg
+
+
+
+		socket.on('savedroom', function(data){
+			console.log('from saved room',data)
+		})
 
         // $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
  		socket.on('composeToUser', function(data){
  			console.log('this is from the composeToUser', data)
  			$scope.$apply(function(){
- 				$scope.toUsername = data.toUser
+ 				$scope.toUsername = data.toUser.displayName
+ 				$scope.toUser = data.toUser
+ 				$scope.fromUser = data.toUser
+ 				$scope.joinedRoom = data.roomname
  			})
  		})
  		console.log('this the toUsername', $scope.toUsername)
@@ -25,13 +37,21 @@ angular.module('myApp')
 	        });
 	    });
 
-	    socket.on('joincomplete', console.log('thiis is from joincomplete'))
-	    socket.on('replychat', function(data){
+	    socket.on('updatechat', function(data){
+	    	console.log('the updated chate', data)
 	    	$scope.$apply(function(){
- 				$scope.toUsername = data.chatwith
- 				$scope.joinedRoom = data.joinedroom
- 			})
+	    		$scope.allMsg = data
+	    	})
+
 	    })
+
+	    socket.on('joincomplete', console.log('thiis is from joincomplete'))
+	   //  socket.on('replychat', function(data){
+	   //  	$scope.$apply(function(){
+ 			// 	$scope.toUsername = data.chatwith
+ 			// 	$scope.joinedRoom = data.joinedroom
+ 			// })
+	   //  })
 
 	    	console.log('Joined rooms', $scope.joinedRoom)
 	    // socket.emit

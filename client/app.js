@@ -63,6 +63,7 @@ angular.module('myApp', [
       controller: 'ChatController'
 
     })
+
     .state('chat.rooms', {
       url: '/chatrooms',
       templateUrl: 'chat/chatrooms.html',

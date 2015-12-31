@@ -21,6 +21,7 @@ var userSchema = new Schema({
    android: Boolean,
    ruby: Boolean,
  },
+ chat: [String],
  skills:{ 
    node: Number,
    angular: Number,
@@ -28,9 +29,18 @@ var userSchema = new Schema({
    css: Number, 
    jquery: Number
  },
- chatroom: [{roomname:String, chatwith:String}],
- messages:[{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
- privaterooms:[{type: mongoose.Schema.Types.ObjectId, ref: 'PrivateRooms'}]
+ chatroom: [{
+ 	roomname:String,
+ 	othername:String, 
+ 	chatwith:String,
+ 	messages:[{
+ 		created: String,
+ 		text: String,
+ 		displayName: String,
+ 	}]
+ }],
+ messages:[String],
+ privaterooms: {type: Number, ref: 'PrivateRooms'}
 });
 
 var privateroomsSchema = new Schema({
@@ -51,6 +61,7 @@ var messageSchema = new Schema({
     text: String,
     displayName: String,
     room: String,
+    othername: String
 
 });
 
