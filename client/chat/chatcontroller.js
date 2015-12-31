@@ -6,6 +6,7 @@ angular.module('myApp')
 		$scope.toUser;
 		$scope.fromUser;
 		$scope.allMsg
+		$scope.otherRoom
 
 
 
@@ -21,19 +22,15 @@ angular.module('myApp')
  				$scope.toUser = data.toUser
  				$scope.fromUser = data.toUser
  				$scope.joinedRoom = data.roomname
+ 				$scope.otherRoom = data.othername
  			})
  		})
  		console.log('this the toUsername', $scope.toUsername)
          $scope.username = Account.getUserDisplayName();
 	    socket.on("publish message", function(data) {
 	    	console.log('this is the published message', data)
-	        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
 	        $scope.$apply(function(){
-	            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
-	        	// console.log('this is data', data)
-	        	//data comes from mongo and returns an array of objects
-	        	$scope.allChats = data.messages;
-					        
+	        	$scope.allChats = data.messages;	        
 	        });
 	    });
 
@@ -46,12 +43,6 @@ angular.module('myApp')
 	    })
 
 	    socket.on('joincomplete', console.log('thiis is from joincomplete'))
-	   //  socket.on('replychat', function(data){
-	   //  	$scope.$apply(function(){
- 			// 	$scope.toUsername = data.chatwith
- 			// 	$scope.joinedRoom = data.joinedroom
- 			// })
-	   //  })
 
 	    	console.log('Joined rooms', $scope.joinedRoom)
 	    // socket.emit
@@ -60,7 +51,7 @@ angular.module('myApp')
 	        //check if there is text in the box.
 	        if ($scope.text) {
 	            //emit a new message with the text data. Will store this in the database. 
-	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom});
+	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	             // this is be sent to the socket.on('new messsages') on the server side.
 	        }
 	        $scope.text = ""
