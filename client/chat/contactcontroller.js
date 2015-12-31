@@ -5,8 +5,6 @@ angular.module('myApp')
 		$scope.fromUser
 		$scope.allUsers = []; 
 
-
-		// $scope.allUser.github = $stateParams.chatId
 		  var account = Account.getUserDisplayName()
 		  profiledata.findUser({user:account}).then(function(results){
 		  	$scope.profile = results.data.displayName

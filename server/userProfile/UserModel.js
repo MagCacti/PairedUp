@@ -35,7 +35,6 @@ var messageSchema = new Schema({
     text: String,
     displayName: String,
     room: String,
-    otherroom: String
 });
 var Message = mongoose.model('Message', messageSchema);
 var User = mongoose.model("User", userSchema);

@@ -220,33 +220,29 @@ passport.use(new GitHubStrategy({
     callbackURL: "http://127.0.0.1:8080/auth/github/callback"
   }, userAuthUtil.setingUserToGlobalProfile));
 
-
-//The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client  
-  // var people = {};  
-  // var chatroom = {}; 
-  // var clients = [];
 io.on('connection', function(socket) {
-  var roomname;
   console.log('new connection');
+  var roomname;
   socket.on('writeToUser', function(data){
     console.log('this the write to user data', data)
     roomname = data.fromUser.displayName+data.toUser.displayName
-    othername = data.toUser.displayName+data.fromUser.displayName
+    console.log('initial roomname', roomname)
     Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
       if(err){return err}
-      if(msg.room===undefined){
-      roomname = data.toUser.displayName+data.fromUser.displayName
+      if(msg[0] === undefined){
+        roomname = data.fromUser.displayName+data.toUser.displayName
       console.log('roomname',roomname)
       console.log('mesgroom', msg)
-      } else{
-        return;
+      } else if(msg[0].room){
+        roomname = data.toUser.displayName+data.fromUser.displayName
+        console.log('room on the if', roomname)
       }
     socket.join(roomname)
     console.log('roomname after check', roomname)
     socket.broadcast.to(roomname).emit('joincomplete', console.log('hey your in this chat with ' +data.toUser.displayName))
-      socket.emit('composeToUser', {roomname: roomname, othername: othername, fromUser: data.fromUser, toUser:data.toUser})
-  })
+      socket.emit('composeToUser', {roomname: roomname, fromUser: data.fromUser, toUser:data.toUser})
     })
+  })
   
   socket.on('userjoin', function(data){
     socket.join(data.joinedroom)
@@ -255,7 +251,6 @@ io.on('connection', function(socket) {
   })
 
   socket.on('new message', function(message) {
-      //message - data from the cliet side 
       console.log('this is the incoming message', message);
     roomname = message.joinedroom
     otherroom = message.toUser+message.fromUser
@@ -275,10 +270,6 @@ io.on('connection', function(socket) {
       console.log('the found messages', msg)
     socket.emit('updatechat', msg)
     })
-    // Messages.find({otherroom:message.otherroom}, function(err, msg){
-    //   console.log('the other found messages', msg)
-    // socket.emit('updatechat', msg)
-    // })
 
 ///////end of newmessage socket//////     
     });
