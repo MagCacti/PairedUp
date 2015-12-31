@@ -2,7 +2,7 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
-      'btford.socket-io',
+      'btford.socket-io'
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
