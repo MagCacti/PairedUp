@@ -63,7 +63,7 @@ app.use(session({
 
 var content;
 //Need to build this function to get around asynchronous behavior.
-var sendFileDataToClient = function(data) {
+var sendFileDataToClient = function() {
   //send the data from the file to the client. 
   io.emit('fileData', content);
 };
@@ -79,7 +79,7 @@ app.post('/fileUpload', function(req, res, next) {
         content = data;
         //To get around the synchronous behavior we wrap the next step into the function sendFileDataToClient. Which will just emit the content, but this way we are sure that content is done receiving the data from the file.
         sendFileDataToClient(content);
-        return;
+        res.json({status: "file is uploaded"});
       }
     });
   });

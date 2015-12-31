@@ -10,6 +10,7 @@ angular.module('myApp')
           $scope.user = response.data.profile;
           //sets the displayName in the localStorage of the browser. 
           Account.storeUserDisplayName(response.data.profile.displayName);
+          console.log("response.data.profile", response.data.profile);
           return {};
         })
         .catch(function(response) {

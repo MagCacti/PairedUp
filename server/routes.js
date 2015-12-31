@@ -104,4 +104,10 @@ module.exports = function(app) {
 
   //delete works but now I need to update every single document's id to --1. 
   app.post('/deleteDocumentsForUser', documentUtils.deleteDocumentsForUser);
+
+  app.post('/api/upload', function(req,res) {
+    console.log("success"); 
+    res.json({});
+  });
+  
 };
