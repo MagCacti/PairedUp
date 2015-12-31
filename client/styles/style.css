@@ -1,8 +1,5 @@
 body {
   padding-top: 50px;
-  margin: 10px;
-  margin-top: 20px;
-  margin-left: 12px;
 }
 
 /* Styles for signin.html */
@@ -19,41 +16,10 @@ body {
 }
 
 /* Styles for codeshare.html */
-.ace_editor  {
-  height : 300px;
-}
+.ace_editor { height: 200px; } 
 
-/*Styles for profile.html*/
-.bluecacti {
-  /*background-image: url("http://images.nationalgeographic.com/wpf/media-live/photos/000/632/cache/saguaro-arizona-richardson_63204_600x450.jpg"); */
-  background-color: #1c1f45; /*or: #0a1219 or #1c1f45 or 404040 */
-}
-.warmcacti {
-  /*background-image: url("http://images.nationalgeographic.com/wpf/media-live/photos/000/632/cache/saguaro-arizona-richardson_63204_600x450.jpg"); */
-  background-color: #1c1f45; /*or: #0a1219 or  */
-}
-.importante {
-  background-color: 'red';
-}
-
-.chat-container {
-  width: 400px;
-  height: 600px;
-  margin: auto;
-}
-.msg-container {
-  height: 400px;
-  border: 2px;
-  overflow: scroll;
-}
 
 video {
-  width: 500%;
-  border-radius: 10px;
-}
-
-.video-wrapper:after {
-  content: ' ';
-  clear: both;
-  display: block;
+    height: 200px;
+    width: 200px;
 }

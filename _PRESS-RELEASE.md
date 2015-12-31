@@ -17,7 +17,8 @@ Once the project moves into development, the press release can be used as a touc
  -->
  
 # PairedUp #
-## PairedUp is for people learning how to code. ##
+## Market ##
+PairedUp is for people learning how to code. 
 ## Summary ##
 Learning how to code? Need a Partner? PairedUp is a way to connect with awesome TechMentors. If your looking to learn a particular programming language then PairedUp will match you with fellow coders who can pair program with you. 
 ## Problem ##

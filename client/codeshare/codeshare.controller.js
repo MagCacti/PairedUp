@@ -1,8 +1,8 @@
-angular.module('myApp')
+angular.module('myApp.codeshare', [ ])
 //factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
-  //A socket connection to our server.
-  var socket = io.connect("https://paired-up.herokuapp.com");
+    //A socket connection to our server.
+  var socket = io.connect("http://localhost:8080");
   return {
     //listen to events.
     on: function(eventName, callback){
@@ -22,26 +22,37 @@ angular.module('myApp')
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[0];
-  if (Account.getCheckIfLoggedOut()){
+  if (Account.getLoggedOutData()){
+
   }
+  //I believe the line below to be unnecessary now but not sure. 
+  // $http.get('/checkIfLoggedIn').then(function(response){
+  //   console.log("response from checkIfLoggedIn", response);
+  // });
+  // var comm = new Icecomm('');
 
+  //       comm.connect('test');
 
-  // Will use to hold all the text in editor
+  //       comm.on('local', function(peer) {
+  //         localVideo.src = peer.stream;
+  //       });
 
+  //       comm.on('connected', function(peer) {
+  //         document.body.appendChild(peer.getVideo());
+  //       });
+
+  //       comm.on('disconnect', function(peer) {
+  //         document.getElementById(peer.ID).remove();
+  //       });
+  //Will use to hold all the text in editor
   $scope.textInEditor;
-  // 'textInEditor' refers to the text in the codeshare itself.  This variable was created to help implement the file upload feature.
   $scope.doc;
-  // 'scope.doc' refers to the document object. 
-
   $scope.aceOption = {
-    useWrapMode : true,
-    showGutter: true,
-    theme:'chaos',
-    firstLineNumber: 1,
     mode: $scope.mode.toLowerCase(),
     onLoad: function (_ace) {
       $scope.modeChanged = function () {
           _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
+          
       };
       //store the document of the session to a variable. 
       $scope.doc = _ace.getSession().getDocument();
@@ -51,13 +62,16 @@ angular.module('myApp')
     onChange: function(_ace) {
       //store the document of the session to a variable. 
       var sessionDoc = _ace[1].getSession().getDocument();
+      //Was erroring without this if statement. Not sure why. 
       if ($scope.textInEditor !== sessionDoc.getValue() ) {
         //setting $scope.textInEditor equal to the text in the document
         $scope.textInEditor = sessionDoc.getValue();
+
          //send a signal with the title from the document and the text from the document. 
          socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
+        
       }
-
+     
       //When a signal(called notification) is sent, then run the callback function.
       //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put notification
       socket.on('notification', function(data) {
@@ -77,7 +91,6 @@ angular.module('myApp')
       });
     }
   };
-
   //listening to when the server emits the file's data.
   socket.on("fileData", function( data) {
     //$scope.textInEditor will be set to the text (called data) from the file
@@ -86,13 +99,21 @@ angular.module('myApp')
    $scope.doc.setValue($scope.textInEditor);
   });
 
-  $scope.aceModel = 'Type your code here!';
+  $scope.aceModel = ';; Scheme code in here.\n' +
+    '(define (double x)\n\t(* x x))\n\n\n' +
+    '<!-- XML code in here. -->\n' +
+    '<root>\n\t<foo>\n\t</foo>\n\t<bar/>\n</root>\n\n\n' +
+    '// Javascript code in here.\n' +
+    'function foo(msg) {\n\tvar r = Math.random();\n\treturn "" + r + " : " + msg;\n}';
+ 
+  
+//add a document
 
  //file types to add to the document name. 
   $scope.fileTypes = {'Scheme': '.sch', 'XML' : '.xml', 'Javascript': '.js', 'HTML': '.html' , 'Ruby': '.rb' , 'CSS': '.css' , 'Curly': '.curly' , 'CSharp': '.csharp' , 'Python': '.py' , 'MySQL': '.sql' };
 //retrieving all the files if the user is logged in. 
-  if (Account.getCheckIfLoggedOut() === 'false') {
-      $http.post('/retrievingDocumentsForUser', {displayName: Account.getUserDisplayName(), code: $scope.aceModel})
+  if (Account.getLoggedOutData() === 'false') {
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
       .then(function(result) {
         for (var i = 0; i < result.data.length; i++) {
           $scope.id++;
@@ -110,7 +131,7 @@ angular.module('myApp')
     var total = $scope.id + $scope.removeid;
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
     $scope.filesList[total - 1].title += $scope.fileTypes[$scope.mode];
-    $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getUserDisplayName(), code: $scope.aceModel});  
+    $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getLogInData(), code: $scope.aceModel});  
     
     $scope.title = '';
     $scope.aceModel = '';
@@ -143,11 +164,11 @@ angular.module('myApp')
     var index = selectId(id);
     var item = $scope.filesList[index];
     var store = $scope.filesList[$scope.removeid];
-    $http.post('/deleteDocumentsForUser', {displayName: Account.getUserDisplayName(), title: item.title, id:item.id}).then(function(result) {
+    $http.post('/deleteDocumentsForUser', {displayName: Account.getLogInData(), title: item.title, id:item.id}).then(function(result) {
     }).then(function() {
       $scope.id = 0; 
       $scope.filesList = [];
-      $http.post('/retrievingDocumentsForUser', {displayName: Account.getUserDisplayName(), code: $scope.aceModel})
+      $http.post('/retrievingDocumentsForUser', {displayName: Account.getLogInData(), code: $scope.aceModel})
       .then(function(result) {
         for (var i = 0; i < result.data.length; i++) {
           $scope.id++;
@@ -167,7 +188,7 @@ angular.module('myApp')
 
   };
 
-  function selectId (id) {
+  function selectId (id){
     for(var i = 0; i < $scope.filesList.length; i++){
       if($scope.filesList[i].id === id){
         return i;
@@ -177,3 +198,4 @@ angular.module('myApp')
 
 
 }]);
+
