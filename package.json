@@ -1,28 +1,34 @@
 {
-  "name": "PairedUp",
+  "name": "testapp",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "5.0.0"
+  },
   "scripts": {
-    "test": "mocha"
+    "postinstall": "bower install"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MagCacti/PairedUp.git"
+    "url": "git+https://github.com/kmcelveen/PairedUp.git"
   },
   "author": "MagCacti",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MagCacti/PairedUp/issues"
+    "url": "https://github.com/kmcelveen/PairedUp/issues"
   },
-  "homepage": "https://github.com/MagCact/PairedUp#readme",
+  "homepage": "https://github.com/kmcelveen/PairedUp#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
+    "bower": "~1.7.1",
     "chai": "^3.4.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.0",
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
+    "event-emitter": "^0.3.4",
+    "eventemitter2": "^0.4.14",
     "express": "^4.13.3",
     "express-favicon": "^1.0.1",
     "express-session": "^1.12.1",
@@ -34,6 +40,7 @@
     "mongoose-find-one-or-create": "^0.2.0",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
+    "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-github": "^1.0.0",
     "querystring": "^0.2.0",

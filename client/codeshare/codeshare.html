@@ -1,97 +1,32 @@
-<div class="well">
-  <h1 class="text-primary"> Pair | Share | Learn </h1>
-</div>
 
-
+<h1>The Codesharing experience will live here </h1>
 <div class="row">
-
   <div class="col-md-2"> 
-    <div class="well" ng-repeat=" file in filesList">{{ file.title }} 
+    <button ng-click='add()'>Add</button>
+    <div ng-repeat=" file in filesList">
       <button ng-click='delete(file.id)'>Delete</button>
-      <button ng-click='edit(file.id)'>Edit</button>
+      <button ng-click='edit(file.id)'>Edit {{file.title}}</button>
       <button ng-click='shareWith(file.id)'>ShareWith</button>
-      
+      <button ng-click='update(file.id)'>Update</button>
     </div>
   </div> 
+    <div class="col-md-4">
 
-    <div class="col-md-8">
-        <form ng-submit="getFileInfo()" ng-controller="ExampleController" action="/fileUpload" enctype="multipart/form-data" method="post">
+        <form ng-submit="getFileInfo()" action="/fileUpload" enctype="multipart/form-data" method="post">
             <input type="file" name="string">
             <input type="submit" value="Upload File">
         </form>
-
-    <!-- 'Add' Button: -->
-    <a href="#" class="btn btn-success" ng-click='add()'class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create new knowledge nugget">Create New</a>
-
-    <!-- 'Update' Button -->
-    <a href="#" class="btn btn-success" ng-click='update(file.id)' class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Update an existing nugget">Update Changes</a>
-    
       <input ng-model="title">
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
     </div>
-
-    <div class="col-md-2">
-
-    <!-- <video id="localVideo" autoplay></video> -->
-      <!-- <icecomm-connect room="custom room"></icecomm-connect>
-      <icecomm-local><video ng-if="local" autoplay class="icecomm-local"' +
-        'ng-src={{local.stream}}></video></icecomm-local>
-      <icecomm-peer></icecomm-peer>
-      <icecomm-leave></icecomm-leave>
- -->
-    <!-- <ice-comm
-            
-            room="custom room"></ice-comm> -->
-      <!-- <div>
-          <button ng-if="!!current_room" ng-click="close()">Close</button>
-          <input ng-if="!current_room" type="text" ng-keyup="roomEvent()" />
-          <div ng-if="!!local">
-            <video autoplay class="local" ng-src={{local.stream}}></video>
-          </div>
-          <ul><li ng-repeat="peer in peers">
-            <video autoplay ng-src="{{peer.stream}}" ></video>
-          </li></ul> -->
-
-
-        <!-- <<  </li></ul> --> 
-      <!-- </div> -->
-
-  
-
-    
-
-    
-    <!-- Codeshare Editor: -->
-<!--     <div ui-ace="aceOption" class="ng-untouched ng-valid ace_editor ace-tm ng-dirty ng-valid-parse" ng-model="aceModel"></div>
-
-    <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
- -->
-  
-  <div class="col-md-2">
-<!--Icecomm Code (temp removal)--> 
+   <div>
+    <div class='col-md-4'>
+      <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button>
+           <div ui-view></div>
+    </div>
   </div>
-
 </div>
-
-<!-- 
-<section ng-controller="AceCtrl">
-
-  <div ui-ace="aceOption" ng-model="aceModel"></div>
-
-  <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-
-</section> -->
-
-
-<!-- codeshare was added using the following: https://github.com/angular-ui/ui-ace
-  -The ui-ace dependency is in bower:
-  bower install angular-ui-ace#bower
-  or bower install -g 'dash dash' save angular-ui-ace#bower
-  -Considered: implementing the ace raw 
-    https://ace.c9.io/
--->
-
 
 
 
