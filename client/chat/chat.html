@@ -1,29 +1,53 @@
+<h1>{{user}}</h1>
 <div class="chat-container">
+  <div class="row">
 
-<div class="msg-container">
+    <div class="col-md-4 table-responsive">
+      <table class="table">
+          <thead>
+            <tr>
+              <th><button ui-sref="chat.rooms">Messages</button></th>
+             
+              <th><button ui-sref="chat.contacts">Compose</button></th>
+            </tr>
+          </thead>
+        </table>
+        <div ui-view></div>
 
-  <div ng-repeat="key in chat">
-    <p>{{key.displayName}} : </p> 
-    <p>{{key.text}}</p>
-    <p>{{key.created}}</p>
-  </div>
-</div>
-
-
-<form ng-submit="submit()">
-<div class="form-group">
-    <label class="col-sm-2 control-label">Username</label>
-    <div class="col-sm-10">
-      <p class="form-control-static">{{username}}</p>
     </div>
+
+
+
+    <div class="col-md-8">
+      <table class="table">
+          <thead>
+            <tr>
+              <th>ToUser:{{toUsername}}</th>
+             
+            </tr>
+          </thead>
+        </table>
+        <div class="msg-container">
+          <div ng-repeat="key in allMsg">
+            <p>{{key.displayName}} : {{key.text}}</p>
+            <p>{{key.created}}</p>
+          </div>
+        </div>
+        <form ng-submit="submit()">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">(from)Username</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">{{username}}</p>
+            </div>
+          </div>
+          <textarea class="form-control" rows="3" ng-model="text" name="text"></textarea>
+         <p ng-model="date" ></p>
+          <input type="submit" id="submit" value="Submit" />
+        </form>
+        <a ui-sref="chat.room">Start a chatroom</a>
+        </div>
+    </div>
+
   </div>
-  <textarea class="form-control" rows="3" ng-model="text" name="text"></textarea>
-
- <p ng-model="date" ></p>
-
-  <input type="submit" id="submit" value="Submit" />
-
-</form>
-
-
 </div>
+

@@ -9,6 +9,10 @@ body {
 	/*font-size: 14px;*/	
 }
 
+#slider1 {
+  width: 200px;
+}
+
 /* Styles for login.html */
 .starter-template {
   padding: 40px 15px;
@@ -19,9 +23,10 @@ body {
 .ace_editor { height: 200px; } 
 
 .chat-container {
-  width: 400px;
+  width: 980px;
   height: 600px;
   margin: auto;
+  margin-top: 30px;
 }
 .msg-container {
   height: 400px;

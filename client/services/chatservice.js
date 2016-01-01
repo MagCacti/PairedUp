@@ -1,3 +1,17 @@
+angular.module('myApp')
+	.factory('Chat', ['$http', function($http){
+		var obj = {
+
+		}
+		//grabs the username of the person that wants to chat. 
+		obj.initChat = function(user){
+			return $http.get('/initChat', user)
+		}
+
+		return obj;
+	}])
+
+
 //this is all now irrevelant but the structure is useful for future reference
 
 // angular.module('myApp')

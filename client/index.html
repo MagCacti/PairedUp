@@ -52,10 +52,8 @@
         </ul>
       </div><!--/.nav-collapse -->
     </div>
-  <!-- <a href="/auth/github" ng-click= 'clickedLogin()'>login with Passport Github</a> -->
   </nav>
 
-  <!-- <a href="/auth/github">login with Passport Github</a> -->
 
 
     <!-- NG-VIEW BEGIN-->
@@ -71,12 +69,19 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="assets/lib/angular.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
-    <!-- Angular UI Boostrap  -->
+    <!--shim is needed to support non-html5 browsers -->
+     
+    <!-- // <script type="text/javascript" src="../bower_components/ng-file-upload/angular-file-upload-shim.js"></script> -->
+     <!-- // <script type="text/javascript" src="../bower_components/ng-file-upload/angular-file-upload.js"></script> -->
+<!--     // <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+ -->    <!-- Angular UI Boostrap  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
     <script type="text/javascript" src="../bower_components/angular-socket-io/socket.min.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
     <script type="text/javascript" src="../bower_components/ace-builds/src-min-noconflict/ace.js"></script>
      <script type="text/javascript" src="../bower_components/angular-ui-ace/ui-ace.js"></script>
@@ -89,11 +94,15 @@
     <script src="services/accountservice.js"></script> 
      <script src="services/chatservice.js"></script> 
     <script src="chat/chatcontroller.js"></script>
+    <script src="chat/chatroomcontroller.js"></script>
+    <script src="chat/contactcontroller.js"></script>
+
     <script src="userprofile/userprofilecontroller.js"></script>
     <script src="auth/logoutcontroller.js"></script>
     <script src="auth/navbarcontroller.js"></script>
      <script src="userprofile/currentskillscontroller.js"></script>
-     <!-- // <script src="userprofile/summaryskillscontroller.js"></script> -->
+     <script src="userprofile/futureskillscontroller.js"></script>
+     <script src="userprofile/summaryskillscontroller.js"></script>
     <script src="codeshare/codeshare.controller.js"></script>
     <script src="./codeshare/roomcontroller.js"></script>
     <script src="./codeshare/roomfactory.js"></script>

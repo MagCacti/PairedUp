@@ -10,32 +10,59 @@ function initiation(server) {
   //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
   io.on('connection', function(socket) {
     //this corresponds to the socket.emit('new message') on the client
-    socket.on('new message', /*socketUtils.newMessage*/ function(message) {
-      //message - data from the cliet side 
+    var roomname;
+  socket.on('writeToUser', function(data){
+    console.log('this the write to user data', data)
+    roomname = data.fromUser.displayName+data.toUser.displayName
+    console.log('initial roomname', roomname)
+    Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
+      if(err){return err}
+      if(msg[0] === undefined){
+        roomname = data.fromUser.displayName+data.toUser.displayName
+      console.log('roomname',roomname)
+      console.log('mesgroom', msg)
+      } else if(msg[0].room){
+        roomname = data.toUser.displayName+data.fromUser.displayName
+        console.log('room on the if', roomname)
+      }
+    socket.join(roomname)
+    console.log('roomname after check', roomname)
+    socket.broadcast.to(roomname).emit('joincomplete', console.log('hey your in this chat with ' +data.toUser.displayName))
+      socket.emit('composeToUser', {roomname: roomname, fromUser: data.fromUser, toUser:data.toUser})
+    })
+  })
+  
+  socket.on('userjoin', function(data){
+    socket.join(data.joinedroom)
+    socket.broadcast.to(data.joinedroom).emit('joincomplete', console.log('hey your in this chat with ' +data.chatwith))
+    socket.emit('replychat', data) 
+  })
+
+  socket.on('new message', function(message) {
       console.log('this is the incoming message', message);
-      var messages = new Messages(message);
-      //messages.create etc were all defined in the messages model
-      messages.created = message.date ;
-      messages.text = message.text;
-      messages.displayName = message.username;
-      messages.save(function(err, results){
-        if(err){
-          console.log('you have an error', err);
-        }
-        console.log('you save the chat. check mongo.', results);
-      });
-        ///Collect all the messages now in database 
-        var foundMessages;
-        Messages.find(function(err, msg){
-          if(err){
-            return console.log('you have an err get chats from the DB', err);
-          }
-          // console.log('MESSAGES from get request', req)
-          foundMessages = msg;
-          //this will post all the messages from the database
-          io.emit('publish message', foundMessages);
-        });
-      });
+    roomname = message.joinedroom
+    otherroom = message.toUser+message.fromUser
+
+    var chatmessage = new Messages()
+    chatmessage.created = message.date
+    chatmessage.text = message.text
+    chatmessage.displayName = message.fromUser
+    chatmessage.otherroom = message.otherroom
+    chatmessage.room = message.joinedroom 
+    chatmessage.save(function(err, results){
+      if (err){return err;}
+      console.log('this is the message you saved', results)
+    })
+
+    Messages.find({room:message.joinedroom}, function(err, msg){
+      console.log('the found messages', msg)
+    socket.emit('updatechat', msg)
+    })
+
+///////end of newmessage socket//////     
+    });
+
+///////end of newmessage socket//////  ß
   //general code
     //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
     socket.on('/create', function(data) {
