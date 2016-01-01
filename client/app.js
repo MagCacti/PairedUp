@@ -4,16 +4,17 @@ angular.module('myApp', [
 	'ui.bootstrap',
   'btford.socket-io',
 
+
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
 
 	$stateProvider
 	
-		.state('login', {
-			url: '/login',
-      template: 'you need to log back in'
-			// controller: 'NavbarController'
-		})
+
+	.state('login', {
+		url: '/login',
+		// controller: 'NavbarController'
+	})
     .state('logout', {
       url: '/logout',
       template: null,
@@ -42,11 +43,11 @@ angular.module('myApp', [
         controller: 'SummaryController'
       })
 
-		.state('codeshare', {
-			url: '/codeshare',
-			templateUrl: 'codeshare/codeshare.html',
-			controller: 'CodeShareController'
-		})
+	.state('codeshare', {
+		url: '/codeshare',
+		templateUrl: 'codeshare/codeshare.html',
+		controller: 'CodeShareController'
+	})
     .state('codeshare.room2', {
       url: '/room/:roomId',
       templateUrl: 'codeshare/room.html',
@@ -76,11 +77,6 @@ angular.module('myApp', [
     })
 
 	$urlRouterProvider.otherwise('/');
-
-})
-
-.controller('LoginController', function($scope,$location, $http) {
-
 
 });
 

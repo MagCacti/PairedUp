@@ -10,6 +10,7 @@ db.once('open', function(){
   console.log('connect');
 });
 
+
 var userSchema = new Schema({
  displayName: String,
  picture: String,
@@ -30,18 +31,17 @@ var userSchema = new Schema({
  },
 });
 
-var messageSchema = new Schema({
-    created: String,
-    text: String,
-    displayName: String,
-    room: String,
-});
-var Message = mongoose.model('Message', messageSchema);
+// var messageSchema = new Schema({
+//     created: String,
+//     text: String,
+//     displayName: String,
+//     room: String,
+// });
+// var Message = mongoose.model('Message', messageSchema);
 var User = mongoose.model("User", userSchema);
 
 module.exports = {
-  user: User,
-  messages: Message,
+  user: User
+  // messages: Message,
+
 };
-
-

@@ -15,8 +15,10 @@ angular.module('myApp')
   };
 }])
 
+
 .controller('CodeShareController', ['$scope','$http', '$state','socket','Account', function($scope, $http, $state, socket, Account){
   //where the documents that are added are being saved. 
+
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
