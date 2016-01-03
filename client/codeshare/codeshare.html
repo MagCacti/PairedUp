@@ -5,7 +5,7 @@
     <button ng-click='add()'>Add</button>
     <div ng-repeat=" file in filesList">
       <button ng-click='delete(file.id)'>Delete</button>
-      <button ng-click='edit(file.id)'>Edit {{file.title}}</button>
+      <button ng-click='edit(file.id)'>{{file.title}}</button>
       <button ng-click='shareWith(file.id)'>ShareWith</button>
       <button ng-click='update(file.id)'>Update</button>
     </div>
