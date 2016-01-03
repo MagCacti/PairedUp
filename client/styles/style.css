@@ -46,9 +46,10 @@ body {
 .ace_editor { height: 200px; } 
 
 .chat-container {
-  width: 400px;
+  width: 980px;
   height: 600px;
   margin: auto;
+  margin-top: 30px;
 }
 .msg-container {
   height: 400px;

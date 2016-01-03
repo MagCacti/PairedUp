@@ -4,79 +4,85 @@ angular.module('myApp', [
 	'ui.bootstrap',
   'btford.socket-io',
   'xeditable'
-  // 'myApp.services',
-  // 'myApp.current'
-])
+  ])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider){
 
 	$stateProvider
 	
-		.state('login', {
-			url: '/login',
-      template: 'Please Log In'
+  .state('login', {
+   url: '/login',
+   template: 'Please Log In'
 			// controller: 'NavbarController'
 		})
-    .state('logout', {
-      url: '/logout',
-      template: null,
-      controller: 'LogoutController'
-    })
-    .state('profile', {
-      url: '/profile',
-      templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController'
-    })
 
-      .state('profile.currentskills', {
-        url: '/currentskills',
-        templateUrl: 'userprofile/currentskills.html',
-        controller: 'CurrentSkillsController'
-      })
-      .state('profile.futureskills', {
-        url: '/futureskills',
-        templateUrl: 'userprofile/futureskills.html',
-        controller: 'FutureSkillsController'
-      })
+  .state('logout', {
+    url: '/logout',
+    template: null,
+    controller: 'LogoutController'
+  })
 
-       .state('profile.summary', {
-        url: '/summary',
-        templateUrl: 'userprofile/summary.html',
-        controller: 'SummaryController'
-      })
+  .state('profile', {
+    url: '/profile',
+    templateUrl: 'userprofile/userprofile.html',
+    controller: 'ProfileController'
+  })
 
-		.state('codeshare', {
-			url: '/codeshare',
-			templateUrl: 'codeshare/codeshare.html',
-			controller: 'CodeShareController'
-		})
-    .state('codeshare.room2', {
-      url: '/room/:roomId',
-      templateUrl: 'codeshare/room.html',
-      controller: 'RoomCtrl'
-    })
-    .state('codeshare.room', {
-      url: '/room',
-      templateUrl: 'codeshare/room.html',
-      controller: 'RoomCtrl'
-    })
-    .state('chat', {
-      url: '/chat',
-      templateUrl: 'chat/chat.html',
-      controller: 'ChatController'
-    })
-    .state('chat.room', {
-      url: '/chatroom',
-      templateUrl: 'chat/chatroom.html',
-      controller: 'ChatRoomController'
-    })
+  .state('profile.currentskills', {
+    url: '/currentskills',
+    templateUrl: 'userprofile/currentskills.html',
+    controller: 'CurrentSkillsController'
+  })
 
-	$urlRouterProvider.otherwise('/');
+  .state('profile.futureskills', {
+    url: '/futureskills',
+    templateUrl: 'userprofile/futureskills.html',
+    controller: 'FutureSkillsController'
+  })
 
-}])
+  .state('profile.summary', {
+    url: '/summary',
+    templateUrl: 'userprofile/summary.html',
+    controller: 'SummaryController'
+  })
 
-.controller('LoginController', ['$scope','$location', '$http', function($scope,$location, $http) {
+  .state('codeshare', {
+    url: '/codeshare',
+    templateUrl: 'codeshare/codeshare.html',
+    controller: 'CodeShareController'
+  })
 
+  .state('codeshare.room2', {
+    url: '/room/:roomId',
+    templateUrl: 'codeshare/room.html',
+    controller: 'RoomCtrl'
+  })
+
+  .state('codeshare.room', {
+    url: '/room',
+    templateUrl: 'codeshare/room.html',
+    controller: 'RoomCtrl'
+  })
+
+  .state('chat', {
+    url: '/chat',
+    templateUrl: 'chat/chat.html',
+    controller: 'ChatController'
+  })
+
+  .state('chat.rooms', {
+    url: '/chatrooms',
+    templateUrl: 'chat/chatrooms.html',
+    controller: 'ChatRoomController'
+  })
+
+  .state('chat.contacts', {
+    url: '/contacts',
+    templateUrl: 'chat/contacts.html',
+    controller: 'ContactController'
+  })
+
+  $urlRouterProvider.otherwise('/');
 
 }])
 

@@ -1,44 +1,39 @@
 angular.module('myApp')
 	.factory('profileData', ['$http', function($http){
-	  	var obj = {
-	    	skills: ['hello'],
-	    	allUsers: []
-	  	}
+		var obj = {
+			skills: ['hello'],
+			allUsers: []
+		}
 
-	  	obj.getAllUsers = function () {
-	  		return $http.get('/oneuserskill').success(function(data){
-	  			console.log('data from getOneUser', data)
-	  			for (var i=0; i<data.length; i++){
-	  				obj.allUsers.push(data[i])	
-	  			}
-	  		})
-	  	}
+		obj.findUser = function(user){
+			return $http.post('/founduser', user).success(function(data){
+				return data;
+			})
+		}
 
-	  	obj.addSkills = function (skill) {
-	  		return $http.post('/skills', skill);
-	  	}
+		obj.getAll = function() {
+			return $http.get('/profile').success(function(data){
+				angular.copy(data, obj.skills);
+			});
+		};
 
-	  	obj.futureSkills = function (skill) {
-	  		return $http.post('/futureskills', skill)
-	  	}
-	  	// obj.create = function(skills) {
-	  	//     console.log('this these are the skills', skills)
-	  	//   return $http.post('/skills', skills).success(function(data){
-	  	//   	console.log('this is create data', data)
-	  	//   	obj.skills.push(data)
-	  	//   });
-	  	// };
-	  	return obj;
-}])
+		obj.getAllUsers = function (){
+			return $http.get('/oneuserskill').success(function(data){
+				console.log('data from getOneUser', data)
+				for (var i=0; i<data.length; i++){
+					obj.allUsers.push(data[i])	
+				}
+			})
+		}
 
+		obj.addSkills = function (skill) {
+			return $http.post('/skills', skill);
+		}
 
-// Note: This results in an exportable factory object that looks like this:
+		obj.futureSkills = function (skill) {
+			return $http.post('/futureskills', skill)
+		}
 
-// var obj = {
-// 	skills : ['hello'], 
-// 	allUsers : [ ],
-// 	getAll : function, NOT USED
-// 	getAllUsers : function, USED BUT NOT CLEAR HOW
-// 	addSkills : function,
-// 	futureSkills : function,
-// }
+		return obj;
+
+	}]);

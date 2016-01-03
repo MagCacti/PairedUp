@@ -22,22 +22,21 @@ angular.module('myApp')
 		 	for (var i=0; i<data.length; i++){
 		  	$scope.allUsers.push(data[i]);
 		  	}
-		})
-		
-		console.log("this is all users", $scope.allUsers);
+		  })
 
-	//track docuents section
+		  $scope.initChat = function (user){
+		  	console.log('this is from initchat', user)
+		  }
 
-		console.log('ready to do the documentTracker works');
+		console.log("this is all users", $scope.allUsers)
+
+		//track docs section
+
+		console.log('ready to do the documentTracker work');
 	  
 	  $scope.allDocs= []; 
 	  
 	  documentData.getAllDocs()
-	  // .success(function(data){
-	  //       for (var i = 0; i < data.length; i++){
-	  //         $scope.allDocs.push(data[i])
-	  //     }
-	  //   })
 
 	  console.log("this is all docs", $scope.allDocs);
 
