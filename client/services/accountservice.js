@@ -44,6 +44,12 @@ angular.module('myApp')
           getChekIfActivelyLoggedIn: function() {
             return $window.localStorage && $window.localStorage.getItem('notLoggedIn');
           },
+          setTitle: function(val) {
+            return $window.localStorage && $window.localStorage.setItem('liveCodeShare', val);
+          },
+          getTitle: function() {
+            return $window.localStorage && $window.localStorage.getItem('liveCodeShare');
+          },
       updateProfile: function(profileData) {
         return $http.put('/api/me', profileData);
       }

@@ -42,7 +42,7 @@ angular.module('myApp')
 
 	    })
 
-	    socket.on('joincomplete', console.log('thiis is from joincomplete'))
+	    
 
 	    	console.log('Joined rooms', $scope.joinedRoom)
 	    // socket.emit

@@ -17,6 +17,28 @@ body {
 .starter-template {
   padding: 40px 15px;
   text-align: center;
+  height: 900px;
+  background-image: url(night-lights.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 200px 0px 300px 0px;
+  color: #FFF;
+}
+
+.card li {
+  display: inline;
+}
+.card img{
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+
+}
+
+.card{
+  height: 300px;
+  width: 300px;
+  border-style: solid;
 }
 
 /* Styles for codeshare.html */

@@ -8,7 +8,6 @@ angular.module('myApp')
 		    $scope.profile = data.profile.github
 			$scope.userSkills.push(data.profile.skills)
 			for(var keys in data.profile.futureskills){
-				console.log
 				$scope.futureSkills.push(keys)
 			}
 			// $scope.futureSkills = data.profile.futureskills

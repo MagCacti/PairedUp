@@ -193,5 +193,26 @@ angular.module('myApp')
     }
   };
 
+  console.log(Account.getTitle());
+  if (Account.getTitle()) {
+    console.log("true");
+    $scope.title = Account.getTitle();
+    $scope.add();
+    var idOfTitle;
+    for (var i = 0; i < $scope.filesList.length; i++) {
+      var title = $scope.filesList[i].title.split('.')[0];
+      console.log("$scope.filesList", $scope.filesList)
+      console.log("$scope.filesList[i].title[0]", title, 'Account.getTitle()',Account.getTitle());
+      if (title === Account.getTitle()) {
+        idOfTitle = $scope.filesList[i].id;
+      }
+    }
+    console.log("id", idOfTitle);
+    $scope.edit(idOfTitle);
+    $scope.shareWith();
+  }
+    //set title to github id of the two people together. 
+    //click add, edit and share with 
+
 
 }]);

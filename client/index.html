@@ -12,11 +12,14 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
     
+    <link href="styles/dashboard.css" rel="stylesheet">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
     <link href="styles/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -27,7 +30,30 @@
 
   <body>
 
-  <nav ng-controller="NavbarController" class="navbar navbar-inverse navbar-fixed-top">
+
+ <nav ng-controller="NavbarController" class="navbar navbar-inverse navbar-fixed-top">
+   <div class="container-fluid">
+     <div class="navbar-header">
+       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+       </button>
+       <a class="navbar-brand" href="#">Paired-Up</a>
+     </div>
+     <div id="navbar" class="navbar-collapse collapse">
+       <ul class="nav navbar-nav navbar-right">
+          <li><a ui-sref="profile" ng-show="!loggedIn">Profile</a></li>
+            <li><a ui-sref="logout" ng-show="!loggedIn" ng-click='goingToLogOut()'>Logout</a></li>
+            <li><a ui-sref="codeshare" ng-show="!loggedIn">Codeshare</a></li>
+            <li><a ui-sref="chat" ng-show="!loggedIn">Chat</a></li>
+       </ul>
+     </div>
+   </div>
+ </nav>   
+
+ <!--  <nav ng-controller="NavbarController" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -41,19 +67,19 @@
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
 
-          <li><a href="/auth/github" ng-click='clickedLogin()' ng-if="!isAuthenicated">Login</a></li>
-          <!-- <div ng-if="isAuthenticated()"> -->
-            <li><a ui-sref="profile" ng-if="!isAuthenicated">Profile</a></li>
-            <li><a ui-sref="logout" ng-if="!isAuthenicated" ng-click= 'goingToLogOut()'>Logout</a></li>
-            <li><a ui-sref="codeshare" ng-if="!isAuthenicated">Codeshare</a></li>
-            <li><a ui-sref="chat" ng-if="!isAuthenicated">Chat</a></li>
-          <!-- </div> -->
+          <li><a href="/auth/github" ng-click='clickedLogin()' ng-hide="loggedIn">Login</a></li>
+          <div>
+            <li><a ui-sref="profile" ng-show="!loggedIn">Profile</a></li>
+            <li><a ui-sref="logout" ng-show="!loggedIn" ng-click= 'goingToLogOut()'>Logout</a></li>
+            <li><a ui-sref="codeshare" ng-show="!loggedIn">Codeshare</a></li>
+            <li><a ui-sref="chat" ng-show="!loggedIn">Chat</a></li>
+           </div>
 
         </ul>
-      </div><!--/.nav-collapse -->
+      </div><!/.nav-collapse
     </div>
   </nav>
-
+  -->
 
 
     <!-- NG-VIEW BEGIN-->
@@ -100,6 +126,7 @@
     <script src="userprofile/userprofilecontroller.js"></script>
     <script src="auth/logoutcontroller.js"></script>
     <script src="auth/navbarcontroller.js"></script>
+    <script src="home/homecontroller.js"></script>
      <script src="userprofile/currentskillscontroller.js"></script>
      <script src="userprofile/futureskillscontroller.js"></script>
      <script src="userprofile/summaryskillscontroller.js"></script>

@@ -13,13 +13,27 @@ angular.module('myApp', [
 
 	.state('login', {
 		url: '/login',
-		// controller: 'NavbarController'
+    templateUrl: 'auth/login/login.html',
+		controller: 'NavbarController'
+
 	})
     .state('logout', {
       url: '/logout',
       template: null,
       controller: 'LogoutController'
     })
+    .state('home', {
+      url:'/home',
+      templateUrl: 'home/home.html',
+      controller: 'HomeController',
+      resolve: {
+        profile: function(Account) {
+          console.log('where is this resolve')
+          return Account.getUserDisplayName()
+        }
+      }
+    })
+
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',

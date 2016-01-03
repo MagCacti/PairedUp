@@ -1,6 +1,26 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $http, $state,  Account) {
+  .controller('ProfileController', ['$scope', '$http', '$state', '$window', 'socket', 'Account', function($scope, $http, $state, $window, socket, Account) {
     var loggedInInformation; 
+    $scope.liveCodeShare = function() {
+      socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
+    };
+    // $window.confirm("hello")
+    
+    //socket listener  for mediumLiveEdit. 
+    socket.on("mediumLiveEdit", function(data) {
+      //if there names match the ones given from the medium live edit
+      if (Account.getUserDisplayName() === data.toName || Account.getUserDisplayName() === data.fromName){
+        //do confirm question
+        var goToCodeShare = $window.confirm("Go to live Code Share?");
+        //if confirm true 
+        if (goToCodeShare) {
+          //set title to a value 
+          Account.setTitle(data.toName + data.fromName);
+          //state.go codeshare
+          $state.go("codeshare");
+        }    
+      } 
+    });
 
     $scope.getProfile = function() {
       Account.setChekIfActivelyLoggedIn(false); 
@@ -47,4 +67,4 @@ angular.module('myApp')
           });
       }
     }
-  });
+  }]);

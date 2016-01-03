@@ -1,0 +1,22 @@
+<div>
+
+	<div class="card" ng-repeat="info in allUsers">
+		<img ng-src="{{info.picture || 'https://placehold.it/100x100'}}">
+	{{info.displayName}}, knows
+		
+			angular: {{info.skills.angular}}
+			node: {{info.skills.node}}
+			jquery: {{info.skills.jquery}}
+			html: {{info.skills.html}}
+			css: {{info.skills.css}}
+	and wants to know; 
+		{{info.futureskills}}
+
+	<button ng-click="initChat(info)">Send Message</button>
+
+</div>
+
+</div>
+
+
+

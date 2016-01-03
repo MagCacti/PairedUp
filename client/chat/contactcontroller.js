@@ -17,7 +17,6 @@ angular.module('myApp')
 		  		$scope.allUsers.push(data[i])
 		  	}
 		  })
-
 		  $scope.initChat = function (user){
 		  	socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
 		  }

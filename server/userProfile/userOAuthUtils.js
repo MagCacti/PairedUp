@@ -65,20 +65,22 @@ module.exports = {
       res.redirect('/login');
     },
     setingUserToGlobalProfile:   function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        User.findOne({github: profile.id}, function (err, user) {
-          if (user) {
-          globalProfile = user;
-          }else {
-            var user = new User();
-            user.github = profile.id;
-            user.picture = profile._json.avatar_url;
-            user.displayName = profile.displayName;
-            user.save(function() {});
-            globalProfile = user;
-          }
-        });
-        return done(null, profile);
-      });
-    }
-};
+          process.nextTick(function () {
+            User.findOne({github: profile.id}, function (err, user) {
+              console.log("User", user)
+              if (user) {
+              globalProfile = user;
+              }else {
+                var user = new User();
+                user.github = profile.id;
+                user.picture = profile._json.avatar_url;
+                user.displayName = profile.displayName;
+                user.save(function() {});
+                globalProfile = user;
+              }
+            }).then(function(){
+            return done(null, globalProfile);   
+            })
+          });
+        }
+    };
