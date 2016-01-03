@@ -214,5 +214,4 @@ angular.module('myApp')
     //set title to github id of the two people together. 
     //click add, edit and share with 
 
-
 }]);
