@@ -19,7 +19,7 @@ angular.module('myApp')
 		})
 		$scope.initChat = function (user){
 			socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
-			$state.go('chat')
+			$state.go('chat.contacts')
 		}
 
 	}])
