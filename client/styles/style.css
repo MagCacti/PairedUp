@@ -1,6 +1,5 @@
 body {
   padding-top: 50px;
-
 }
 
 /* Styles for signin.html */
@@ -20,9 +19,7 @@ body {
   text-align: center;
 }
 
-
 /* Styles for profile.html */
-
 #padded {
   padding-top: 30px;
   /*padding: 20px;*/

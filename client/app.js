@@ -13,8 +13,8 @@ angular.module('myApp', [
   .state('login', {
    url: '/login',
    template: 'Please Log In'
-			// controller: 'NavbarController'
-		})
+	 //controller: 'NavbarController'
+  })
 
   .state('logout', {
     url: '/logout',
@@ -89,4 +89,5 @@ angular.module('myApp', [
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;
   return obj;
+
 };
