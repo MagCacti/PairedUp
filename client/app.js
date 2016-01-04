@@ -3,6 +3,7 @@ angular.module('myApp', [
 	'ui.ace',
 	'ui.bootstrap',
   'btford.socket-io',
+  'ngAnimate',
 
 
 ])
@@ -26,12 +27,6 @@ angular.module('myApp', [
       url:'/home',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
-      resolve: {
-        profile: function(Account) {
-          console.log('where is this resolve')
-          return Account.getUserDisplayName()
-        }
-      }
     })
 
     .state('profile', {
@@ -79,8 +74,8 @@ angular.module('myApp', [
 
     })
 
-    .state('chat.rooms', {
-      url: '/chatrooms',
+    .state('chat.room', {
+      url: '/chatroom',
       templateUrl: 'chat/chatrooms.html',
       controller: 'ChatRoomController'
     })

@@ -16,6 +16,45 @@ function initiation(server) {
     //socket listener for starting a live codeshare editor. 
       //emit mediumLiveEdit for everyone. The data will be the displayName from each person. 
     //socket listener for medium LiveEdit. 
+      var roomname;
+      socket.on('writeToUser', function(data){
+        console.log('this the write to user data', data)
+        roomname = data.fromUser.displayName+data.toUser.displayName
+        console.log('initial roomname', roomname)
+        Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
+          if(err){return err}
+          if(msg[0] === undefined){
+            roomname = data.fromUser.displayName+data.toUser.displayName
+          console.log('roomname',roomname)
+          console.log('mesgroom', msg)
+          } else if(msg[0].room){
+            roomname = data.toUser.displayName+data.fromUser.displayName
+            console.log('room on the if', roomname)
+          }
+
+          var foundMessages;
+          Messages.find(function(err, msg){
+            if(err){
+              return console.log('you have an err get chats from the DB', err);
+            }
+            // console.log('MESSAGES from get request', req)
+            foundMessages = msg;
+            //this will post all the messages from the database
+            io.emit('publish message', foundMessages);
+          }).sort('-created');
+
+        socket.join(roomname)
+        console.log('roomname after check', roomname)
+        socket.broadcast.to(roomname).emit('joincomplete', console.log('hey your in this chat with ' +data.toUser.displayName))
+          socket.emit('composeToUser', {roomname: roomname, fromUser: data.fromUser, toUser:data.toUser})
+        })
+      })
+      
+      socket.on('userjoin', function(data){
+        socket.join(data.joinedroom)
+        socket.broadcast.to(data.joinedroom).emit('joincomplete', console.log('hey your in this chat with ' +data.chatwith))
+        socket.emit('replychat', data) 
+      })
 
     //this corresponds to the socket.emit('new message') on the client
     socket.on('new message', /*socketUtils.newMessage*/ function(message) {
@@ -23,9 +62,10 @@ function initiation(server) {
       console.log('this is the incoming message', message);
       var messages = new Messages(message);
       //messages.create etc were all defined in the messages model
-      messages.created = message.date ;
+      messages.created = message.date;
       messages.text = message.text;
-      messages.displayName = message.username;
+      messages.displayName = message.fromUser;
+      messages.room = message.joinedroom
       messages.save(function(err, results){
         if(err){
           console.log('you have an error', err);

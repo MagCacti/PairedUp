@@ -6,8 +6,8 @@ angular.module('myApp')
 
 		  var account = Account.getUserDisplayName()
 		  profiledata.findUser({user:account}).then(function(results){
-		  	$scope.profile = results.data.displayName
-		  	$scope.fromUser = results.data
+		  	$scope.profile = results.displayName
+		  	$scope.fromUser = results
 		  	console.log('these are the results', $scope.profile)
 		  })
 		$scope.allUsers= []; 

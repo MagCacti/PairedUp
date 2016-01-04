@@ -1,14 +1,18 @@
 angular.module('myApp')
-	.factory('profiledata', ['$http', function($http){
+	.factory('profiledata', ['$http', '$q', function($http, $q){
 	  	var obj = {
 	    	skills: ['hello'],
 	    	allUsers: []
 	  	}
 
 	  	obj.findUser = function(user){
-	  		return $http.post('/founduser', user).success(function(data){
-	  			return data;
+	  		var defer = $q.defer()
+	  		 $http.post('/founduser', user).success(function(data){
+	  			defer.resolve(data)
+	  		}).error(function(err, status){
+	  			defer.reject(err)
 	  		})
+	  		return defer.promise;
 	  	}
 
 

@@ -1,5 +1,5 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', '$stateParams', function($scope, $http, socket, $filter, Account, $stateParams){
+	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
 		$scope.toUsername;
 		$scope.joinedRoom;
 		$scope.allChats;
@@ -19,18 +19,18 @@ angular.module('myApp')
  			console.log('this is from the composeToUser', data)
  			$scope.$apply(function(){
  				$scope.toUsername = data.toUser.displayName
- 				$scope.toUser = data.toUser
+ 				$scope.toUser = data.toUser.displayName
  				$scope.fromUser = data.toUser
  				$scope.joinedRoom = data.roomname
  				$scope.otherRoom = data.othername
  			})
  		})
- 		console.log('this the toUsername', $scope.toUsername)
          $scope.username = Account.getUserDisplayName();
+ 		console.log('this the toUsername', $scope.username)
 	    socket.on("publish message", function(data) {
 	    	console.log('this is the published message', data)
 	        $scope.$apply(function(){
-	        	$scope.allChats = data.messages;	        
+	        	$scope.allChats = data;	        
 	        });
 	    });
 

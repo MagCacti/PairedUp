@@ -62,6 +62,25 @@ module.exports = function(app) {
     })
   });
 
+  app.post('/chats', function(req, res){
+    console.log('this is from chats', req.body)
+    roomname = data.fromUser+data.toUser.displayName
+    console.log('initial roomname', roomname)
+    Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
+      if(err){return err}
+      if(msg[0] === undefined){
+        roomname = data.fromUser.displayName+data.toUser.displayName
+      console.log('roomname',roomname)
+      console.log('mesgroom', msg)
+      } else if(msg[0].room){
+        roomname = data.toUser.displayName+data.fromUser.displayName
+        console.log('room on the if', roomname)
+      }
+      console.log('these are the messages', msg)
+      res.json(msg)
+    })
+  })
+
   app.post('/skills', function(req, res, next) {
     // console.log('this is from skills', req.body)
     User.findOne({github: req.body.github}, function(err, user) {

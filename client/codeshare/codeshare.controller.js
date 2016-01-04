@@ -16,7 +16,7 @@ angular.module('myApp')
 }])
 
 
-.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', function($scope, $http, $state, socket, Account){
+.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', '$log', function($scope, $http, $state, socket, Account, $log){
   //where the documents that are added are being saved. 
 
   $scope.filesList = [];
@@ -213,5 +213,27 @@ angular.module('myApp')
   }
     //set title to github id of the two people together. 
     //click add, edit and share with 
+
+
+
+    $scope.items = [
+        'The first choice!',
+        'And another choice for you.',
+        'but wait! A third!'
+      ];
+
+      $scope.status = {
+        isopen: false
+      };
+
+      $scope.toggled = function(open) {
+        $log.log('Dropdown is now: ', open);
+      };
+
+      $scope.toggleDropdown = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.status.isopen = !$scope.status.isopen;
+      };
 
 }]);

@@ -6,7 +6,6 @@
       <table class="table">
           <thead>
             <tr>
-              <th><button ui-sref="chat.rooms">Messages</button></th>
              
               <th><button ui-sref="chat.contacts">Compose</button></th>
             </tr>
@@ -28,7 +27,7 @@
           </thead>
         </table>
         <div class="msg-container">
-          <div ng-repeat="key in allMsg">
+          <div ng-repeat="key in allChats">
             <p>{{key.displayName}} : {{key.text}}</p>
             <p>{{key.created}}</p>
           </div>

@@ -4,11 +4,29 @@
   <div class="col-md-2"> 
     <button ng-click='add()'>Add</button>
     <div ng-repeat=" file in filesList">
+      <h5>{{file.title}}</h5>
       <button ng-click='delete(file.id)'>Delete</button>
-      <button ng-click='edit(file.id)'>{{file.title}}</button>
+      <button ng-click='edit(file.id)'>Edit </button>
       <button ng-click='shareWith(file.id)'>ShareWith</button>
       <button ng-click='update(file.id)'>Update</button>
     </div>
+
+    <!-- Single button -->
+    <div ng-repeat="file in filesList">
+    <div class="btn-group" uib-dropdown is-open="status.isopen">
+      <h5>{{file.title}}</h5>
+      <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+        <span class="caret"></span>
+      </button>
+      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+        <li role="menuitem" ng-click='shareWith(file.id)'><a href="#">ShareWith</a></li>
+        <li role="menuitem" ng-click='edit(file.id)'><a href="#">Edit File</a></li>
+        <li role="menuitem" ng-click='delete(file.id)'><a href="#">Delete</a></li>
+      </ul>
+    </div>
+      </div> 
+
+        <hr />
   </div> 
     <div class="col-md-4">
 
