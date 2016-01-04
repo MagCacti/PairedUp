@@ -33,7 +33,7 @@ function initiation(server) {
           }
 
           var foundMessages;
-          Messages.find(function(err, msg){
+          Messages.find({room:roomname}, function(err, msg){
             if(err){
               return console.log('you have an err get chats from the DB', err);
             }
@@ -74,7 +74,7 @@ function initiation(server) {
       });
         ///Collect all the messages now in database 
         var foundMessages;
-        Messages.find(function(err, msg){
+        Messages.find({room:roomname}, function(err, msg){
           if(err){
             return console.log('you have an err get chats from the DB', err);
           }
