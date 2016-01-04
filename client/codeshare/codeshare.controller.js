@@ -16,9 +16,9 @@ angular.module('myApp')
 }])
 
 
-.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', function($scope, $http, $state, socket, Account){
+.controller('CodeShareController', ['$scope','$http', '$state','$log','socket','Account', function($scope, $http, $state, $log, socket, Account){
   //where the documents that are added are being saved. 
-
+  $scope.IdOfCurrentDoc; 
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
@@ -135,12 +135,15 @@ angular.module('myApp')
   };
 //update a document
   $scope.update = function(id){
-    var index = selectId(id);
+    // var index = selectId(id);
+    var index = selectId($scope.IdOfCurrentDoc);  
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
     $scope.filesList[index].mode = $scope.mode;
     $scope.title = '';
     $scope.aceModel = '';
+    $scope.IdOfCurrentDoc = null; 
+
 
   };
 //After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
@@ -155,11 +158,15 @@ angular.module('myApp')
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
+    $scope.IdOfCurrentDoc = id;  
+
   };
 
   $scope.delete = function(id){
-    var index = selectId(id);
+    // var index = selectId(id);
+    var index = selectId($scope.IdOfCurrentDoc);
     var item = $scope.filesList[index];
+    console.log("$scope.filesList", $scope.filesList, 'id', id, 'index', index);
     var store = $scope.filesList[$scope.removeid];
     $http.post('/deleteDocumentsForUser', {displayName: Account.getUserDisplayName(), title: item.title, id:item.id}).then(function(result) {
     }).then(function() {
@@ -213,5 +220,45 @@ if (Account.getTitle()) {
 }
   //set title to github id of the two people together. 
   //click add, edit and share with 
+  $scope.items = [
+    'The first choice!',
+    'And another choice for you.',
+    'but wait! A third!'
+  ];
+
+  $scope.status = {
+    isopen: false
+  };
+
+  $scope.toggled = function(open) {
+    $log.log('Dropdown is now: ', open);
+  };
+
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.status.isopen = !$scope.status.isopen;
+  };
 
 }]);
+// .controller('DropdownCtrl', function ($scope, $log) {
+//   $scope.items = [
+//     'The first choice!',
+//     'And another choice for you.',
+//     'but wait! A third!'
+//   ];
+
+//   $scope.status = {
+//     isopen: false
+//   };
+
+//   $scope.toggled = function(open) {
+//     $log.log('Dropdown is now: ', open);
+//   };
+
+//   $scope.toggleDropdown = function($event) {
+//     $event.preventDefault();
+//     $event.stopPropagation();
+//     $scope.status.isopen = !$scope.status.isopen;
+//   };
+// });
