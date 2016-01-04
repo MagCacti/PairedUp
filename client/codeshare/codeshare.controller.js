@@ -16,7 +16,7 @@ angular.module('myApp')
 }])
 
 
-.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', '$log', function($scope, $http, $state, socket, Account, $log){
+.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', '$log', 'profiledata', function($scope, $http, $state, socket, Account, $log, profiledata){
   //where the documents that are added are being saved. 
 
   $scope.filesList = [];
@@ -28,22 +28,6 @@ angular.module('myApp')
 
   }
 
-  // var comm = new Icecomm('');
-
-  //       comm.connect('test');
-
-  //       comm.on('local', function(peer) {
-  //         localVideo.src = peer.stream;
-  //       });
-
-  //       comm.on('connected', function(peer) {
-  //         document.body.appendChild(peer.getVideo());
-  //       });
-
-  //       comm.on('disconnect', function(peer) {
-  //         document.getElementById(peer.ID).remove();
-  //       });
-  //Will use to hold all the text in editor
   $scope.textInEditor;
   $scope.doc;
   $scope.aceOption = {
@@ -143,6 +127,44 @@ angular.module('myApp')
     $scope.aceModel = '';
 
   };
+
+  //import all users similarly to how users are imported in the home controller
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  ////Imported Contacts list
+  //////////////////////////////////////////////////////////////////////////
+
+
+  $scope.profile;
+  $scope.fromUser
+  $scope.allUsers = []; 
+
+  var account = Account.getUserDisplayName()
+  profiledata.findUser({user:account}).then(function(results){
+      $scope.profile = results.displayName
+      $scope.fromUser = results
+      console.log('these are the results', $scope.profile)
+  })
+ 
+  profiledata.getAllUsers().success(function(data){
+    for (var i=0; i<data.length; i++){
+      $scope.allUsers.push(data[i])
+
+    }
+  })
+
+  $scope.initChat = function (user){
+    socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
+    $state.go('chat.contacts')
+  }
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  ////End - Imported Contacts list 
+  //////////////////////////////////////////////////////////////////////////
 //After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
    //emiting a message to server called /create which will have the users join a room

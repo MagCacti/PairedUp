@@ -6,7 +6,8 @@ var documentSchema = new Schema ({
     title: String, 
     mode: String,
     displayName: String, 
-    code: String
+    code: String,
+    room: String,
 });
 
 var Document = mongoose.model('Document', documentSchema);
