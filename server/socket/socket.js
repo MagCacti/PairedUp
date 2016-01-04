@@ -1,4 +1,5 @@
 var Messages = require('../database/MessageModel').messages;
+var userDocument = require('../documents/DocumentModel').userDocument;
 var rooms = {};
 var userIds = {};
 var uuid = require('node-uuid');
@@ -9,9 +10,9 @@ function initiation(server) {
   var io = socketio(server);
   //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
   io.on('connection', function(socket) {
-    socket.on("startLiveEditing", function(data) {
-      io.emit("mediumLiveEdit", {toName: data.toName, fromName: data.fromName});
-    });
+    // socket.on("startLiveEditing", function(data) {
+    //   io.emit("mediumLiveEdit", {toName: data.toName, fromName: data.fromName});
+    // });
 
     //socket listener for starting a live codeshare editor. 
       //emit mediumLiveEdit for everyone. The data will be the displayName from each person. 
@@ -85,6 +86,86 @@ function initiation(server) {
         });
       });
   //general code
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////CodeSharing Sockets///////////////////////////////////////  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  var coderoom;
+  socket.on('startsharing', function(data){
+    console.log('data from from initated codesharing', data)
+      coderoom = data.fromUser.displayName+data.toUser.displayName
+      console.log('initial roomname', coderoom)
+      userDocument.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, doc){
+        if(err){return err}
+        if(doc[0] === undefined){
+          coderoom = data.fromUser.displayName+data.toUser.displayName
+        console.log('roomname',coderoom)
+
+        var document = new userDocument()
+        document.title = data.title
+        document.code = data.code
+        document.displayName = data.fromUser.displayName
+        document.mode = data.mode
+        document.room = coderoom
+        document.id = data.id
+        document.sharedWith = data.toUser.displayName
+        document.save(function(err, doc){
+          if(err){
+            return err
+          }
+          console.log('hey your saving this document', doc)
+          var foundDocs;
+          userDocument.find({room:coderoom}, function(err, doc){
+                if(err){
+                  return console.log('you have an err get chats from the DB', err);
+                }
+                // console.log('MESSAGES from get request', req)
+                foundDocs = doc[0];
+                console.log('this is what doc is ', foundDocs)
+                //this will post all the messages from the database
+                socket.join(coderoom)
+                io.emit('publishdocuments', {roomname: foundDocs.room, fromUser: doc.displayName, toUser:data.toUser.displayName, code: foundDocs.code, title:foundDocs.title, mode:foundDocs.mode});
+                console.log('roomname after check', coderoom)
+                socket.broadcast.to(coderoom).emit('joincomplete', console.log('hey your in this codeshare with ' +data.toUser.displayName))
+                socket.emit('notification', {roomname: coderoom, fromUser: doc.displayName, toUser:data.toUser, code:doc.code, title: doc.title, mode:doc.mode })
+          }).sort('-created');
+        })
+
+        } else if(doc[0].room){
+          coderoom = data.toUser.displayName+data.fromUser.displayName
+          console.log('room on the if', coderoom)
+
+          socket.on('userjoin', function(data){
+            socket.join(data.joinedroom)
+            socket.broadcast.to(data.joinedroom).emit('joincomplete', console.log('hey your in this chat with ' +data.chatwith))
+            socket.emit('replychat', data) 
+          })
+        }
+
+        userDocument.find({room:coderoom}, function(err, docs){
+
+          if (err){
+            return err
+          }
+
+          socket.emit('allDocs', docs)
+        })
+
+
+    })
+    // socket.on('writeToShare', function(data){
+    //   console.log('this is the code room data', data)
+    //   socket.on(data.coderoom, function(data){
+    //     socket.emit('wordsconnect', data)
+    //   });
+    // })
+
+  })
+  
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////CodeSharing Sockets///////////////////////////////////////  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
     socket.on('/create', function(data) {
       // usersRoom = data.title; Unnecessary piece of code. 
@@ -94,8 +175,8 @@ function initiation(server) {
       socket.on(data.title, function(data) {
         //send a signal to frontEnd called notification
         socket.broadcast.emit('notification', data);
-        });
       });
+    });
     
         //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
 

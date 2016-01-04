@@ -2,12 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var documentSchema = new Schema ({
-    id: Number, 
     title: String, 
-    mode: String,
-    displayName: String, 
     code: String,
+    mode: String,
+    displayName: String,
+    sharedWith: String, 
     room: String,
+    id: Number, 
 });
 
 var Document = mongoose.model('Document', documentSchema);

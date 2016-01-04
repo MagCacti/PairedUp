@@ -9,6 +9,8 @@ angular.module('myApp')
 		$scope.otherRoom
 
 
+         
+        $scope.username = Account.getUserDisplayName();
 
 		socket.on('savedroom', function(data){
 			console.log('from saved room',data)
@@ -25,7 +27,6 @@ angular.module('myApp')
  				$scope.otherRoom = data.othername
  			})
  		})
-         $scope.username = Account.getUserDisplayName();
  		console.log('this the toUsername', $scope.username)
 	    socket.on("publish message", function(data) {
 	    	console.log('this is the published message', data)
