@@ -16,11 +16,7 @@ angular.module('myApp')
 }])
 
 
-// <<<<<<< HEAD
-// .controller('CodeShareController', ['$scope','$http', '$state','$log','socket','Account', function($scope, $http, $state, $log, socket, Account){
-//   //where the documents that are added are being saved. 
-//   $scope.IdOfCurrentDoc; 
-// =======
+
 .controller('CodeShareController', ['$scope','$http', '$state','$window','socket','Account', '$log', 'profiledata', function($scope, $http, $state, $window,  socket, Account, $log, profiledata){
   //where the documents that are added are being saved. 
   $scope.toUsername;
@@ -71,6 +67,7 @@ angular.module('myApp')
   $scope.initSharing = function(user) {
     console.log("Name", user);
     $scope.id++;
+    socket.emit("startLiveEditing", {toName: user, fromName: Account.getUserDisplayName()});
     var total = $scope.id + $scope.removeid;
     socket.emit('startsharing', {toUser: user, fromUser:$scope.fromUser, id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode })
   };
@@ -218,12 +215,12 @@ angular.module('myApp')
       ////End - Codesharing Functions
       //////////////////////////////////////////////////////////////////////////
   //listening to when the server emits the file's data.
-  socket.on("fileData", function( data) {
-    //$scope.textInEditor will be set to the text (called data) from the file
-   $scope.textInEditor = data;
-   //set the documents value to the text from the server.
-   $scope.doc.setValue($scope.textInEditor);
-  });
+  // socket.on("fileData", function( data) {
+  //   //$scope.textInEditor will be set to the text (called data) from the file
+  //  $scope.textInEditor = data;
+  //  //set the documents value to the text from the server.
+  //  $scope.doc.setValue($scope.textInEditor);
+  // });
 
   $scope.aceModel = ';; Scheme code in here.\n' +
     '(define (double x)\n\t(* x x))\n\n\n' +
@@ -347,54 +344,42 @@ angular.module('myApp')
     }
   };
 
+  $scope.endLiveCodeShare = function() {
+    Account.setTitle(null);
+    $window.location.reload();
+  };
   $scope.liveCodeShare = function() {
-    console.log("livecodeshare is called");
     socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
   };
-  // $window.confirm("hello")
   
-  //socket listener  for mediumLiveEdit. 
   socket.on("mediumLiveEdit", function(data) {
-    console.log("mediumLiveEdit")
     //if there names match the ones given from the medium live edit
     if (Account.getUserDisplayName() === data.toName || Account.getUserDisplayName() === data.fromName){
-      //do confirm question
+      // confirm whether both want to go to the codeshare
       var goToCodeShare = $window.confirm("Go to live Code Share?");
-      //if confirm true 
+      //if they both say yes. 
       if (goToCodeShare) {
         //set title to a value 
         Account.setTitle(data.toName + data.fromName);
         //state.go codeshare
-        $state.go("codeshare");
+        $window.location.reload();
       }    
     } 
   });
 
-  console.log(Account.getTitle());
-  if (Account.getTitle()) {
-    console.log("true");
+  if (Account.getTitle() && Account.getTitle() !== 'null') {
     $scope.title = Account.getTitle();
     $scope.add();
     var idOfTitle;
     for (var i = 0; i < $scope.filesList.length; i++) {
       var title = $scope.filesList[i].title.split('.')[0];
-      console.log("$scope.filesList", $scope.filesList)
-      console.log("$scope.filesList[i].title[0]", title, 'Account.getTitle()',Account.getTitle());
       if (title === Account.getTitle()) {
         idOfTitle = $scope.filesList[i].id;
       }
     }
-    console.log("id", idOfTitle);
     $scope.edit(idOfTitle);
     $scope.shareWith();
   }
-// <<<<<<< HEAD
-//   console.log("id", idOfTitle);
-//   $scope.edit(idOfTitle);
-//   $scope.shareWith();
-// }
-  //set title to github id of the two people together. 
-  //click add, edit and share with 
   $scope.items = [
     'The first choice!',
     'And another choice for you.',
@@ -416,50 +401,3 @@ angular.module('myApp')
   };
 
 }]);
-// .controller('DropdownCtrl', function ($scope, $log) {
-//   $scope.items = [
-//     'The first choice!',
-//     'And another choice for you.',
-//     'but wait! A third!'
-//   ];
-
-//   $scope.status = {
-//     isopen: false
-//   };
-
-//   $scope.toggled = function(open) {
-//     $log.log('Dropdown is now: ', open);
-//   };
-// =======
-//     //set title to github id of the two people together. 
-//     //click add, edit and share with 
-
-
-
-//     $scope.items = [
-//         'The first choice!',
-//         'And another choice for you.',
-//         'but wait! A third!'
-//       ];
-
-//       $scope.status = {
-//         isopen: false
-//       };
-
-//       $scope.toggled = function(open) {
-//         $log.log('Dropdown is now: ', open);
-//       };
-
-//       $scope.toggleDropdown = function($event) {
-//         $event.preventDefault();
-//         $event.stopPropagation();
-//         $scope.status.isopen = !$scope.status.isopen;
-//       };
-// >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
-
-//   $scope.toggleDropdown = function($event) {
-//     $event.preventDefault();
-//     $event.stopPropagation();
-//     $scope.status.isopen = !$scope.status.isopen;
-//   };
-// });

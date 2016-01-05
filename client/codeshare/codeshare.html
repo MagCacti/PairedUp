@@ -33,25 +33,19 @@
   </div>
 
 
-<!-- <<<<<<< HEAD -->
 <h1>The Codesharing experience will live here </h1>
-<!-- <div class="row"> -->
   <div class="col-md-4"> 
   <div>
     <button ng-click='add()'>Add</button>
     <button ng-click='delete()'>Delete</button>
     <button ng-click='update()'>Update</button>
-    <button ng-click='shareWith()'>ShareWith</button>
+    <button ng-click='endLiveCodeShare()'>Stop CodeSharing</button>
   </div> 
 
-<!--     <div class="col-md-4">
- -->      <input ng-model="title">
+      <input ng-model="title">
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-<!-- ======= -->
-<!-- >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
- -->   
-  <!-- </div> -->
+
 
 
 
@@ -59,13 +53,9 @@
     ///Imported Contacts list 
     //////////////////////////////////////////////////////////////////////////-->
 
-<!-- end of codeshare view -->
-
-<!-- view -->
 
 
 
-<!--  ng-controller="DropdownCtrl" -->
 <div>
     <!-- Simple dropdown -->
     <span uib-dropdown on-toggle="toggled(open)">
