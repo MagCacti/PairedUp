@@ -1,30 +1,10 @@
 angular.module('myApp')
   .controller('ProfileController', ['$scope', '$http', '$state', '$window', 'socket', 'Account', function($scope, $http, $state, $window, socket, Account) {
     var loggedInInformation; 
-    // $scope.liveCodeShare = function() {
-    //   socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
-    // };
-    // // $window.confirm("hello")
-    
-    // //socket listener  for mediumLiveEdit. 
-    // socket.on("mediumLiveEdit", function(data) {
-    //   //if there names match the ones given from the medium live edit
-    //   if (Account.getUserDisplayName() === data.toName || Account.getUserDisplayName() === data.fromName){
-    //     //do confirm question
-    //     var goToCodeShare = $window.confirm("Go to live Code Share?");
-    //     //if confirm true 
-    //     if (goToCodeShare) {
-    //       //set title to a value 
-    //       Account.setTitle(data.toName + data.fromName);
-    //       //state.go codeshare
-    //       $state.go("codeshare");
-    //     }    
-    //   } 
-    // });
+
 
     $scope.getProfile = function() {
       Account.setChekIfActivelyLoggedIn(false); 
-      //set promise variable to equal return of Account.getProfile so we can chain promise and fix the check for the req.sessions once someone immediately logs in. 
       var promise = Account.getProfile()
         .then(function(response) {
           $scope.user = response.data.profile;

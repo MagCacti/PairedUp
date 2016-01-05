@@ -215,12 +215,6 @@ angular.module('myApp')
       ////End - Codesharing Functions
       //////////////////////////////////////////////////////////////////////////
   //listening to when the server emits the file's data.
-  // socket.on("fileData", function( data) {
-  //   //$scope.textInEditor will be set to the text (called data) from the file
-  //  $scope.textInEditor = data;
-  //  //set the documents value to the text from the server.
-  //  $scope.doc.setValue($scope.textInEditor);
-  // });
 
   $scope.aceModel = ';; Scheme code in here.\n' +
     '(define (double x)\n\t(* x x))\n\n\n' +
@@ -260,28 +254,17 @@ angular.module('myApp')
   };
 //update a document
   $scope.update = function(id){
-    // var index = selectId(id);
-// <<<<<<< HEAD
-//     var index = selectId($scope.IdOfCurrentDoc);  
-//     console.log("Update going through");
-// =======
     var index = selectId($scope.idOfCurrentDoc);
-// >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
     $scope.filesList[index].mode = $scope.mode;
     $scope.title = '';
     $scope.aceModel = '';
-// <<<<<<< HEAD
-//     $scope.IdOfCurrentDoc = null; 
 
-// =======
     $scope.idOfCurrentDoc = null;
-// >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
 
   };
 
-//After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
    //emiting a message to server called /create which will have the users join a room
     socket.emit('/create', {title:$scope.title});
@@ -293,22 +276,13 @@ angular.module('myApp')
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
-// <<<<<<< HEAD
-//     $scope.IdOfCurrentDoc = id;  
 
-//   };
-
-//   $scope.delete = function(id){
-//     // var index = selectId(id);
-//     var index = selectId($scope.IdOfCurrentDoc);
-// =======
     $scope.idOfCurrentDoc = id;
   };
 
   $scope.delete = function(id){
     var index = selectId(id);
     var index = selectId($scope.idOfCurrentDoc);
-// >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
     var item = $scope.filesList[index];
     console.log("$scope.filesList", $scope.filesList, 'id', id, 'index', index);
     var store = $scope.filesList[$scope.removeid];
