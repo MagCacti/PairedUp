@@ -6,7 +6,7 @@ var documentSchema = new Schema ({
     code: String,
     mode: String,
     displayName: String,
-    sharedWith: String, 
+    sharedUser: String, 
     room: String,
     id: Number, 
 });

@@ -34,6 +34,45 @@ angular.module('myApp')
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
   $scope.mode = $scope.modes[1];
+  var coderoom = $scope.joinedRoom
+  
+  //import all users similarly to how users are imported in the home controller
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  ////Imported Contacts list
+  //////////////////////////////////////////////////////////////////////////
+
+  var account = Account.getUserDisplayName()
+  profiledata.findUser({user:account}).then(function(results){
+      $scope.profile = results.displayName
+      $scope.fromUser = results
+      console.log('these are the results', $scope.profile)
+  });
+  
+  profiledata.getAllUsers().success(function(data){
+    for (var i=0; i<data.length; i++){
+      $scope.allUsers.push(data[i])
+
+    }
+  });
+
+  $scope.initChat = function (user){
+    socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
+    $state.go('chat.contacts')
+  };
+
+  $scope.initSharing = function(user) {
+    $scope.id++;
+    var total = $scope.id + $scope.removeid;
+    socket.emit('startsharing', {toUser: user, fromUser:$scope.fromUser, id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode })
+  };
+
+  ///////////////////////////////////////////////////////////////////////////
+  ////End - Imported Contacts list 
+  //////////////////////////////////////////////////////////////////////////
+
+
   if (Account.getCheckIfLoggedOut()){
 
   }
@@ -58,74 +97,85 @@ angular.module('myApp')
       ///////////////////////////////////////////////////////////////////////////
       ////Codesharing Functions
       //////////////////////////////////////////////////////////////////////////
-      socket.on('publishdocuments', function(data){
-        console.log('this is the published document data', data)
-        $scope.$apply(function(){
-          $scope.toUsername = data.toUser.displayName
-          $scope.toUser = data.toUser.displayName
-          $scope.fromUser = data.toUser
-          $scope.joinedRoom = data.roomname
-          $scope.textInEditor = data.code
-          $scope.title = data.title
-          $scope.mode = data.mode
-          $scope.doc = data
-        })
+  //     socket.on('startdoc', function(data){
+  //       console.log('these are the new docs', data)
+  //     })
 
-        var coderoom = $scope.joinedRoom
-        var sessionDoc = _ace[1].getSession().getDocument();
-        if ($scope.textInEditor !== sessionDoc.getValue() ) {
-          //setting $scope.textInEditor equal to the text in the document
-          $scope.textInEditor = sessionDoc.getValue();
-           //send a signal with the title from the document and the text from the document. 
-        }
+  //     socket.on('allDocs', function(data){
+  //       console.log('these are all the documents', data)
+  //       $scope.$apply(function(){
+  //         $scope.allDocs = data  
+  //       })
 
-        socket.emit(coderoom, {code: $scope.textInEditor, title:$scope.title, mode: $scope.mode})
+  //     })
 
-      })
-      socket.on('notification', function(data){
-        console.log('this is returned once you start a codeshare', data)
+  //     socket.on('publishdocuments', function(data){
+  //       console.log('this is the published document data', data)
+  //       $scope.$apply(function(){
+  //         $scope.toUsername = data.toUser.displayName
+  //         $scope.toUser = data.toUser.displayName
+  //         $scope.fromUser = data.toUser
+  //         $scope.joinedRoom = data.roomname
+  //         $scope.textInEditor = data.code
+  //         $scope.title = data.title
+  //         $scope.mode = data.mode
+  //         $scope.doc = data
+  //       })
 
-        $scope.$apply(function(){
-          $scope.toUsername = data.toUser.displayName
-          $scope.toUser = data.toUser.displayName
-          $scope.fromUser = data.toUser
-          $scope.joinedRoom = data.roomname
-          $scope.textInEditor = data.code
-          $scope.title = data.title
-          $scope.mode = data.mode
-        })
+  //       var sessionDoc = _ace[1].getSession().getDocument();
+  //       if ($scope.textInEditor !== sessionDoc.getValue() ) {
+  //         //setting $scope.textInEditor equal to the text in the document
+  //         $scope.textInEditor = sessionDoc.getValue();
+  //          //send a signal with the title from the document and the text from the document. 
+  //       }
 
-      })
+  //       socket.emit(coderoom, {code: $scope.textInEditor, title:$scope.title, mode: $scope.mode})
 
-      socket.on('allDocs', function(data){
-        console.log('the data from all docs', data)
-        $scope.$apply(function(){
-        $scope.doc = data
-        var allUsers = $scope.allUsers
-        for(var i = 0; i < allUsers.length; i++){
-          console.log('this is the current user', $scope.profile)
-          if((allUsers[i].displayName === data[0].sharedWith) && ($scope.profile === data[0].displayName))
-            allUsers[i].docs = data
-        }
-         })
-        console.log('this is what happends to allUsers', $scope.allUsers)
-      })
+  //     })
+  //     socket.on('notification', function(data){
+  //       console.log('this is returned once you start a codeshare', data)
+
+  //       $scope.$apply(function(){
+  //         $scope.toUsername = data.toUser.displayName
+  //         $scope.toUser = data.toUser.displayName
+  //         $scope.fromUser = data.toUser
+  //         $scope.joinedRoom = data.roomname
+  //         $scope.textInEditor = data.code
+  //         $scope.title = data.title
+  //         $scope.mode = data.mode
+  //       })
+
+  //     })
+
+  //     // socket.on('allDocs', function(data){
+  //     //   console.log('the data from all docs', data)
+  //     //   $scope.$apply(function(){
+  //     //   $scope.doc = data
+  //     //   var allUsers = $scope.allUsers
+  //     //   for(var i = 0; i < allUsers.length; i++){
+  //     //     console.log('this is the current user', $scope.profile)
+  //     //     if((allUsers[i].displayName === data[0].sharedWith) && ($scope.profile === data[0].displayName))
+  //     //       allUsers[i].docs = data
+  //     //   }
+  //     //    })
+  //     //   console.log('this is what happends to allUsers', $scope.allUsers)
+  //     // })
 
       
-      socket.emit('writeToShare', {coderoom: $scope.joinedRoom, title: $scope.title, textFromDoc: $scope.textInEditor});
-      socket.on('wordsconnect', function(data){
-        $scope.textInEditor = data.textFromDoc
-        console.log('this is from words connect', data)
-        if ($scope.textInEditor !== sessionDoc.getValue() ) {
-          //setting $scope.textInEditor equal to the text in the document
-          $scope.textInEditor = sessionDoc.getValue();
+  //     socket.emit('writeToShare', {coderoom: $scope.joinedRoom, title: $scope.title, textFromDoc: $scope.textInEditor});
+  //     socket.on('wordsconnect', function(data){
+  //       $scope.textInEditor = data.textFromDoc
+  //       console.log('this is from words connect', data)
+  //       if ($scope.textInEditor !== sessionDoc.getValue() ) {
+  //         //setting $scope.textInEditor equal to the text in the document
+  //         $scope.textInEditor = sessionDoc.getValue();
 
-           //send a signal with the title from the document and the text from the document. 
+  //          //send a signal with the title from the document and the text from the document. 
             
-        }
-      })
-    },
-  };
+  //       }
+  //     })
+  //   },
+  // };
 
       ///////////////////////////////////////////////////////////////////////////
       ////End - Codesharing Functions
@@ -176,60 +226,16 @@ angular.module('myApp')
   };
 //update a document
   $scope.update = function(id){
-    var index = selectId(id);
+    // var index = selectId(id);
+    var index = selectId($scope.idOfCurrentDoc);
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
     $scope.filesList[index].mode = $scope.mode;
     $scope.title = '';
     $scope.aceModel = '';
+    $scope.idOfCurrentDoc = null;
 
   };
-
-  //import all users similarly to how users are imported in the home controller
-
-
-  ///////////////////////////////////////////////////////////////////////////
-  ////Imported Contacts list
-  //////////////////////////////////////////////////////////////////////////
-
-
-
-  var account = Account.getUserDisplayName()
-  profiledata.findUser({user:account}).then(function(results){
-      $scope.profile = results.displayName
-      $scope.fromUser = results
-      console.log('these are the results', $scope.profile)
-  });
- 
-  profiledata.getAllUsers().success(function(data){
-    for (var i=0; i<data.length; i++){
-      $scope.allUsers.push(data[i])
-
-    }
-  });
-
-  $scope.initChat = function (user){
-    socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
-    $state.go('chat.contacts')
-  };
-
-  $scope.initSharing = function(user) {
-    $scope.id++;
-    var total = $scope.id + $scope.removeid;
-    socket.emit('startsharing', {toUser: user, fromUser:$scope.fromUser, id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode })
-  };
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////////
-  ////End - Imported Contacts list 
-  //////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 //After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
   $scope.shareWith = function(username) {
@@ -243,10 +249,12 @@ angular.module('myApp')
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
+    $scope.idOfCurrentDoc = id;
   };
 
   $scope.delete = function(id){
     var index = selectId(id);
+    var index = selectId($scope.idOfCurrentDoc);
     var item = $scope.filesList[index];
     var store = $scope.filesList[$scope.removeid];
     $http.post('/deleteDocumentsForUser', {displayName: Account.getUserDisplayName(), title: item.title, id:item.id}).then(function(result) {

@@ -97,40 +97,39 @@ function initiation(server) {
       console.log('initial roomname', coderoom)
       userDocument.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, doc){
         if(err){return err}
+          console.log('this is the doc', doc)
         if(doc[0] === undefined){
-          coderoom = data.fromUser.displayName+data.toUser.displayName
-        console.log('roomname',coderoom)
+          userDocument.find({room: data.fromUser.displayName+data.toUser.displayName}, function(err, otherdoc){
+            if(otherdoc[0] === undefined){
 
-        var document = new userDocument()
-        document.title = data.title
-        document.code = data.code
-        document.displayName = data.fromUser.displayName
-        document.mode = data.mode
-        document.room = coderoom
-        document.id = data.id
-        document.sharedWith = data.toUser.displayName
-        document.save(function(err, doc){
-          if(err){
-            return err
-          }
-          console.log('hey your saving this document', doc)
-          var foundDocs;
-          userDocument.find({room:coderoom}, function(err, doc){
+                coderoom = data.fromUser.displayName+data.toUser.displayName
+              console.log('roomname',coderoom)
+
+              var document = new userDocument()
+              document.title = data.title
+              document.code = data.code
+              document.displayName = data.fromUser.displayName
+              document.mode = data.mode
+              document.room = coderoom
+              document.id = data.id
+              document.sharedUser = data.toUser.displayName
+              document.save(function(err, doc){
                 if(err){
-                  return console.log('you have an err get chats from the DB', err);
+                  return err
                 }
-                // console.log('MESSAGES from get request', req)
-                foundDocs = doc[0];
-                console.log('this is what doc is ', foundDocs)
-                //this will post all the messages from the database
+                console.log('hey your saving this document', otherdoc)
                 socket.join(coderoom)
-                io.emit('publishdocuments', {roomname: foundDocs.room, fromUser: doc.displayName, toUser:data.toUser.displayName, code: foundDocs.code, title:foundDocs.title, mode:foundDocs.mode});
-                console.log('roomname after check', coderoom)
-                socket.broadcast.to(coderoom).emit('joincomplete', console.log('hey your in this codeshare with ' +data.toUser.displayName))
-                socket.emit('notification', {roomname: coderoom, fromUser: doc.displayName, toUser:data.toUser, code:doc.code, title: doc.title, mode:doc.mode })
-          }).sort('-created');
-        })
+                socket.emit('startdoc', otherdoc)
 
+              })
+
+            } else if(otherdoc[0].room){
+              console.log('hey your saving this document', otherdoc)
+              socket.join(coderoom)
+              socket.emit('startdoc', otherdoc)
+            }
+          })
+   
         } else if(doc[0].room){
           coderoom = data.toUser.displayName+data.fromUser.displayName
           console.log('room on the if', coderoom)
