@@ -25,7 +25,7 @@ module.exports = {
       res.redirect('http://localhost:8080/#/profile');
     },
     sendingUserToClient: function(req, res){
-      console.log("req.session", req.sessionStore);
+
       res.json({profile: globalProfile, sessions: req.session});
     },
     ensureAuthenticated : function(req, res, next) {

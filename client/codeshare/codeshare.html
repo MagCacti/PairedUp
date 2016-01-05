@@ -1,4 +1,36 @@
+<div class="codeshare-wrapper">
+  <h1> Contact List </h1>
+  <div class="row">
+    <div class="col-md-4"> 
 
+
+
+  <!--///////////////////////////////////////////////////////////////////////////
+    ///Imported Contacts list 
+    //////////////////////////////////////////////////////////////////////////-->
+
+    <div>
+
+      <div class="card" ng-repeat="info in allUsers">
+        <img ng-src="{{info.picture || 'https://placehold.it/100x100'}}">
+          {{info.displayName}}, knows
+          angular: {{info.skills.angular}}
+          node: {{info.skills.node}}
+          jquery: {{info.skills.jquery}}
+          html: {{info.skills.html}}
+          css: {{info.skills.css}}
+          and wants to know; 
+          {{info.futureskills}}
+
+        <button ng-click="initChat(info)">Send Message</button>
+        <button ng-click="initSharing(info)">Start Codeshare</button>
+
+      </br>
+        <p>these are your documents with {{toUsername}}</p>
+
+      </div>
+
+<!-- <<<<<<< HEAD -->
 <h1>The Codesharing experience will live here </h1>
 <div class="row">
   <div class="col-md-2"> 
@@ -11,11 +43,135 @@
       <input ng-model="title">
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
       <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-    </div>
-   <div>
-    <div class='col-md-4'>
-      <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button>
-           <div ui-view></div>
+<!-- ======= -->
+<!-- >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
+ -->    </div>
+
+
+
+  <!--///////////////////////////////////////////////////////////////////////////
+    ///Imported Contacts list 
+    //////////////////////////////////////////////////////////////////////////-->
+
+
+
+
+
+ 
+
+      <!-- Single button -->
+<!--       <div ng-repeat="file in filesList">
+      <div class="btn-group" uib-dropdown is-open="status.isopen">
+        <h5>{{file.title}}</h5>
+        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+          <span class="caret"></span>
+        </button>
+        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+          <li role="menuitem" ng-click='shareWith(file.id)'><a href="#">ShareWith</a></li>
+          <li role="menuitem" ng-click='edit(file.id)'><a href="#">Edit File</a></li>
+          <li role="menuitem" ng-click='delete(file.id)'><a href="#">Delete</a></li>
+        </ul>
+      </div>
+      </div>  -->
+
+     
+
+    <!--       <hr />
+    </div>  -->
+
+
+    <!-- Codeshare view  -->
+<!--       <div class="col-md-4">
+        <p>You are now coding with: {{toUsername}}</p>
+          <form ng-submit="getFileInfo()" action="/fileUpload" enctype="multipart/form-data" method="post">
+              <input type="file" name="string">
+              <input type="submit" value="Upload File">
+          </form>
+        <input ng-model="title">      <button ng-click='add()'>Add</button>
+      <div>
+        <button ng-click='delete()'>Delete</button>
+        <button ng-click='edit()'>Edit </button>
+        <button ng-click='shareWith()'>ShareWith</button>
+        <button ng-click='update()'>Update</button>
+      </div>
+        <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
+        <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+      </div>
+     <div>
+
+    <div>
+        Simple dropdown -->
+<!--         <span uib-dropdown on-toggle="toggled(open)">
+          <a href id="simple-dropdown" uib-dropdown-toggle>
+            Click me for a dropdown, yo!
+          </a>
+          <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
+            <li ng-repeat="file in filesList">
+              <a href ng-click='edit(file.id)'>{{file.title}}</a>
+            </li>
+          </ul>
+        </span>
+
+        Single button
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+            <li role="menuitem"><a href="#">Action</a></li>
+            <li role="menuitem"><a href="#">Another action</a></li>
+            <li role="menuitem"><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+          </ul>
+        </div>
+
+        <!Split button
+        <div class="btn-group" uib-dropdown>
+          <button id="split-button" type="button" class="btn btn-danger">Action</button>
+          <button type="button" class="btn btn-danger" uib-dropdown-toggle>
+            <span class="caret"></span>
+            <span class="sr-only">Split button!</span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="split-button">
+
+            <li role="menuitem"><a href="#" ng-click='delete(file.id)'>Delete</a></li>
+            <li role="menuitem"><a href="#" ng-click='shareWith(file.id)'>ShareWith</a></li>
+            <li role="menuitem"><a href="#" ng-click='update(file.id)'>Update</a></li>
+            <li class="divider"></li>
+            <li role="menuitem"><a href="#">Separated link</a></li>
+          </ul>
+        </div> -->
+
+
+    <!-- </div> -->
+ 
+
+
+
+     <!--  <div ng-repeat="docs in allDocs">
+        <a href="#">{{docs.title}}</a>
+      </div> -->
+
+
+<!--       <div ng-repeat="docs in allDocs">
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+          <a href="#" ng-click="edit(docs.id)"><h5>{{docs.title}}</h5></a>
+          <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+            <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+            <li role="menuitem" ng-click='shareWith(docs.id)'><a href="#">ShareWith</a></li>
+            <li role="menuitem" ng-click='edit(docs.id)'><a href="#">Edit File</a></li>
+            <li role="menuitem" ng-click='delete(docs.id)'><a href="#">Delete</a></li>
+          </ul>
+        </div>
+      </div>  -->
+
+<!-- end of codeshare view -->
+
+<!-- view -->
+      <div class='col-md-2'>
+        <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button>
+             <div ui-view></div>
+      </div>
     </div>
   </div>
 </div>
@@ -64,8 +220,6 @@
 
 
 </div>
-
-
 
 
 

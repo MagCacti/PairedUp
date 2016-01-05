@@ -1,5 +1,5 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $http, $state, $window, socket, Account) {
+  .controller('ProfileController', ['$scope', '$http', '$state', '$window', 'socket', 'Account', function($scope, $http, $state, $window, socket, Account) {
     var loggedInInformation; 
     $scope.liveCodeShare = function() {
       socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
@@ -21,6 +21,7 @@ angular.module('myApp')
         }    
       } 
     });
+
     $scope.getProfile = function() {
       Account.setChekIfActivelyLoggedIn(false); 
       //set promise variable to equal return of Account.getProfile so we can chain promise and fix the check for the req.sessions once someone immediately logs in. 
@@ -66,4 +67,4 @@ angular.module('myApp')
           });
       }
     }
-  });
+  }]);

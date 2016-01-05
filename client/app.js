@@ -2,31 +2,36 @@ angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
 	'ui.bootstrap',
-      'btford.socket-io'
+  'btford.socket-io',
+  'ngAnimate',
+
 
 ])
 .config(function($stateProvider, $urlRouterProvider, $locationProvider){
 
 	$stateProvider
 	
+
 	.state('login', {
 		url: '/login',
-		// controller: 'NavbarController'
+    templateUrl: 'auth/login/login.html',
+		controller: 'NavbarController'
+
 	})
     .state('logout', {
       url: '/logout',
       template: null,
       controller: 'LogoutController'
     })
+    .state('home', {
+      url:'/home',
+      templateUrl: 'home/home.html',
+      controller: 'HomeController',
+    })
+
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
-      controller: 'ProfileController'
-    })
-
-    .state('profile.start', {
-      url: '/start',
-      templateUrl: 'userprofile/start.html',
       controller: 'ProfileController'
     })
 
@@ -38,13 +43,13 @@ angular.module('myApp', [
       .state('profile.futureskills', {
         url: '/futureskills',
         templateUrl: 'userprofile/futureskills.html',
-        controller: 'ProfileController'
+        controller: 'FutureSkillsController'
       })
 
        .state('profile.summary', {
         url: '/summary',
         templateUrl: 'userprofile/summary.html',
-        controller: 'ProfileController'
+        controller: 'SummaryController'
       })
 
 	.state('codeshare', {
@@ -66,16 +71,23 @@ angular.module('myApp', [
       url: '/chat',
       templateUrl: 'chat/chat.html',
       controller: 'ChatController'
-    });
+
+    })
+
+    .state('chat.room', {
+      url: '/chatroom',
+      templateUrl: 'chat/chatrooms.html',
+      controller: 'ChatRoomController'
+    })
+    .state('chat.contacts', {
+      url: '/contacts',
+      templateUrl: 'chat/contacts.html',
+      controller: 'ContactController'
+    })
 
 	$urlRouterProvider.otherwise('/');
 
 });
-
-
-
-
-
 
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;

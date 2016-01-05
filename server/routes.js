@@ -52,42 +52,82 @@ module.exports = function(app) {
       callbackURL: "http://127.0.0.1:8080/auth/github/callback"
     }, userAuthUtil.setingUserToGlobalProfile));
 
-  app.get('/skills', function(req, res, next){
+
+  app.post('/founduser', function(req, res){
+    // console.log('this is teh found user', req.body)
+    User.findOne({displayName: req.body.user}, function(err, user){
+      if(err){return console.log('no founduser', err)}
+      // console.log(user)
+      res.json(user)
+    })
+  });
+
+  app.post('/chats', function(req, res){
+    console.log('this is from chats', req.body)
+    roomname = data.fromUser+data.toUser.displayName
+    console.log('initial roomname', roomname)
+    Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
+      if(err){return err}
+      if(msg[0] === undefined){
+        roomname = data.fromUser.displayName+data.toUser.displayName
+      console.log('roomname',roomname)
+      console.log('mesgroom', msg)
+      } else if(msg[0].room){
+        roomname = data.toUser.displayName+data.fromUser.displayName
+        console.log('room on the if', roomname)
+      }
+      console.log('these are the messages', msg)
+      res.json(msg)
+    })
+  })
+
+  app.post('/skills', function(req, res, next) {
+    // console.log('this is from skills', req.body)
+    User.findOne({github: req.body.github}, function(err, user) {
+    // console.log('this is from skills', user)
+      if(err){return next(err)}
+        for(var key in req.body){
+          if (req.body[key] !== req.body.github)
+          user.skills[key] = req.body[key]
+        }
+      user.save(function(err, user){
+        if (err){return next(err)}
+      // console.log('this after saving first skills', user)   
+      });
+    });
+  });
+
+  app.post('/futureskills', function(req, res, next){
+    // console.log('this is from futureskills', req.body)
+    User.findOne({github: req.body.github}, function(err, user) {
+      if(err){
+        return next(err);
+      }
+        for(var key in req.body){
+          if (req.body[key] !== req.body.github) {
+          user.futureskills[key] = req.body[key];
+        }
+      user.save(function(err, user){
+        if (err){
+          return next(err);
+        }
+      // console.log('this after saving skills', user)   
+    
+    });
+  };
+  });
+  });
+
+  app.get('/oneuserskill', function(req, res, next){
+    // console.log('this is the oneuserskill', req.body)
     User.find(function(err, user){
       if(err){next(err);}
+      // console.log('this is the user within', user)
       res.json(user);
     });
   });
 
-  app.param('user', function(req, res, next, id) {
-    var query = User.findById(id);
-    query.exec(function (err, user){
-      if (err) { return next(err); }
-      if (!user) { return next(new Error('can\'t find user')); }
-
-      req.user = user;
-      return next();
-    });
-  });
-
-  app.post('/skills/:user', function(req, res, next) {
-    var skills = new Skills(req.body);
-    skills.user = req.user;
-    // console.log('this is skills/:user post:', req.user)
-    console.log('this is skills/:user req.user:', req.user);
-      // comment.post = req.post;
-
-    skills.save(function(err, skill){
-      if(err){ return next(err); }
-
-      req.user.skills.push(skill);
-      req.user.save(function(err, user) {
-        if(err){ return next(err); }
-
-        res.json(skill);
-      });
-    });
-  });
+  
 
   app.post('/getFromDatabaseBecausePersonSignedIn', userUtils.getFromDatabaseBecausePersonSignedIn);
 

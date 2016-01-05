@@ -1,8 +1,9 @@
 var express = require('express');
 var qs = require('querystring');//ask if I can delete this
 var bodyParser = require('body-parser');
-var favicon = require('express-favicon');
-var favicon = require('serve-favicon');
+var _ = require('underscore');
+// var favicon = require('express-favicon');
+// var favicon = require('serve-favicon');
 var fs = require('fs');
 var multer  = require('multer');
 var cookieParser = require('cookie-parser');
@@ -35,12 +36,16 @@ var io = require('./socket/socket')(server);
 
 server.listen(8080); 
 console.log("App listening on port 8080");
+// var User = require('./userProfile/UserModel').user;
+// var Skills = require('./database/SkillsModel').skills;
+// var Messages = require('./database/MessageModel').messages;
+
 
 var routesActivation = require('./routes');
 
 app.set('port', process.env.PORT || 8080);
 app.use(upload.single('string'));
-app.use(favicon("../favicon.ico"));
+// app.use(favicon("../favicon.ico"));
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -61,6 +66,8 @@ app.use(session({
    }));
 
 
+//content will hold the data from the uploaded file
+
 var content;
 //Need to build this function to get around asynchronous behavior.
 var sendFileDataToClient = function() {
@@ -71,6 +78,7 @@ var sendFileDataToClient = function() {
 //Initiating the file upload. Immediately happens after someone clickes the upload file button. Cannot export this because of sendFileDataToClient. That function has io defined and that would be difficult to replicate for another file.
 app.post('/fileUpload', function(req, res, next) {
     //collect the data from the file in a human readable form. 
+
     fs.readFile(req.file.path, 'ascii', function ( error, data ) {
       if ( error ) {
         console.error( error );
@@ -85,3 +93,4 @@ app.post('/fileUpload', function(req, res, next) {
   });
 
 routesActivation(app);
+

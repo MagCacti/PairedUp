@@ -7,11 +7,11 @@ angular.module('myApp')
         .success(function(req, res){
          
           var username = req.profile.displayName;
+
           return username;
         });
       
       },
-
 
       setChekIfActivelyLoggedIn: function(val) {
             $window.localStorage && $window.localStorage.setItem('notLoggedIn', val);

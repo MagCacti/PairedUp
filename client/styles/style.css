@@ -1,5 +1,5 @@
 body {
-  padding-top: 50px;
+  padding: 50px 0px 30px 30px;
 }
 
 /* Styles for signin.html */
@@ -9,19 +9,51 @@ body {
 	/*font-size: 14px;*/	
 }
 
+.codeshare-wrapper{
+  width:1280px;
+  height: 900px;
+}
+
+#slider1 {
+  width: 200px;
+}
+
 /* Styles for login.html */
 .starter-template {
   padding: 40px 15px;
   text-align: center;
+  height: 900px;
+  background-image: url(night-lights.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 200px 0px 300px 0px;
+  color: #FFF;
+}
+
+.card li {
+  display: inline;
+}
+.card img{
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+
+}
+
+.card{
+  height: 300px;
+  width: 300px;
+  border-style: solid;
 }
 
 /* Styles for codeshare.html */
 .ace_editor { height: 200px; } 
 
 .chat-container {
-  width: 400px;
+  width: 980px;
   height: 600px;
   margin: auto;
+  margin-top: 30px;
 }
 .msg-container {
   height: 400px;
