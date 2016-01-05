@@ -137,6 +137,7 @@ angular.module('myApp')
   $scope.update = function(id){
     // var index = selectId(id);
     var index = selectId($scope.IdOfCurrentDoc);  
+    console.log("Update going through");
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
     $scope.filesList[index].mode = $scope.mode;
