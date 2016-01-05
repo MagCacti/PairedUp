@@ -1,7 +1,7 @@
 var express = require('express');
 var qs = require('querystring');//ask if I can delete this
 var bodyParser = require('body-parser');
-var _ = require('underscore');
+// var _ = require('underscore');
 // var favicon = require('express-favicon');
 // var favicon = require('serve-favicon');
 var fs = require('fs');

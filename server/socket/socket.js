@@ -10,9 +10,9 @@ function initiation(server) {
   var io = socketio(server);
   //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
   io.on('connection', function(socket) {
-    // socket.on("startLiveEditing", function(data) {
-    //   io.emit("mediumLiveEdit", {toName: data.toName, fromName: data.fromName});
-    // });
+    socket.on("startLiveEditing", function(data) {
+      io.emit("mediumLiveEdit", {toName: data.toName, fromName: data.fromName});
+    });
 
     //socket listener for starting a live codeshare editor. 
       //emit mediumLiveEdit for everyone. The data will be the displayName from each person. 

@@ -21,7 +21,7 @@ angular.module('myApp')
 //   //where the documents that are added are being saved. 
 //   $scope.IdOfCurrentDoc; 
 // =======
-.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', '$log', 'profiledata', function($scope, $http, $state, socket, Account, $log, profiledata){
+.controller('CodeShareController', ['$scope','$http', '$state','$window','socket','Account', '$log', 'profiledata', function($scope, $http, $state, $window,  socket, Account, $log, profiledata){
   //where the documents that are added are being saved. 
   $scope.toUsername;
   $scope.joinedRoom;
@@ -33,7 +33,7 @@ angular.module('myApp')
   $scope.profile;
   $scope.fromUser
   $scope.allUsers = []; 
-  $scope.title = 'untitled'
+  // $scope.title = 'untitled'
 // >>>>>>> b8bba24f5011b92a9e6e9ab5c8110a8db93b1a64
   $scope.filesList = [];
   $scope.id = 0;
@@ -69,6 +69,7 @@ angular.module('myApp')
   };
 
   $scope.initSharing = function(user) {
+    console.log("Name", user);
     $scope.id++;
     var total = $scope.id + $scope.removeid;
     socket.emit('startsharing', {toUser: user, fromUser:$scope.fromUser, id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode })
@@ -99,7 +100,37 @@ angular.module('myApp')
     //When someone changes the document (for example, typing in the document.)
     onChange: function(_ace) {
       //store the document of the session to a variable. 
+      //store the document of the session to a variable. 
+            var sessionDoc = _ace[1].getSession().getDocument();
+            //Was erroring without this if statement. Not sure why. 
+            if ($scope.textInEditor !== sessionDoc.getValue() ) {
+              //setting $scope.textInEditor equal to the text in the document
+              $scope.textInEditor = sessionDoc.getValue();
 
+               //send a signal with the title from the document and the text from the document. 
+               socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
+              
+            }
+           
+            //When a signal(called notification) is sent, then run the callback function.
+            //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put notification
+            socket.on('notification', function(data) {
+              //data will be the information the server is sending.
+
+              //if the text in the document is not the same as the user's version of the text in the editor.
+              if ($scope.textInEditor !== data.textFromDoc){
+                //if the title of the user is the same as the title of the other user(s).
+                if ($scope.title === data.title) {
+                //set the variable $scope.textInEditor to the text received from the server.
+                  $scope.textInEditor = data.textFromDoc;
+                  //change the user's document to reflect the other's typing. 
+                  sessionDoc.setValue($scope.textInEditor);
+                  
+                  }
+              }
+            });
+          }
+        };
       ///////////////////////////////////////////////////////////////////////////
       ////Codesharing Functions
       //////////////////////////////////////////////////////////////////////////
@@ -316,6 +347,29 @@ angular.module('myApp')
     }
   };
 
+  $scope.liveCodeShare = function() {
+    console.log("livecodeshare is called");
+    socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
+  };
+  // $window.confirm("hello")
+  
+  //socket listener  for mediumLiveEdit. 
+  socket.on("mediumLiveEdit", function(data) {
+    console.log("mediumLiveEdit")
+    //if there names match the ones given from the medium live edit
+    if (Account.getUserDisplayName() === data.toName || Account.getUserDisplayName() === data.fromName){
+      //do confirm question
+      var goToCodeShare = $window.confirm("Go to live Code Share?");
+      //if confirm true 
+      if (goToCodeShare) {
+        //set title to a value 
+        Account.setTitle(data.toName + data.fromName);
+        //state.go codeshare
+        $state.go("codeshare");
+      }    
+    } 
+  });
+
   console.log(Account.getTitle());
   if (Account.getTitle()) {
     console.log("true");
@@ -335,10 +389,10 @@ angular.module('myApp')
     $scope.shareWith();
   }
 // <<<<<<< HEAD
-  console.log("id", idOfTitle);
-  $scope.edit(idOfTitle);
-  $scope.shareWith();
-}
+//   console.log("id", idOfTitle);
+//   $scope.edit(idOfTitle);
+//   $scope.shareWith();
+// }
   //set title to github id of the two people together. 
   //click add, edit and share with 
   $scope.items = [
