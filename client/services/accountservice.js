@@ -49,9 +49,6 @@ angular.module('myApp')
           },
           getTitle: function() {
             return $window.localStorage && $window.localStorage.getItem('liveCodeShare');
-          },
-      updateProfile: function(profileData) {
-        return $http.put('/api/me', profileData);
-      }
+          }
     };
 });

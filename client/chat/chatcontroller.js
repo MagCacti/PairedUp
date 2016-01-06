@@ -1,5 +1,5 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', 'Notification', function($scope, $http, socket, $filter, Account, Notification){
 		$scope.toUsername;
 		$scope.joinedRoom;
 		$scope.allChats;
@@ -7,68 +7,40 @@ angular.module('myApp')
 		$scope.fromUser;
 		$scope.allMsg
 		$scope.otherRoom
-
-
-         
         $scope.username = Account.getUserDisplayName();
 
 		socket.on('savedroom', function(data){
 			console.log('from saved room',data)
-		})
+		});
 
-        // $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
  		socket.on('composeToUser', function(data){
- 			console.log('this is from the composeToUser', data)
  			$scope.$apply(function(){
  				$scope.toUsername = data.toUser.displayName
  				$scope.toUser = data.toUser.displayName
  				$scope.fromUser = data.toUser
  				$scope.joinedRoom = data.roomname
  				$scope.otherRoom = data.othername
- 			})
- 		})
- 		console.log('this the toUsername', $scope.username)
+ 			});
+ 		});
+
 	    socket.on("publish message", function(data) {
-	    	console.log('this is the published message', data)
 	        $scope.$apply(function(){
 	        	$scope.allChats = data;	        
 	        });
 	    });
 
 	    socket.on('updatechat', function(data){
-	    	console.log('the updated chate', data)
 	    	$scope.$apply(function(){
 	    		$scope.allMsg = data
-	    	})
+	    	});
+	    });
 
-	    })
-
-	    
-
-	    	console.log('Joined rooms', $scope.joinedRoom)
-	    // socket.emit
-	    //When someone clicks the submit button for the template chat.
 	    $scope.submit = function() {
 	        //check if there is text in the box.
 	        if ($scope.text) {
-	            //emit a new message with the text data. Will store this in the database. 
-	             socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
-	             // this is be sent to the socket.on('new messsages') on the server side.
+	        	Notification('Primary notification'); 
+	            socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	        }
-	        $scope.text = ""
+	        $scope.text = "";
 	    };
 	}]);
-
-//
-	    //So this is currently function is still not working so we will leave it out for now
-	    // $scope.sendMessage = function (fromUser, toUser) {
-	    //   ///TODO: grab current user's name and the other user's name
-
-	    //   //store that name in a object
-	    //     var roomName = {
-	    //         userWhoClicked: fromUser,
-	    //         userWhoWasClicked: toUser
-	    //     };
-	    //   //socket emit chatRoom with this users name and the other users name
-	    //     socket.emit("chatBox", roomName);
-	    // };

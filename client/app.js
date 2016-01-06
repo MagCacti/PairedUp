@@ -4,10 +4,9 @@ angular.module('myApp', [
 	'ui.bootstrap',
   'btford.socket-io',
   'ngAnimate',
-
-
+  'ui-notification'
 ])
-.config(function($stateProvider, $urlRouterProvider, $locationProvider){
+.config(function($stateProvider, $urlRouterProvider, $locationProvider, NotificationProvider){
 
 	$stateProvider
 	
@@ -85,7 +84,11 @@ angular.module('myApp', [
       controller: 'ContactController'
     })
 
-	$urlRouterProvider.otherwise('/');
+    NotificationProvider.setOptions({ 
+      delay: 10000, startTop: 20, startRight: 10, verticalSpacing: 20, horizontalSpacing: 20, positionX: 'left', positionY: 'bottom' 
+    });
+
+	$urlRouterProvider.otherwise('/login');
 
 });
 

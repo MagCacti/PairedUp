@@ -1,11 +1,13 @@
 body {
-  padding: 50px 0px 30px 30px;
+  padding: 50px 0px 0px 0px;
+  background-color: #333;
+  color: #fff;
 }
 
 /* Styles for signin.html */
 .btn-default {
-	padding: 20px;
-	margin: 15px;
+/*	padding: 20px;
+	margin: 15px;*/
 	/*font-size: 14px;*/	
 }
 
@@ -40,14 +42,29 @@ body {
 
 }
 
+td {
+  padding: 0px 0px 10px 10px;
+}
+
+.well {
+  background-image: linear-gradient(to bottom,#FFFFFF 0,#f5f5f5 100%);
+}
+
+span.glyphicon{
+  font-size: 1.5em;
+}
 .card{
-  height: 300px;
-  width: 300px;
-  border-style: solid;
+  height: 150px;
+  width: 250px;
+  /*border-style: solid;*/
+  padding: 10px;
+  /*background-color: #fff;*/
+  color: #000;
+  font-size: 1em;
 }
 
 /* Styles for codeshare.html */
-.ace_editor { height: 200px; } 
+.ace_editor { height: 600px; } 
 
 .chat-container {
   width: 980px;
@@ -61,8 +78,12 @@ body {
   overflow: scroll;
 }
 
+input {
+  color: #000;
+}
+
 video {
-  width: 500%;
+  width: 250px;
   border-radius: 10px;
 }
 
