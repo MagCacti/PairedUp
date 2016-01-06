@@ -15,14 +15,14 @@ angular.module('myApp', [
     url: '/login',
     templateUrl: 'auth/login/login.html',
     controller: 'NavbarController'
-
   })
-
+  
   .state('logout', {
     url: '/logout',
     template: null,
     controller: 'LogoutController'
   })
+  
   .state('home', {
     url:'/home',
     templateUrl: 'home/home.html',
@@ -94,13 +94,12 @@ angular.module('myApp', [
     controller: 'ContactController'
   })
 
-
   $urlRouterProvider.otherwise('/login');
-
 
 }])
 
 Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
   obj.__proto__ = proto;
   return obj;
+
 };
