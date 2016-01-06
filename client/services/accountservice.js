@@ -47,7 +47,7 @@ angular.module('myApp')
 
           updateProfile: function(profiledata) {
             return $http.put('/api/me', profiledata);
-          }
+          },
 
           setTitle: function(val) {
             return $window.localStorage && $window.localStorage.setItem('liveCodeShare', val);
