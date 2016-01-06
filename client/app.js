@@ -3,23 +3,31 @@ angular.module('myApp', [
 	'ui.ace',
 	'ui.bootstrap',
   'btford.socket-io',
-
-
+  'ngAnimate',
+  'ui-notification'
 ])
-.config(function($stateProvider, $urlRouterProvider, $locationProvider){
+.config(function($stateProvider, $urlRouterProvider, $locationProvider, NotificationProvider){
 
 	$stateProvider
 	
 
 	.state('login', {
 		url: '/login',
-		// controller: 'NavbarController'
+    templateUrl: 'auth/login/login.html',
+		controller: 'NavbarController'
+
 	})
     .state('logout', {
       url: '/logout',
       template: null,
       controller: 'LogoutController'
     })
+    .state('home', {
+      url:'/home',
+      templateUrl: 'home/home.html',
+      controller: 'HomeController',
+    })
+
     .state('profile', {
       url: '/profile',
       templateUrl: 'userprofile/userprofile.html',
@@ -58,6 +66,11 @@ angular.module('myApp', [
       templateUrl: 'codeshare/room.html',
       controller: 'RoomCtrl'
     })
+    .state('codeshare.contact', {
+      url: '/contact',
+      templateUrl: 'codeshare/contactlist.html',
+      controller: 'CodeShareController'
+    })
     .state('chat', {
       url: '/chat',
       templateUrl: 'chat/chat.html',
@@ -65,8 +78,8 @@ angular.module('myApp', [
 
     })
 
-    .state('chat.rooms', {
-      url: '/chatrooms',
+    .state('chat.room', {
+      url: '/chatroom',
       templateUrl: 'chat/chatrooms.html',
       controller: 'ChatRoomController'
     })
@@ -76,7 +89,11 @@ angular.module('myApp', [
       controller: 'ContactController'
     })
 
-	$urlRouterProvider.otherwise('/');
+    NotificationProvider.setOptions({ 
+      delay: 10000, startTop: 20, startRight: 10, verticalSpacing: 20, horizontalSpacing: 20, positionX: 'left', positionY: 'bottom' 
+    });
+
+	$urlRouterProvider.otherwise('/login');
 
 });
 

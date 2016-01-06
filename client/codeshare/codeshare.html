@@ -1,33 +1,68 @@
-
-<h1>The Codesharing experience will live here </h1>
+<div class="codeshare-wrapper">
 <div class="row">
-  <div class="col-md-2"> 
-    <button ng-click='add()'>Add</button>
-    <div ng-repeat=" file in filesList">
-      <button ng-click='delete(file.id)'>Delete</button>
-      <button ng-click='edit(file.id)'>Edit {{file.title}}</button>
-      <button ng-click='shareWith(file.id)'>ShareWith</button>
-      <button ng-click='update(file.id)'>Update</button>
-    </div>
-  </div> 
-    <div class="col-md-4">
+  <div class="col-md-3"> 
 
-        <form ng-submit="getFileInfo()" action="/fileUpload" enctype="multipart/form-data" method="post">
-            <input type="file" name="string">
-            <input type="submit" value="Upload File">
-        </form>
-      <input ng-model="title">
+    <table>
+      <tr>
+        <td><button type="button" class="btn btn-default" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
+        <td> <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button></td>
+      </tr>
+    </table>
+    
+    <div ui-view></div>
+  </div>
+
+  <div class="col-md-9"> 
+      <table>
+        <tr>
+          <td>
+            <input ng-model="title"> 
+          </td>
+          <td>
+            <!-- Simple dropdown -->
+            <span uib-dropdown on-toggle="toggled(open)">
+              <a href id="simple-dropdown" uib-dropdown-toggle>
+                Show All Files
+              </a>
+              <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown" >
+                <li ng-repeat="file in filesList">
+                  <a href ng-click='edit(file.id)'>{{file.title}}</a>
+                </li>
+              </ul>
+            </span>
+          </td>
+          <td>
+            <!-- Single button -->
+            <div class="btn-group" uib-dropdown is-open="status.isopen">
+
+              <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+               <!--  <li role="menuitem"><a href="#">Action</a></li>
+                <li role="menuitem"><a href="#">Another action</a></li>
+                <li role="menuitem"><a href="#">Something else here</a></li>
+                <li class="divider"></li> -->
+              </ul>
+            </div>
+            </div>
+          </td>
+          <td><select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select></td>
+          <div class="filebtn">
+          <td><button ng-click='add()'>Add</button></td>
+          <td> <button ng-click='update()'>Update</button></td>
+          <td><button ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button ng-click='delete()'>Delete</button></td>
+          <div>
+
+        </tr>
+      </table>
       <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
-      <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-    </div>
-   <div>
-    <div class='col-md-4'>
-      <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button>
-           <div ui-view></div>
-    </div>
+      
+
+<div>
+    
+</div>
+</div>
   </div>
 </div>
-
 
 
 
