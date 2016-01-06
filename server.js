@@ -29,14 +29,14 @@ var session = require('express-session');
 var morgan = require('morgan');
 var upload = multer({ dest: 'uploads/' });
 var socketio = require('socket.io');
-var io = require('./socket/socket')(server);
+var io = require('./server/socket/socket')(server);
 
 //do not remove. Works for localhost AND deployment/production.
 var port = process.env.PORT || '8080'; 
 server.listen(port);
 console.log("App listening on port");
 
-var routesActivation = require('./routes');
+var routesActivation = require('./server/routes');
 
 app.set('port', process.env.PORT || 8080);
 app.use(upload.single('string'));
