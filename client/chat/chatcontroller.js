@@ -35,9 +35,9 @@ angular.module('myApp')
 	    	});
 	    });
 
-	    $scope.submit = function() {
+	    $scope.submit = function(e) {
 	        //check if there is text in the box.
-	        if ($scope.text) {
+	        if (e.keyCode === 13 && $scope.text) {
 	        	Notification('Primary notification'); 
 	            socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	        }

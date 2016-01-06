@@ -45,12 +45,6 @@
   Some content</div>
           </div>
   <div class="col-md-6"> 
-  <div>
-    <button ng-click='add()'>Add</button>
-    <button ng-click='delete()'>Delete</button>
-    <button ng-click='update()'>Update</button>
-    <button ng-click='endLiveCodeShare()'>Stop CodeSharing</button>
-  </div> 
       <table>
         <tr>
           <td>
@@ -84,6 +78,12 @@
 
 
           </td>
+          <div class="filebtn">
+          <td><button ng-click='add()'>Add</button></td>
+          <td> <button ng-click='update()'>Update</button></td>
+          <td><button ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button ng-click='delete()'>Delete</button></td>
+          <div>
 
         </tr>
       </table>
@@ -94,7 +94,9 @@
     
 </div>
 </div>
-      Welcome, {{profile}}<img ng-src="{{fromUser.picture || 'https://placehold.it/100x100'}}">
+  <div class="topright"><a href="#" ui-sref="profile">
+      Welcome, {{profile}}<img ng-src="{{fromUser.picture || 'https://placehold.it/50x50'}}"></a>
+  </div>
     <div class='col-md-2'>
 
 

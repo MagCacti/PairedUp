@@ -45,9 +45,9 @@
      <div id="navbar" class="navbar-collapse collapse">
        <ul class="nav navbar-nav navbar-right">
           <li><a ui-sref="profile" ng-show="!loggedIn" ng-model="checkModel.profile" uib-btn-checkbox>Profile</a></li>
-            <li><a ui-sref="logout" ng-show="!loggedIn" ng-click='goingToLogOut()' >Logout</a></li>
             <li><a ui-sref="codeshare" ng-show="!loggedIn">Codeshare</a></li>
-            <li><a ui-sref="chat" ng-show="!loggedIn">Inbox</a></li>
+            <li><a ui-sref="chat.contacts" ng-show="!loggedIn">Inbox</a></li>
+            <li><a ui-sref="logout" ng-show="!loggedIn" ng-click='goingToLogOut()' >Logout</a></li>
        </ul>
      </div>
    </div>
