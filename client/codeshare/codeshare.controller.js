@@ -11,7 +11,7 @@ angular.module('myApp')
   };
 }])
 
-.controller('CodeShareController', ['$scope','$http', '$state','$window','socket','Account', '$log', 'profiledata', 'Notification', function($scope, $http, $state, $window,  socket, Account, $log, profiledata, Notification){ 
+.controller('CodeShareController', ['$scope','$http', '$state','$window','socket','Account', '$log', 'profiledata', function($scope, $http, $state, $window,  socket, Account, $log, profiledata){ 
   $scope.isCollapsed = false;
   $scope.toUsername;
   $scope.joinedRoom;
@@ -27,7 +27,7 @@ angular.module('myApp')
   $scope.id = 0;
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
-  $scope.mode = $scope.modes[1];
+  $scope.mode = $scope.modes[2];
   var coderoom = $scope.joinedRoom
   
 
@@ -54,7 +54,6 @@ angular.module('myApp')
   };
 
   $scope.initSharing = function(user) {
-    Notification.success({message: 'Success notification<br>Some other <b>content</b><br><a href="https://github.com/alexcrack/angular-ui-notification">This is a link</a><br><img src="https://angularjs.org/img/AngularJS-small.png">', title: 'Html content'});
     $scope.id++;
     socket.emit("startLiveEditing", {toName: user, fromName: Account.getUserDisplayName()});
     var total = $scope.id + $scope.removeid;
@@ -68,6 +67,7 @@ angular.module('myApp')
   $scope.textInEditor = $scope.aceModel;
   $scope.doc;
   $scope.aceOption = {
+    theme:'twilight',
     mode: $scope.mode.toLowerCase(),
     onLoad: function (_ace) {
       $scope.modeChanged = function () {

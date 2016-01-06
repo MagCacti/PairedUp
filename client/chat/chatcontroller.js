@@ -1,12 +1,12 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', 'Notification', function($scope, $http, socket, $filter, Account, Notification){
+	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
 		$scope.toUsername;
 		$scope.joinedRoom;
 		$scope.allChats;
 		$scope.toUser;
 		$scope.fromUser;
-		$scope.allMsg
-		$scope.otherRoom
+		$scope.allMsg;
+		$scope.otherRoom;
         $scope.username = Account.getUserDisplayName();
 
 		socket.on('savedroom', function(data){
@@ -17,10 +17,11 @@ angular.module('myApp')
  			$scope.$apply(function(){
  				$scope.toUsername = data.toUser.displayName
  				$scope.toUser = data.toUser.displayName
- 				$scope.fromUser = data.toUser
+ 				$scope.fromUser = data.fromUser
  				$scope.joinedRoom = data.roomname
  				$scope.otherRoom = data.othername
  			});
+        console.log('username', data)
  		});
 
 	    socket.on("publish message", function(data) {
@@ -35,10 +36,9 @@ angular.module('myApp')
 	    	});
 	    });
 
-	    $scope.submit = function(e) {
+	    $scope.submit = function() {
 	        //check if there is text in the box.
-	        if (e.keyCode === 13 && $scope.text) {
-	        	Notification('Primary notification'); 
+	        if ($scope.text) {
 	            socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	        }
 	        $scope.text = "";

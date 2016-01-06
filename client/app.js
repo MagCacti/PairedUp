@@ -66,6 +66,11 @@ angular.module('myApp', [
       templateUrl: 'codeshare/room.html',
       controller: 'RoomCtrl'
     })
+    .state('codeshare.contact', {
+      url: '/contact',
+      templateUrl: 'codeshare/contactlist.html',
+      controller: 'CodeShareController'
+    })
     .state('chat', {
       url: '/chat',
       templateUrl: 'chat/chat.html',
