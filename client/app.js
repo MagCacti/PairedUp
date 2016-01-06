@@ -1,25 +1,32 @@
 angular.module('myApp', [
 	'ui.router',
 	'ui.ace',
-	'ui.bootstrap',
+  'ui.bootstrap',
   'btford.socket-io',
+  'ngAnimate',
   'xeditable'
   ])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider){
 
-	$stateProvider
-	
+  $stateProvider
+  
   .state('login', {
-   url: '/login',
-   template: 'Please Log In'
-			// controller: 'NavbarController'
-		})
+    url: '/login',
+    templateUrl: 'auth/login/login.html',
+    controller: 'NavbarController'
+
+  })
 
   .state('logout', {
     url: '/logout',
     template: null,
     controller: 'LogoutController'
+  })
+  .state('home', {
+    url:'/home',
+    templateUrl: 'home/home.html',
+    controller: 'HomeController',
   })
 
   .state('profile', {
@@ -63,6 +70,11 @@ angular.module('myApp', [
     templateUrl: 'codeshare/room.html',
     controller: 'RoomCtrl'
   })
+  .state('codeshare.contact', {
+    url: '/contact',
+    templateUrl: 'codeshare/contactlist.html',
+    controller: 'CodeShareController'
+  })
 
   .state('chat', {
     url: '/chat',
@@ -82,7 +94,9 @@ angular.module('myApp', [
     controller: 'ContactController'
   })
 
-  $urlRouterProvider.otherwise('/');
+
+  $urlRouterProvider.otherwise('/login');
+
 
 }])
 

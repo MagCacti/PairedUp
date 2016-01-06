@@ -4,7 +4,6 @@ angular.module('myApp')
 	var account = Account.getUserDisplayName()
 	profiledata.findUser({user:account}).then(function(results){
 	  $scope.profile = results.data.github
-	  console.log('these are the results', results.data.github)
 	  })
 
 		$scope.add = function(){
