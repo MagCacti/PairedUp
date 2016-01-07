@@ -116,11 +116,15 @@ span.glyphicon{
 }
 
 #cool {
-  background-color: #fff;
+  padding: 60px 0px 0px 0px;
+  background-color: #333;
+  color: #fff;
 }
 
 #sweet {
-  background-color: #fff;
+  padding: 60px 0px 0px 0px;
+  background-color: #333;
+  color: #fff;
 }
 
 #whiteText {
