@@ -21,14 +21,13 @@ angular.module('myApp')
  				$scope.joinedRoom = data.roomname
  				$scope.otherRoom = data.othername
  			});
-        console.log('username', data)
  		});
 
 	    socket.on("publish message", function(data) {
 	        $scope.$apply(function(){
 	        	$scope.allChats = data;	        
 	        });
-	    });
+	    })
 
 	    socket.on('updatechat', function(data){
 	    	$scope.$apply(function(){
