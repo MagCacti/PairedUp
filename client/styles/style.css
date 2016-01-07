@@ -116,13 +116,14 @@ span.glyphicon{
 }
 
 #cool {
-  padding: 60px 0px 0px 0px;
+  /*padding: 60px 0px 0px 0px;*/
+  left padding: 6px;
   background-color: #333;
   color: #fff;
 }
 
 #sweet {
-  padding: 60px 0px 0px 0px;
+  left padding: 6px;
   background-color: #333;
   color: #fff;
 }
