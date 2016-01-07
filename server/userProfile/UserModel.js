@@ -13,21 +13,35 @@ db.once('open', function(){
 
 var userSchema = new Schema({
  displayName: String,
+ githubName: String,
  picture: String,
  github: String,
+ location: String,
+ membersince: Date,
+ linkedin: String,
  futureskills: {
+   angular: Boolean,
+   node: Boolean,
+   html: Boolean,
+   css: Boolean,
+   jquery: Boolean,
    python: Boolean,
    swift: Boolean,
    java: Boolean,
-   android: Boolean,
+   go: Boolean,
    ruby: Boolean,
  },
  skills:{ 
-   node: Number,
    angular: Number,
+   node: Number,
    html: Number,
    css: Number, 
-   jquery: Number
+   jquery: Number,
+   python: Number,
+   swift: Number,
+   java: Number,
+   go: Number,
+   ruby: Number
  },
 });
 
