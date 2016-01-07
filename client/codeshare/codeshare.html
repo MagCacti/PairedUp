@@ -45,12 +45,15 @@
             </div>
           </div>
         </td>
-        <td><select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select></td>
+        
+        <td>
+          <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+        </td>
         <div class="filebtn">
-          <td><button ng-click='add()'>Add</button></td>
-          <td> <button ng-click='update()'>Update</button></td>
-          <td><button ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
-          <td><button ng-click='delete()'>Delete</button></td>
+          <td><button class="btn-primary" ng-click='add()'>Add</button></td>
+          <td> <button class="btn-primary" ng-click='update()'>Update</button></td>
+          <td><button class="btn-primary" ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button class="btn-primary" ng-click='delete()'>Delete</button></td>
           <div>
 
           </tr>

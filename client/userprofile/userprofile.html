@@ -2,15 +2,14 @@
   <div class="col-md-4" id="sweet">
     <div class="panel panel-default">
       <div class="panel-body">
-        <form method="post" ng-submit="updateProfile()">
-          <!-- <div class="form-group"> -->
-            <label ng-hide="user.picture" class="control-label">Profile Picture</label>
-            <article>
-              <img class="img-circle img-responsive" width="250" height="250" ng-src="{{user.picture || 'https://placehold.it/100x100'}}">
-            </article>
-          <!-- </div> -->
+        <label ng-hide="user.picture" class="control-label">Profile Picture</label>
+        <article>
+          <img class="img-circle img-responsive" width="250" height="250" ng-src="{{user.picture || 'https://placehold.it/100x100'}}">
+        </article>
 
-          <h2>{{user.displayName}}</h2>
+        <h2 style="color:gray; text-align: center;"> {{user.displayName}} </h2>
+
+        <h2 style="color:gray; text-align: center;"> Welcome to PairedUp! </h2>
 
           <div class="form-group">
             <label class="control-label"><i class="ion-person"></i> PairedUp Alias (Optional)</label>
@@ -25,14 +24,18 @@
       </div>
   </div>
 </div>
+
 <div class="col-md-8">
-    <div>
-<h2>Rate your skills to complete your user profile</h2>
-  <a id="whitetext" ui-sref="profile.currentskills">Let's go!<a>
-    </div>
+  <div>
+    <h2>Rate your skills to complete your user profile</h2>
+    <a style="color:blue; text-align: center; font-size: 100px;" ui-sref="profile.currentskills">Let's go!<a>
   </div>
-  <div class="col-md-8">
-      <div ui-view></div>
-  </div>
+</div>
+
+<div class="col-md-8">
+  <div ui-view></div>
+</div>
+  
+
   </div>
 </div>
