@@ -1,17 +1,17 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
-		$scope.toUsername;
-		$scope.joinedRoom;
-		$scope.allChats;
-		$scope.toUser;
-		$scope.fromUser;
-		$scope.allMsg;
-		$scope.otherRoom;
-        $scope.username = Account.getUserDisplayName();
+.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+	$scope.toUsername;
+	$scope.joinedRoom;
+	$scope.allChats;
+	$scope.toUser;
+	$scope.fromUser;
+	$scope.allMsg;
+	$scope.otherRoom;
+	$scope.username = Account.getUserDisplayName();
 
-		socket.on('savedroom', function(data){
-			console.log('from saved room',data)
-		});
+	socket.on('savedroom', function(data){
+		console.log('from saved room',data)
+	});
 
  		socket.on('composeToUser', function(data){
  			$scope.$apply(function(){
@@ -29,17 +29,18 @@ angular.module('myApp')
 	        });
 	    })
 
-	    socket.on('updatechat', function(data){
-	    	$scope.$apply(function(){
-	    		$scope.allMsg = data
-	    	});
-	    });
+	socket.on('updatechat', function(data){
+		$scope.$apply(function(){
+			$scope.allMsg = data
+		});
+	});
 
-	    $scope.submit = function() {
+	$scope.submit = function() {
 	        //check if there is text in the box.
 	        if ($scope.text) {
-	            socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
+	        	socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	        }
 	        $scope.text = "";
-	    };
-	}]);
+	      };
+	    }]);
+

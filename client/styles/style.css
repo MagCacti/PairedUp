@@ -7,8 +7,8 @@ body {
 /* Styles for signin.html */
 .btn-default {
 /*	padding: 20px;
-	margin: 15px;*/
-	/*font-size: 14px;*/	
+margin: 15px;*/
+/*font-size: 14px;*/	
 }
 
 .codeshare-wrapper{
@@ -106,6 +106,28 @@ span.glyphicon{
   /*background-color: #fff;*/
   color: #000;
   font-size: 1em;
+}
+
+
+/* Styles for profile.html */
+
+#padded {
+  padding-top: 30px;
+  /*padding: 20px;*/
+  margin: 3px;
+}
+
+#cool {
+  background-color: #272B37;
+}
+
+#sweet {
+  background-color: #EEEEEE;
+}
+
+#whiteText {
+  color: white;
+  font-style: Helvetica;
 }
 
 /* Styles for codeshare.html */

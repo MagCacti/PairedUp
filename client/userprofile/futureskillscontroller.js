@@ -7,7 +7,7 @@ angular.module('myApp')
 	  })
 
 		$scope.add = function(){
-			profiledata.futureSkills({github: $scope.profile, python: $scope.python, java: $scope.java, swift: $scope.swift, android: $scope.android, ruby: $scope.ruby})
+			profiledata.futureSkills({github: $scope.profile, python: $scope.python, java: $scope.java, swift: $scope.swift, go: $scope.go, ruby: $scope.ruby, angular: $scope.angular, jQuery: $scope.jQuery, html: $scope.html, css: $scope.css})
 		}
 
 	}])
