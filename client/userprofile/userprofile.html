@@ -3,15 +3,14 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <label ng-hide="user.picture" class="control-label">Profile Picture</label>
-        <article>
+        <center>
           <img class="img-circle img-responsive" width="250" height="250" ng-src="{{user.picture || 'https://placehold.it/100x100'}}">
-        </article>
+        </center>
 
         <h2 style="color:gray; text-align: center;"> {{user.displayName}} </h2>
 
         <h2 style="color:gray; text-align: center;"> Welcome to PairedUp! </h2>
 
-          <button class="btn btn-lg btn-success" ui-sref="profile.currentskills">Update Information</button>
       </div>
   </div>
 </div>
@@ -19,7 +18,7 @@
 <div class="col-md-8">
   <div>
     <h2>Rate your skills to complete your user profile</h2>
-    <a style="color:blue; text-align: center; font-size: 100px;" ui-sref="profile.currentskills">Let's go!<a>
+    <a style="color:blue; text-align: center; font-size: 50px;" ui-sref="profile.currentskills">Let's go!<a>
   </div>
 </div>
 
