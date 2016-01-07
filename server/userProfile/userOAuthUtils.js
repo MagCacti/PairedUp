@@ -35,9 +35,12 @@ module.exports = {
           globalProfile = user;
           }else {
             var user = new User();
-            user.github = profile.username;
+            user.github = profile.id;
+            user.githubName = profile.username;
             user.picture = profile._json.avatar_url;
             user.displayName = profile.displayName;
+            user.email = profile.email;
+            user.location = profile.location;
             user.save(function() {});
             globalProfile = user;
           }
