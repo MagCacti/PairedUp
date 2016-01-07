@@ -1,20 +1,16 @@
 <div class="row" id="cool">
   <div class="col-md-4" id="sweet">
     <div class="panel panel-default">
-      <!-- <div class="panel-heading">Profile</div> -->
       <div class="panel-body">
-        <legend><i class="ion-clipboard"></i> Edit My Profile</legend>
         <form method="post" ng-submit="updateProfile()">
-          <div class="form-group">
+          <!-- <div class="form-group"> -->
             <label ng-hide="user.picture" class="control-label">Profile Picture</label>
             <article>
-              <img class="img-circle img-responsive" width="200" height="200" ng-src="{{user.picture || 'https://placehold.it/100x100'}}">
+              <img class="img-circle img-responsive" width="250" height="250" ng-src="{{user.picture || 'https://placehold.it/100x100'}}">
             </article>
-          </div>
+          <!-- </div> -->
 
-          <h2>
-            {{user.displayName}}
-          </h2>
+          <h2>{{user.displayName}}</h2>
 
           <div class="form-group">
             <label class="control-label"><i class="ion-person"></i> PairedUp Alias (Optional)</label>

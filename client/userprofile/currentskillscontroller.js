@@ -11,7 +11,7 @@ angular.module('myApp')
 
     Account.getProfile().success(function(data){
     $scope.profile = data.profile.github
-    console.log('this is the data.profile:', data.profile.github)
+    console.log('this is the data.profile:', data.profile)
   })
 
     $scope.add = function(){
