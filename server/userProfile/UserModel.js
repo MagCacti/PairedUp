@@ -10,7 +10,6 @@ db.once('open', function(){
   console.log('connect');
 });
 
-
 var userSchema = new Schema({
  displayName: String,
  githubName: String,
