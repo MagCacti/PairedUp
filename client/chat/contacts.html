@@ -1,0 +1,14 @@
+<div ng-repeat="info in allUsers">
+	<table>
+		<tr>
+
+			<td><img ng-src="{{info.picture || 'https://placehold.it/50x50'}}"><td>
+			<td class="listname">{{info.displayName}}</td>
+			<td><span class="glyphicon glyphicon-envelope" aria-hidden="true" ng-click="initChat(info)" target="_blank"></span></td>
+		</tr>
+
+	</table>	
+
+
+
+</div>

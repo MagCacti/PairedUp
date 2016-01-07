@@ -1,4 +1,5 @@
 var Messages = require('../database/MessageModel').messages;
+var userDocument = require('../documents/DocumentModel').userDocument;
 var rooms = {};
 var userIds = {};
 var uuid = require('node-uuid');
@@ -9,48 +10,76 @@ function initiation(server) {
   var io = socketio(server);
   //The first event we will use is the connection event. It is fired when a client tries to connect to the server; Socket.io creates a new socket that we will use to receive or send messages to the client.
   io.on('connection', function(socket) {
-    //this corresponds to the socket.emit('new message') on the client
-    socket.on('new message', /*socketUtils.newMessage*/ function(message) {
-      //message - data from the cliet side 
-      console.log('this is the incoming message', message);
+    socket.on("startLiveEditing", function(data) {
+      io.emit("mediumLiveEdit", {toName: data.toName, fromName: data.fromName});
+    });
+
+    //emit mediumLiveEdit for everyone. The data will be the displayName from each person. 
+    //socket listener for medium LiveEdit. 
+      var roomname;
+      socket.on('writeToUser', function(data){
+        roomname = data.fromUser.displayName+data.toUser.displayName
+        Messages.find({room: data.toUser.displayName+data.fromUser.displayName}, function(err, msg){
+          if(err){return err}
+          if(msg[0] === undefined){
+            roomname = data.fromUser.displayName+data.toUser.displayName
+          } else if(msg[0].room){
+            roomname = data.toUser.displayName+data.fromUser.displayName
+          }
+
+          var foundMessages;
+          Messages.find({room:roomname}, function(err, msg){
+            if(err){
+              return console.log('you have an err get chats from the DB', err);
+            }
+            // console.log('MESSAGES from get request', req)
+            foundMessages = msg;
+            //this will post all the messages from the database
+            io.emit('publish message', foundMessages);
+          }).sort('-created');
+
+        socket.join(roomname)
+        socket.broadcast.to(roomname).emit('joincomplete', console.log('hey your in this chat with ' +data.toUser.displayName))
+          socket.emit('composeToUser', {roomname: roomname, fromUser: data.fromUser, toUser:data.toUser})
+        })
+      })
+      
+      socket.on('userjoin', function(data){
+        socket.join(data.joinedroom)
+        socket.broadcast.to(data.joinedroom).emit('joincomplete', console.log('hey your in this chat with ' +data.chatwith))
+        socket.emit('replychat', data) 
+      })
+
+    socket.on('new message', function(message) {
       var messages = new Messages(message);
-      //messages.create etc were all defined in the messages model
-      messages.created = message.date ;
+      messages.created = message.date;
       messages.text = message.text;
-      messages.displayName = message.username;
+      messages.displayName = message.fromUser;
+      messages.room = message.joinedroom
       messages.save(function(err, results){
         if(err){
           console.log('you have an error', err);
         }
-        console.log('you save the chat. check mongo.', results);
       });
         ///Collect all the messages now in database 
         var foundMessages;
-        Messages.find(function(err, msg){
+        Messages.find({room:roomname}, function(err, msg){
           if(err){
             return console.log('you have an err get chats from the DB', err);
           }
-          // console.log('MESSAGES from get request', req)
           foundMessages = msg;
           //this will post all the messages from the database
           io.emit('publish message', foundMessages);
         });
       });
-  //general code
-    //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
+
     socket.on('/create', function(data) {
-      // usersRoom = data.title; Unnecessary piece of code. 
       //Have the socket join a rooom that is named after the title of their document
       socket.join(data.title);
-      //Listen for a emit from client that's message is the title of the document
       socket.on(data.title, function(data) {
-        //send a signal to frontEnd called notification
         socket.broadcast.emit('notification', data);
-        });
       });
-    
-        //Sending a signal to the front end, along with the message from chat. This is so we can test the chat feature. Will build off of it later. 
-
+    });
       /* 
 
       Stuff for WebRtc
@@ -59,7 +88,7 @@ function initiation(server) {
     var currentRoom, id;
       //The init event is used for initialization of given room. 
 
-    socket.on('init', /*socketUtils.init*/ function (data, fn) {
+    socket.on('init', function (data, fn) {
       //If the room is not created we create the room and add the current client to it. 
       //We generate room randomly using node-uuid module
         currentRoom = (data || {}).room || uuid.v4();
@@ -103,7 +132,6 @@ function initiation(server) {
         });
           
           //the disconnect handler
-    //PROBLEM: As it stands I cannot use the socketUtils file here because Socket will be undefined in that file.
     socket.on('disconnect', function () {
       if (!currentRoom || !rooms[currentRoom]) {
         return;

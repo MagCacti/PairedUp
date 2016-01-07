@@ -6,12 +6,8 @@ var messageSchema = new Schema({
     text: String,
     displayName: String,
     room: String,
-    userid: { type: Number, ref: 'User' }
 });
-
-var Message = mongoose.model('Messages', messageSchema);
-
-
+var Message = mongoose.model('Message', messageSchema);
 
 module.exports = {
     messages: Message

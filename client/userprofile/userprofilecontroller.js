@@ -1,10 +1,10 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $http, $state,  Account) {
+  .controller('ProfileController', ['$scope', '$http', '$state', '$window', 'socket', 'Account', function($scope, $http, $state, $window, socket, Account) {
     var loggedInInformation; 
+
 
     $scope.getProfile = function() {
       Account.setChekIfActivelyLoggedIn(false); 
-      //set promise variable to equal return of Account.getProfile so we can chain promise and fix the check for the req.sessions once someone immediately logs in. 
       var promise = Account.getProfile()
         .then(function(response) {
           $scope.user = response.data.profile;
@@ -46,4 +46,4 @@ angular.module('myApp')
           });
       }
     }
-  });
+  }]);

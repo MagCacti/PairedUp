@@ -1,51 +1,74 @@
 angular.module('myApp')
-//factory will hold socket info
 .factory('socket', ['$rootScope', function($rootScope) {
-    //A socket connection to our server.
-
   var socket = io.connect("https://paired-up.herokuapp.com");
+
   return {
-    //listen to events.
     on: function(eventName, callback){
       socket.on(eventName, callback);
     },
-    //give off signals to anyone who might be listening (such as the server).
     emit: function(eventName, data) {
       socket.emit(eventName, data);
     }
   };
 }])
 
-.controller('CodeShareController', ['$scope','$http', '$state','socket','Account', function($scope, $http, $state, socket, Account){
-  //where the documents that are added are being saved. 
+.controller('CodeShareController', ['$scope','$http', '$state','$window','socket','Account', '$log', 'profiledata', function($scope, $http, $state, $window,  socket, Account, $log, profiledata){ 
+  $scope.isCollapsed = false;
+  $scope.toUsername;
+  $scope.joinedRoom;
+  $scope.allChats;
+  $scope.toUserInfo;
+  $scope.fromUser;
+  $scope.allMsg
+  $scope.otherRoom
+  $scope.profile;
+  $scope.fromUser
+  $scope.allUsers = []; 
   $scope.filesList = [];
   $scope.id = 0;
   $scope.removeid = 0;
   $scope.modes = ['Scheme', 'XML', 'Javascript', 'HTML', 'Ruby', 'CSS', 'Curly', 'CSharp', 'Python', 'MySQL'];
-  $scope.mode = $scope.modes[0];
-  if (Account.getCheckIfLoggedOut()){
+  $scope.mode = $scope.modes[2];
+  var coderoom = $scope.joinedRoom
+  
 
-  }
+  ///////////////////////////////////////////////////////////////////////////
+  ////Imported Contacts list
+  //////////////////////////////////////////////////////////////////////////
 
-  // var comm = new Icecomm('');
+  var account = Account.getUserDisplayName()
+  profiledata.findUser({user:account}).then(function(results){
+      $scope.profile = results.displayName
+      $scope.fromUser = results
+  });
+  
+  profiledata.getAllUsers().success(function(data){
+    for (var i=0; i<data.length; i++){
+      $scope.allUsers.push(data[i])
 
-  //       comm.connect('test');
+    }
+  });
 
-  //       comm.on('local', function(peer) {
-  //         localVideo.src = peer.stream;
-  //       });
+  $scope.initChat = function (user){
+    socket.emit('writeToUser', {toUser: user, fromUser:$scope.fromUser})
+    $state.go('chat.contacts')
+  };
 
-  //       comm.on('connected', function(peer) {
-  //         document.body.appendChild(peer.getVideo());
-  //       });
+  $scope.initSharing = function(user) {
+    $scope.id++;
+    socket.emit("startLiveEditing", {toName: user, fromName: Account.getUserDisplayName()});
+    var total = $scope.id + $scope.removeid;
+    socket.emit('startsharing', {toUser: user, fromUser:$scope.fromUser, id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode })
+  };
 
-  //       comm.on('disconnect', function(peer) {
-  //         document.getElementById(peer.ID).remove();
-  //       });
-  //Will use to hold all the text in editor
-  $scope.textInEditor;
+  ///////////////////////////////////////////////////////////////////////////
+  ////End - Imported Contacts list 
+  //////////////////////////////////////////////////////////////////////////
+
+  $scope.textInEditor = $scope.aceModel;
   $scope.doc;
   $scope.aceOption = {
+    theme:'twilight',
     mode: $scope.mode.toLowerCase(),
     onLoad: function (_ace) {
       $scope.modeChanged = function () {
@@ -54,48 +77,28 @@ angular.module('myApp')
       };
       //store the document of the session to a variable. 
       $scope.doc = _ace.getSession().getDocument();
-     
     },
-    //When someone changes the document (for example, typing in the document.)
     onChange: function(_ace) {
-      //store the document of the session to a variable. 
-      var sessionDoc = _ace[1].getSession().getDocument();
-      if ($scope.textInEditor !== sessionDoc.getValue() ) {
-        //setting $scope.textInEditor equal to the text in the document
-        $scope.textInEditor = sessionDoc.getValue();
-
-         //send a signal with the title from the document and the text from the document. 
-         socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
-        
-      }
-     
-      //When a signal(called notification) is sent, then run the callback function.
-      //This may have to be a general variable rather than a hardcoded 'notification'. Will probably be scope.title and some random string. Right now we will put notification
-      socket.on('notification', function(data) {
-        //data will be the information the server is sending.
-
-        //if the text in the document is not the same as the user's version of the text in the editor.
-        if ($scope.textInEditor !== data.textFromDoc){
-          //if the title of the user is the same as the title of the other user(s).
-          if ($scope.title === data.title) {
-          //set the variable $scope.textInEditor to the text received from the server.
-            $scope.textInEditor = data.textFromDoc;
-            //change the user's document to reflect the other's typing. 
-            sessionDoc.setValue($scope.textInEditor);
-            
+      //store the document of the session to a variable.  
+            var sessionDoc = _ace[1].getSession().getDocument();
+            if ($scope.textInEditor !== sessionDoc.getValue() ) {
+              //setting $scope.textInEditor equal to the text in the document
+              $scope.textInEditor = sessionDoc.getValue();
+               socket.emit($scope.title, {title: $scope.title, textFromDoc: $scope.textInEditor});
             }
-        }
-      });
-    }
-  };
-  //listening to when the server emits the file's data.
-  socket.on("fileData", function( data) {
-    //$scope.textInEditor will be set to the text (called data) from the file
-   $scope.textInEditor = data;
-   //set the documents value to the text from the server.
-   $scope.doc.setValue($scope.textInEditor);
-  });
-
+           
+            socket.on('notification', function(data) {
+              if ($scope.textInEditor !== data.textFromDoc){
+                if ($scope.title === data.title) {
+                  $scope.textInEditor = data.textFromDoc;
+                  //change the user's document to reflect the other's typing. 
+                  sessionDoc.setValue($scope.textInEditor);
+                  }
+              }
+            });
+          }
+        };
+     
   $scope.aceModel = ';; Scheme code in here.\n' +
     '(define (double x)\n\t(* x x))\n\n\n' +
     '<!-- XML code in here. -->\n' +
@@ -128,25 +131,23 @@ angular.module('myApp')
     $scope.filesList.push({id: total, title: $scope.title, code: $scope.aceModel, mode: $scope.mode});
     $scope.filesList[total - 1].title += $scope.fileTypes[$scope.mode];
     $http.post('/savingDocumentsToDatabase', {id: total, title: ($scope.title + $scope.fileTypes[$scope.mode]), mode: $scope.mode, displayName: Account.getUserDisplayName(), code: $scope.aceModel});  
-    
     $scope.title = '';
     $scope.aceModel = '';
   };
-//update a document
+
   $scope.update = function(id){
-    var index = selectId(id);
+    var index = selectId($scope.idOfCurrentDoc);
     $scope.filesList[index].title = $scope.title;
     $scope.filesList[index].code = $scope.aceModel;
     $scope.filesList[index].mode = $scope.mode;
     $scope.title = '';
     $scope.aceModel = '';
-
+    $scope.idOfCurrentDoc = null;
   };
-//After OAuth is functional, research how to use another box for the question of who a user wants to share with. 
+
   $scope.shareWith = function(username) {
-   //emiting a message to server called /create which will have the users join a room
     socket.emit('/create', {title:$scope.title});
-    };
+  };
 
   $scope.edit = function(id){
     var index = selectId(id);
@@ -154,10 +155,13 @@ angular.module('myApp')
     $scope.title = item.title;
     $scope.aceModel = item.code;
     $scope.mode = item.mode;
+
+    $scope.idOfCurrentDoc = id;
   };
 
   $scope.delete = function(id){
     var index = selectId(id);
+    var index = selectId($scope.idOfCurrentDoc);
     var item = $scope.filesList[index];
     var store = $scope.filesList[$scope.removeid];
     $http.post('/deleteDocumentsForUser', {displayName: Account.getUserDisplayName(), title: item.title, id:item.id}).then(function(result) {
@@ -192,5 +196,51 @@ angular.module('myApp')
     }
   };
 
+  $scope.endLiveCodeShare = function() {
+    Account.setTitle(null);
+    $window.location.reload();
+  };
+  $scope.liveCodeShare = function() {
+    socket.emit("startLiveEditing", {toName: $scope.text, fromName: Account.getUserDisplayName()});
+  };
+  
+  socket.on("mediumLiveEdit", function(data) {
+    if (Account.getUserDisplayName() === data.toName || Account.getUserDisplayName() === data.fromName){
+      // confirm whether both want to go to the codeshare
+      var goToCodeShare = $window.confirm("Go to live Code Share?");
+      if (goToCodeShare) {
+        Account.setTitle(data.toName + data.fromName);
+        $window.location.reload();
+      }    
+    } 
+  });
+
+  if (Account.getTitle() && Account.getTitle() !== 'null') {
+    $scope.title = Account.getTitle();
+    $scope.add();
+    var idOfTitle;
+    for (var i = 0; i < $scope.filesList.length; i++) {
+      var title = $scope.filesList[i].title.split('.')[0];
+      if (title === Account.getTitle()) {
+        idOfTitle = $scope.filesList[i].id;
+      }
+    }
+    $scope.edit(idOfTitle);
+    $scope.shareWith();
+  }
+
+  $scope.status = {
+    isopen: false
+  };
+
+  $scope.toggled = function(open) {
+    $log.log('Dropdown is now: ', open);
+  };
+
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.status.isopen = !$scope.status.isopen;
+  };
 
 }]);

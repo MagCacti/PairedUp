@@ -1,40 +1,47 @@
 angular.module('myApp')
-	.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+.controller('ChatController', ['$scope', '$http', 'socket', '$filter', 'Account', function($scope, $http, socket, $filter, Account){
+	$scope.toUsername;
+	$scope.joinedRoom;
+	$scope.allChats;
+	$scope.toUser;
+	$scope.fromUser;
+	$scope.allMsg;
+	$scope.otherRoom;
+	$scope.username = Account.getUserDisplayName();
 
-        $scope.date = $filter('date')(new Date(), 'MM/dd/yyyy h:mma');
- 
-         $scope.username = Account.getUserDisplayName();
-	    socket.on("publish message", function(data, other) {
-	        //Angular was not interacting inside socket well. So the function apply was needed to smooth over the bugs.
-	        $scope.$apply(function(){
-	            //store the message in the list array. Thus rendering it on the page, thanks to Angular's two way data binding.
-	        	// console.log('this is data', data)
-	        	//data comes from mongo and returns an array of objects
-	        	$scope.chat = data;
-					        
-	        });
-	    });
+	socket.on('savedroom', function(data){
+		console.log('from saved room',data)
+	});
 
+	socket.on('composeToUser', function(data){
+		$scope.$apply(function(){
+			$scope.toUsername = data.toUser.displayName
+			$scope.toUser = data.toUser.displayName
+			$scope.fromUser = data.fromUser
+			$scope.joinedRoom = data.roomname
+			$scope.otherRoom = data.othername
+		});
+		console.log('username', data)
+	});
 
-	    //When someone clicks the submit button for the template chat.
-	    $scope.submit = function() {
+	socket.on("publish message", function(data) {
+		$scope.$apply(function(){
+			$scope.allChats = data;	        
+		});
+	});
+
+	socket.on('updatechat', function(data){
+		$scope.$apply(function(){
+			$scope.allMsg = data
+		});
+	});
+
+	$scope.submit = function() {
 	        //check if there is text in the box.
 	        if ($scope.text) {
-	            //emit a new message with the text data. Will store this in the database. 
-	             socket.emit('new message', {text: $scope.text, date: $scope.date, username: $scope.username});
-	             // this is be sent to the socket.on('new messsages') on the server side.
+	        	socket.emit('new message', {text: $scope.text, date: $filter('date')(new Date(), 'MM/dd/yyyy h:mma'), fromUser: $scope.username, toUser: $scope.toUsername, joinedroom: $scope.joinedRoom, otherroom: $scope.otherRoom});
 	        }
-	    };
-	}]);
-	    //So this is currently function is still not working so we will leave it out for now
-	    // $scope.sendMessage = function (fromUser, toUser) {
-	    //   ///TODO: grab current user's name and the other user's name
+	        $scope.text = "";
+	      };
+	    }]);
 
-	    //   //store that name in a object
-	    //     var roomName = {
-	    //         userWhoClicked: fromUser,
-	    //         userWhoWasClicked: toUser
-	    //     };
-	    //   //socket emit chatRoom with this users name and the other users name
-	    //     socket.emit("chatBox", roomName);
-	    // };
