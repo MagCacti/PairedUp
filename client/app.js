@@ -3,8 +3,8 @@ angular.module('myApp', [
 	'ui.ace',
   'ui.bootstrap',
   'btford.socket-io',
-  'ngAnimate',
-  'xeditable'
+  'ngAnimate'
+  // 'xeditable'
   ])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider){

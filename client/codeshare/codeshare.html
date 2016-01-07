@@ -4,12 +4,13 @@
 
       <table>
         <tr>
-          <td><button type="button" class="btn btn-default" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
+          <td><button class="btn-primary" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
           <td> <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button></td>
         </tr>
       </table>
       
       <div ui-view></div>
+
     </div>
 
     <div class="col-md-9"> 
@@ -44,23 +45,25 @@
             </div>
           </div>
         </td>
-        <td><select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select></td>
+        
+        <td>
+          <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+        </td>
         <div class="filebtn">
-          <td><button ng-click='add()'>Add</button></td>
-          <td> <button ng-click='update()'>Update</button></td>
-          <td><button ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
-          <td><button ng-click='delete()'>Delete</button></td>
+          <td><button class="btn-primary" ng-click='add()'>Add</button></td>
+          <td> <button class="btn-primary" ng-click='update()'>Update</button></td>
+          <td><button class="btn-primary" ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button class="btn-primary" ng-click='delete()'>Delete</button></td>
           <div>
 
           </tr>
         </table>
         <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
-        
-
-        <div>
+                <div>
           
         </div>
       </div>
+
     </div>
   </div>
 

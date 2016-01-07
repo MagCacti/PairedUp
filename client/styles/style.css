@@ -1,14 +1,17 @@
 body {
-  padding: 60px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
   background-color: #333;
   color: #fff;
+  overflow: none;
+  background-size: 600px;
 }
+
 
 /* Styles for signin.html */
 .btn-default {
-/*	padding: 20px;
+/*  padding: 20px;
 margin: 15px;*/
-/*font-size: 14px;*/	
+/*font-size: 14px;*/  
 }
 
 .codeshare-wrapper{
@@ -22,9 +25,9 @@ margin: 15px;*/
 
 /* Styles for login.html */
 .starter-template {
-  padding: 40px 15px;
+  /*padding: 40px 15px;*/
   text-align: center;
-  height: 900px;
+  height: 700px;
   background-image: url(night-lights.jpg);
   background-repeat: no-repeat;
   background-size: cover;
@@ -108,9 +111,7 @@ span.glyphicon{
   font-size: 1em;
 }
 
-
 /* Styles for profile.html */
-
 #padded {
   padding-top: 30px;
   /*padding: 20px;*/
@@ -118,11 +119,16 @@ span.glyphicon{
 }
 
 #cool {
-  background-color: #272B37;
+  /*padding: 60px 0px 0px 0px;*/
+  left padding: 10px;
+  background-color: #333;
+  color: #fff;
 }
 
 #sweet {
-  background-color: #EEEEEE;
+  left padding: 10px;
+  background-color: #333;
+  color: #fff;
 }
 
 #whiteText {
