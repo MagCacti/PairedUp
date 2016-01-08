@@ -31,21 +31,27 @@ angular.module('myApp', [
 
   .state('profile', {
     url: '/profile',
-    templateUrl: 'userprofile/userprofile.html',
-    controller: 'ProfileController'
+    views: {
+      "": {
+        templateUrl: 'userprofile/userprofile.html', 
+        controller: 'ProfileController'
+          },
+      "currentskills@profile": {
+        templateUrl: 'userprofile/currentskills.html',
+        controller: 'CurrentSkillsController'
+          },
+    }
   })
 
-  .state('profile.currentskills', {
-    url: '/currentskills',
-    templateUrl: 'userprofile/currentskills.html',
-    controller: 'CurrentSkillsController',
-  })
+  // .state('profile.currentskills', {
+  //   url: '/currentskills',    
+  // })
 
-  .state('profile.futureskills', {
-    url: '/futureskills',
-    templateUrl: 'userprofile/futureskills.html',
-    controller: 'FutureSkillsController'
-  })
+  // .state('profile.futureskills', {
+  //   url: '/futureskills',
+  //   templateUrl: 'userprofile/futureskills.html',
+  //   controller: 'FutureSkillsController'
+  // })
 
   .state('profile.summary', {
     url: '/summary',
