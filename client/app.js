@@ -3,8 +3,8 @@ angular.module('myApp', [
 	'ui.ace',
   'ui.bootstrap',
   'btford.socket-io',
-  'ngAnimate'
-  // 'xeditable'
+  'ngAnimate',
+  // 'x-editable'
   ])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider){
@@ -15,7 +15,6 @@ angular.module('myApp', [
     url: '/login',
     templateUrl: 'auth/login/login.html',
     controller: 'NavbarController'
-
   })
 
   .state('logout', {
@@ -23,6 +22,7 @@ angular.module('myApp', [
     template: null,
     controller: 'LogoutController'
   })
+
   .state('home', {
     url:'/home',
     templateUrl: 'home/home.html',
@@ -38,7 +38,7 @@ angular.module('myApp', [
   .state('profile.currentskills', {
     url: '/currentskills',
     templateUrl: 'userprofile/currentskills.html',
-    controller: 'CurrentSkillsController'
+    controller: 'CurrentSkillsController',
   })
 
   .state('profile.futureskills', {
@@ -93,7 +93,6 @@ angular.module('myApp', [
     templateUrl: 'chat/contacts.html',
     controller: 'ContactController'
   })
-
 
   $urlRouterProvider.otherwise('/login');
 
