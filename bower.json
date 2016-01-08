@@ -1,12 +1,15 @@
 {
-  "name": "testapp",
-  "description": "",
+  "name": "PairedUp",
+  "description": "WorldWide pair programming webApp",
   "main": "app.js",
   "authors": [
-    "MagCacti"
+    "Aheri Stanford-Asiyo",
+    "Kristina McElveen",
+    "Joseph Sun",
+    "Carine Todmia"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/MagCacti/testapp",
+  "homepage": "https://github.com/MagCacti/PairedUp",
   "moduleType": [],
   "ignore": [
     "**/.*",
@@ -19,7 +22,11 @@
     "ace-builds": "~1.2.2",
     "angular": "~1.4.8",
     "angular-ui-ace": "~0.2.3",
-    "angular-socket-io": "~0.7.0"
+    "angular-socket-io": "~0.7.0",
+    "angular-xeditable": "~0.1.9",
+    "eventEmitter": "~4.3.0",
+    "angular-ui-router": "~0.2.15",
+    "angular-ui-notification": "~0.1.0"
   },
   "resolutions": {
     "angular-ui-ace": "~0.2.3"

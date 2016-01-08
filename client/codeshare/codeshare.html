@@ -1,51 +1,73 @@
+<div class="codeshare-wrapper container">
+  <div class="row">
+    <div class="col-md-3"> 
 
-<h1>The Codesharing experience will live here </h1>
-<div class="row">
-  <div class="col-md-2"> 
-    <button ng-click='add()'>Add</button>
-    <div ng-repeat=" file in filesList"><!-- {{ file.title }}  -->
-      <button ng-click='delete(file.id)'>Delete</button>
-      <!-- Edit function tied to button with the name of the document -->
-      <button ng-click='edit(file.id)'>Edit {{file.title}}</button>
-      <!-- Share with button, can be improved later. Need to ask the user who they would like to share with.  -->
-      <button ng-click='shareWith(file.id)'>ShareWith</button>
-      <button ng-click='update(file.id)'>Update</button>
-    </div>
-  </div> 
-    <div class="col-md-8">
-      <input ng-model="title">
-      <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
-      <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-    </div>
-    <div class="col-md-2">
+      <table>
+        <tr>
+          
+          <td><button class="btn-primary btn" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
+          <td> <button class="btn-primary btn" ui-sref="codeshare.room">Start VideoChat</button></td>
 
-    <!-- <video id="localVideo" autoplay></video> -->
-      <!-- <icecomm-connect room="custom room"></icecomm-connect>
-      <icecomm-local><video ng-if="local" autoplay class="icecomm-local"' +
-        'ng-src={{local.stream}}></video></icecomm-local>
-      <icecomm-peer></icecomm-peer>
-      <icecomm-leave></icecomm-leave>
- -->
-    <!-- <ice-comm
-            
-            room="custom room"></ice-comm> -->
-      <!-- <div>
-          <button ng-if="!!current_room" ng-click="close()">Close</button>
-          <input ng-if="!current_room" type="text" ng-keyup="roomEvent()" />
-          <div ng-if="!!local">
-            <video autoplay class="local" ng-src={{local.stream}}></video>
+        </tr>
+      </table>
+      
+      <div ui-view></div>
+
+    </div>
+
+    <div class="col-md-9"> 
+      <table>
+        <tr>
+          <td>
+            <input class="form-control" placeholder="Name Document" ng-model="title"> 
+          </td>
+          <td>
+            <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+          </td>
+          <td>
+            <!-- Simple dropdown -->
+            <span uib-dropdown on-toggle="toggled(open)">
+              <a href="#"  class="btn btn-primary dropdown-toggle" uib-dropdown-toggle>
+                Show All Files
+              </a>
+              <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown" >
+                <li ng-repeat="file in filesList">
+                  <a href ng-click='edit(file.id)'>{{file.title}}</a>
+                </li>
+              </ul>
+            </span>
+          </td>
+          <td>
+            <!-- Single button -->
+            <div class="btn-group" uib-dropdown is-open="status.isopen">
+
+              <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+               <!--  <li role="menuitem"><a href="#">Action</a></li>
+                <li role="menuitem"><a href="#">Another action</a></li>
+                <li role="menuitem"><a href="#">Something else here</a></li>
+                <li class="divider"></li> -->
+              </ul>
+            </div>
           </div>
-          <ul><li ng-repeat="peer in peers">
-            <video autoplay ng-src="{{peer.stream}}" ></video>
-          </li></ul> -->
+        </td>
+        <div class="filebtn">
+          <td><button class="btn-primary btn" ng-click='add()'>Save</button></td>
+          <td> <button class="btn-primary btn" ng-click='update()'>Update</button></td>
+          <td><button class="btn-primary btn" ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button class="btn-primary btn" ng-click='delete()'>Delete</button></td>
 
+            <div>
 
-        <!-- <<  </li></ul> --> 
-      <!-- </div> -->
+            </tr>
+          </table>
+          <div ui-ace="aceOption" class="ace_editor" ng-model="aceModel"></div>
+          <div>
+            
+          </div>
+        </div>
 
+      </div>
     </div>
-</div>
-
 
 
 

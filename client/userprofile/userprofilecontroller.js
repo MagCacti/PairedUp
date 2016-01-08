@@ -1,46 +1,49 @@
 angular.module('myApp')
-  .controller('ProfileController', function($scope, $auth, Account) {
+  .controller('ProfileController', ['$scope', '$http', '$state', '$window', 'socket', 'Account', function($scope, $http, $state, $window, socket, Account) {
+    var loggedInInformation; 
+
+
     $scope.getProfile = function() {
-      Account.getProfile()
+      Account.setChekIfActivelyLoggedIn(false); 
+      var promise = Account.getProfile()
         .then(function(response) {
-          console.log('inside profile controller------')
-          var test = JSON.stringify(response);
-          console.log('this is the response', test);
-          $scope.user = response.data;
+          $scope.user = response.data.profile;
+          //sets the displayName in the localStorage of the browser. 
+          Account.storeUserDisplayName(response.data.profile.displayName);
+          return {};
         })
         .catch(function(response) {
-          // toastr.error(response.data.message, response.status);
+          console.log("We have caught a response:", response);
         });
-    };
-    $scope.updateProfile = function() {
-      Account.updateProfile($scope.user)
-        .then(function() {
-          // toastr.success('Profile has been updated');
-        })
-        .catch(function(response) {
-          // toastr.error(response.data.message, response.status);
-        });
-    };
-    $scope.link = function(provider) {
-      $auth.link(provider)
-        .then(function() {
-          // toastr.success('You have successfully linked a ' + provider + ' account');
-          $scope.getProfile();
-        })
-        .catch(function(response) {
-          // toastr.error(response.data.message, response.status);
-        });
-    };
-    $scope.unlink = function(provider) {
-      $auth.unlink(provider)
-        .then(function() {
-          // toastr.info('You have unlinked a ' + provider + ' account');
-          $scope.getProfile();
-        })
-        .catch(function(response) {
-          // toastr.error(response.data ? response.data.message : 'Could not unlink ' + provider + ' account', response.status);
-        });
+        return promise;
     };
 
-    $scope.getProfile();
-  });
+    //the first time a user comes to the profile page without signing in. 
+    if (Account.getCheckingIfLogInData() === null) {
+      Account.setCheckingIfLogInData(1);
+      Account.setCheckIfLoggedOut(true);
+    }
+    //if the person is not logged 
+    if (Account.getChekIfActivelyLoggedIn() && Account.getCheckingIfLogInData() !== '1') {
+      //setting a check to tell the code that the user is logged in
+      Account.setCheckingIfLogInData(1);
+      //accessing the github passport. 
+      $scope.getProfile().then(function() {}, function(err) {
+        console.log("This is a err", err);
+      });
+    //A outer chekc to see if the user is logged in or not
+    }else if (Account.getCheckingIfLogInData() === '1' ){
+      //if they are not logged in, then redirect them to the login page.
+      if (Account.getCheckIfLoggedOut() == 'true') {
+        $state.go('login');
+
+        //else if they are already logged in. 
+      } else {
+        //Use displayName to search for the user in the database. 
+        $http.post('/getFromDatabaseBecausePersonSignedIn', {displayName: Account.getUserDisplayName()})
+          .success(function(data, status) {
+            $scope.user = data.user;
+          });
+      }
+    }
+  }]);
