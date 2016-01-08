@@ -36,7 +36,7 @@ function initiation(server) {
             foundMessages = msg;
             //this will post all the messages from the database
             io.emit('publish message', foundMessages);
-          }).sort('-created');
+          });
 
         socket.join(roomname)
         socket.broadcast.to(roomname).emit('joincomplete', console.log('hey your in this chat with ' +data.toUser.displayName))
