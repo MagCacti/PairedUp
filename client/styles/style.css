@@ -20,6 +20,10 @@ margin: 15px;*/
   height: 650px;
 }
 
+td.list {
+  width: 180px;
+}
+
 #slider1 {
   width: 200px;
 }
