@@ -1,11 +1,11 @@
-<div class="codeshare-wrapper">
+<div class="codeshare-wrapper container">
   <div class="row">
     <div class="col-md-3"> 
 
       <table>
         <tr>
-          <td><button class="btn-primary" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
-          <td> <button class="btn-primary" ui-sref="codeshare.room">Start VideoChat</button></td>
+          <td><button class="btn-primary btn" ui-sref="codeshare.contact" ng-click="isCollapsed = !isCollapsed">Contact List</button></td>
+          <td> <button class="btn-primary btn" ui-sref="codeshare.room">Start VideoChat</button></td>
         </tr>
       </table>
       
@@ -17,12 +17,15 @@
       <table>
         <tr>
           <td>
-            <input ng-model="title"> 
+            <input class="form-control" placeholder="Name Document" ng-model="title"> 
+          </td>
+          <td>
+            <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
           </td>
           <td>
             <!-- Simple dropdown -->
             <span uib-dropdown on-toggle="toggled(open)">
-              <a href id="simple-dropdown" uib-dropdown-toggle>
+              <a href="#"  class="btn btn-primary dropdown-toggle" uib-dropdown-toggle>
                 Show All Files
               </a>
               <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown" >
@@ -45,15 +48,11 @@
             </div>
           </div>
         </td>
-        
-        <td>
-          <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
-        </td>
         <div class="filebtn">
-          <td><button class="btn-primary" ng-click='add()'>Add</button></td>
-          <td> <button class="btn-primary" ng-click='update()'>Update</button></td>
-          <td><button class="btn-primary" ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
-          <td><button class="btn-primary" ng-click='delete()'>Delete</button></td>
+          <td><button class="btn-primary btn" ng-click='add()'>Save</button></td>
+          <td> <button class="btn-primary btn" ng-click='update()'>Update</button></td>
+          <td><button class="btn-primary btn" ng-click='endLiveCodeShare()'>Stop CodeSharing</button></td>
+          <td><button class="btn-primary btn" ng-click='delete()'>Delete</button></td>
           <div>
 
           </tr>
