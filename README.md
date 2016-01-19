@@ -1,5 +1,5 @@
 # PairedUp
-> A pair-programming app that helps you connect and code with awesome tech mentors through Video Chat, a Live Code Editor, and Direct Messaging.
+> A pair-programming app that helps you connect and code with awesome tech mentors through Video Chat, a Live Code Editor, and Direct Messaging. Check out the [LIVE DEMO](http://paired-up.herokuapp.com/#/login)
 
 <img src="http://carinetodmia.com/wp-content/uploads/2016/01/pairupscreen.jpg">
 
