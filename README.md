@@ -1,6 +1,8 @@
 # PairedUp
 > A pair-programming app that helps you connect and code with awesome tech mentors through Video Chat, a Live Code Editor, and Direct Messaging.
 
+<img src="http://carinetodmia.com/wp-content/uploads/2016/01/pairupscreen.jpg">
+
 ## Table of Contents
 
 1. [Team](#team)
