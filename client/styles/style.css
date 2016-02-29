@@ -13,7 +13,7 @@ body {
 }
 .body {
 
-  background: url(../assets/img/horizon.large.jpg) center;
+  /*background: url(../assets/img/horizon.large.jpg) center;*/
   background-repeat: no-repeat;
   background-size: cover; 
 }
@@ -59,10 +59,10 @@ td.list {
   padding: 100px 0;
   height: 800px;
   /*width: 1500px;*/
- /* overflow: hidden;
+  /*overflow: hidden;*/
   background: url(../assets/img/horizon.large.jpg) center;
   background-repeat: no-repeat;
-  background-size: cover; */
+  background-size: cover; 
 /*  background-color: #000;
 */  
 padding: 200px 0px 0px 0px;
