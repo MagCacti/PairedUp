@@ -1,9 +1,26 @@
 body {
-  padding: 0px 0px 0px 0px;
+  /*padding: 0px 0px 0px 0px;*/
   background-color: #fff;
   color: #000;
   overflow: none;
-  background-size: 600px;
+  background-size: cover;
+  /*height: 100%;*/
+  display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+     overflow: hidden;
+  background: url(../assets/img/horizon.large.jpg) center;
+  background-repeat: no-repeat;
+  background-size: cover; 
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+   Set the fixed height of the footer here 
+  height: 60px;
+  background-color: #f5f5f5;
 }
 
 
@@ -30,17 +47,24 @@ td.list {
 
 /* Styles for login.html */
 .starter-template {
+  
   /*padding: 40px 15px;*/
+  display: table;
   text-align: center;
-  height: 900px;
-  width: 1500px;
-  background-image: url(../assets/img/horizon.large.jpg);
+  width: 100%;
+  height: 100%;
+  padding: 100px 0;
+  height: 800px;
+  /*width: 1500px;*/
+ /* overflow: hidden;
+  background: url(../assets/img/horizon.large.jpg) center;
   background-repeat: no-repeat;
-  background-size: cover; 
+  background-size: cover; */
 /*  background-color: #000;
-*/  padding: 200px 0px 0px 0px;
+*/  
+padding: 200px 0px 0px 0px;
   color: #FFF;
-  background-position: center;
+  /*background-position: center;*/
 }
 
 .card li {
