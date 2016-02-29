@@ -8,12 +8,15 @@ body {
   display: flex;
     min-height: 100vh;
     flex-direction: column;
-     overflow: hidden;
+    overflow: hidden;
+ 
+}
+.body {
+
   background: url(../assets/img/horizon.large.jpg) center;
   background-repeat: no-repeat;
   background-size: cover; 
 }
-
 .footer {
   position: absolute;
   bottom: 0;
