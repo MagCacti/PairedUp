@@ -35,9 +35,8 @@ margin: 15px;*/
 }
 
 .codeshare-wrapper{
-  padding:60px;
-  /*width:1280px;*/
-  height: 650px;
+  padding:30px;
+  background-size: cover;
 }
 
 td.list {
@@ -188,7 +187,14 @@ span.glyphicon{
 /* Styles for codeshare.html */
 .ace_editor { 
   height: 600px;
-  width: 100%; 
+  width: 100%;
+
+} 
+.aceedit {
+  overflow: scroll;
+  height: 450px; 
+  background-size: cover;
+  overflow-x: hidden;
 } 
 
 .chat-container {
