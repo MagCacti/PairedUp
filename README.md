@@ -1,7 +1,7 @@
 # PairedUp
 > A pair-programming app that helps you connect and code with awesome tech mentors through Video Chat, a Live Code Editor, and Direct Messaging. Check out the <a href="http://paired-up.herokuapp.com/#/login" target="_blank">[LIVE DEMO]</a>  
 
-<img src="https://carinetodmia.com/wp-content/uploads/2016/01/pairupscreen.jpg">
+<img src="http://carinetodmia.com/img/portfolio/pairupscreen.jpg">
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@
 
 
 ### Team
-[![Aheri Stanford-Asiyo](https://avatars0.githubusercontent.com/u/10456737?v=3&s=70)](https://github.com/DhiMalo) <br>Aheri Stanford-Asiyo| [![Carine Todmia](https://avatars0.githubusercontent.com/u/9440923?v=3&s=70)](https://github.com/ctodmia) <br>Carine Todmia| [![Joseph Sun](https://avatars3.githubusercontent.com/u/11227083?v=3&s=70)](https://github.com/JosephSun)<br>Joseph Sun |<br> Kristina McElveen
+[![Aheri Stanford-Asiyo](https://avatars0.githubusercontent.com/u/10456737?v=3&s=70)](https://github.com/DhiMalo) <br>Aheri Stanford-Asiyo| [![Carine Todmia](https://avatars0.githubusercontent.com/u/9440923?v=3&s=70)](https://github.com/ctodmia) <br>Carine Todmia| [![Joseph Sun](https://avatars3.githubusercontent.com/u/11227083?v=3&s=70)](https://github.com/JosephSun)<br>Joseph Sun | [![Kristina McElveen](https://avatars0.githubusercontent.com/u/6963932?v=3&s=70)](https://github.com/kmcelveen)<br> Kristina McElveen
 --- | --- | --- | --- | --- | --- | ---
 [LinkedIn](https://www.linkedin.com/in/aheri)<br>[Twitter](https://twitter.com/aherisan)|[LinkedIn](https://www.linkedin.com/in/carinetodmia) | [LinkedIn](https://www.linkedin.com/in/josephsun4)|[LinkedIn](https://www.linkedin.com/in/kristina-mcelveen-98b219108)
 
